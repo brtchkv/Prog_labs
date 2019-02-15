@@ -1,8 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Human extends God implements Humanable {
     private int id;
@@ -57,41 +53,6 @@ public class Human extends God implements Humanable {
             return false;
         }
     }
-
-    @Override
-    public void setSkills(String new_skills) {
-        System.out.println(new_skills + " тута ");
-        String[] skills_raw = new_skills.split("-");
-        System.out.println(Arrays.toString(skills_raw));
-        for (String i: skills_raw){
-            System.out.println(i);
-            String name = i.split("\\(")[0].trim();
-            Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(i);
-
-            ArrayList<String[]> skill_stuff = new ArrayList<>();
-            while(m.find()) {
-                System.out.println(m.group(1));
-                Collections.addAll(skill_stuff, m.group(1).split(":"));
-            }
-            System.out.println(skill_stuff.size());
-            if (skill_stuff.size() == 0) {
-                System.out.println(skill_stuff.get(0)[0].trim());
-                Skill temp = new Skill(name, skill_stuff.get(0)[0].trim()) {
-                    @Override
-                    public String doSkill() {
-                        return (skill_stuff.get(0)[1].trim());
-                    }
-                };
-                this.addSkill(temp);
-
-            } else if(skill_stuff.size() == 1){
-                    Skill temp = new Skill(name, skill_stuff.get(0)[0].trim()) {};
-                    this.addSkill(temp);
-            }
-
-        }
-    }
-
 
     public void stopAction() {
         System.out.println(getName() + " отпрянула.");

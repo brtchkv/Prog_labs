@@ -6,6 +6,11 @@ import java.util.*;
 
 
 public class File {
+    /**
+     * Searches for PATH and converts file to LinkedHashSet
+     * @return LinkedHashSet with HUMAN objects
+     * @throws IOException When file is inaccessible or not found
+     */
 
     private static String getFileName() {
         String collectionPath = System.getenv("HUMAN_PATH");
@@ -29,15 +34,31 @@ public class File {
 
             while ((line = br.readLine()) != null) {
                 List<String> upper = CSVUtils.parseLine(line);
-                String[] skills = upper.get(2).split("-");
-                Human temp = new Human(upper.get(0), Integer.valueOf(upper.get(1)));
-                temp.setSkills();
-                System.out.println("[id= " + upper.get(0) + ", code= " + upper.get(1) + " , name= " + upper.get(2)+ "]");
 
-                for (String i: skills){
-                    List<String> lower = CSVUtils.parseLine(i.trim(), ':');
-                    System.out.println("[ " + lower.get(0) + ", " + lower.get(1) + " , " + lower.get(2) + "]");
-                }
+                Human temp = new Human(upper.get(0), Integer.valueOf(upper.get(1)));
+
+                try{
+                    String[] skills = upper.get(2).split("-");
+                    for (String i: skills){
+                        List<String> lower_skill = CSVUtils.parseLine(i.trim(), ':');
+                        temp.addSkill(new Skill(lower_skill.get(0),lower_skill.get(1)){
+                            @Override
+                            public String doSkill(){
+                                return (lower_skill.get(2));
+                            }
+                        });
+
+                    }
+                }catch (Exception e){}
+
+                try{
+                    List<String> lower_dis = CSVUtils.parseLine(upper.get(3).trim(), '-');
+                    for (int i = lower_dis.size() - 1; i >= 0; i--) {
+                        temp.addDisability(new Disability(lower_dis.get(i)));
+                    }
+                }catch (Exception e){}
+
+                humans.add(temp);
             }
 
         } catch (FileNotFoundException e) {
