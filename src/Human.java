@@ -30,6 +30,10 @@ public class Human extends God implements Humanable {
          System.out.println(skills.get(i).getInfo());
     }
 
+    public ArrayList<Skill> getSkills(){
+        return this.skills;
+    }
+
     public void doSkill(int i) {
         System.out.println(skills.get(i).doSkill());
     }
@@ -52,6 +56,10 @@ public class Human extends God implements Humanable {
             System.out.println("При добавлении несовершенности произошла ошибка...");
             return false;
         }
+    }
+
+    public ArrayList<Disability> getDisabilities(){
+        return this.disabilities;
     }
 
     public void stopAction() {

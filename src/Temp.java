@@ -1,14 +1,16 @@
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Arrays;
 
 public class Temp{
+    String name ;
+    int age;
+    Skill skill;
+    String disability;
 
-    public static void main(String[] args) {
-        String s = "Alice,12, Jump(Спасибо, что хоть новая шея великолепно гнется в любом направлении!: Тянусь к ногам, изящно изогнув шею плавным зигзагом.)-Catch()-Fly()";
-        Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(s);
-
-
+    public Human createHuman(){
+        Human human = new Human(name, age);
+        human.addSkill(skill);
+        human.addDisability(new Disability(disability));
+        return human;
     }
 }
 

@@ -1,16 +1,22 @@
 public class Skill {
     private String name;
     private String info;
+    private String action = "undefined";
 
     public Skill(String name, String info){
         this.name = name;
         this.info = info;
     }
 
+    public Skill(){
+
+    }
+
     public String getName(){ return name; }
 
     public String doSkill(){
-        return "undefined";
+        if (action.equals("undefined")) return "undefined";
+        else return  action;
     }
 
 
@@ -22,7 +28,7 @@ public class Skill {
     }
 
     public String toString(){
-        return (this.getName()+ " "+ getInfo()+ " " + doSkill());
+        return (this.getName()+ ":"+ getInfo()+ ":" + doSkill());
     }
 
 }

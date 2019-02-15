@@ -19,7 +19,8 @@ public abstract class God implements  Goddable, Loveable{
         this.type = type;
     }
 
-    public int getAge() {class Age{
+    public int getAge() {
+        class Age{
         int age;
         Age(int age){this.age = age;}
 

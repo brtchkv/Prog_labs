@@ -21,6 +21,10 @@ public class Disability {
         return sameSame;
     }
 
+    public String toString(){
+        return this.getName();
+    }
+
     @Override
     public int hashCode() {
         return (getName().hashCode());

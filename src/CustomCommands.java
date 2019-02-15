@@ -1,3 +1,4 @@
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
@@ -6,10 +7,6 @@ public class CustomCommands {
 
     public CustomCommands(LinkedHashSet<Human> collection){
         this.collection = new LinkedHashSet<>(collection);
-    }
-
-    public CustomCommands(){
-        this.collection = File.convertToLinkedHashSet();
     }
 
     /**

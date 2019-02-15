@@ -109,7 +109,7 @@ public class File {
                 printWriter.println(s);
             }
 
-            System.out.println("<<<<<<<<<<<<<<<<< Сохранение закончено >>>>>>>>>>>>>>>>>");
+            System.out.println("<<<<<<<<<<<<<<<<< Successfully saved >>>>>>>>>>>>>>>>>");
 
         }catch (Exception e){
             System.out.println("Something bad has happened");
