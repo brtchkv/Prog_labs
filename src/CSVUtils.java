@@ -16,6 +16,13 @@ public class CSVUtils {
         return parseLine(cvsLine, separators, DEFAULT_QUOTE);
     }
 
+    /**
+     * Makes a json structure from given json string
+     * @param cvsLine string with raw CSV data
+     * @param separators a separator of columns in CSV data (i.e on default - ',')
+     * @param customQuote a seperator of the start and the end of the column (i. e. on default - '"')
+     * @return List<String> with parsed CSV
+     */
     public static List<String> parseLine(String cvsLine, char separators, char customQuote) {
 
         List<String> result = new ArrayList<>();

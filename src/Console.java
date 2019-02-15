@@ -1,7 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -17,6 +16,10 @@ public class Console {
         this.customCommands = new CustomCommands(humans);
         needExit = false;
     }
+
+    /**
+     * Method interprets commands read by readCommands() method
+     */
 
     public void execute(){
         while(!needExit){
@@ -71,6 +74,7 @@ public class Console {
                     break;
                 case "^C":
                     needExit = true;
+                    File.save(humans);
                     System.out.println("*************** Program Terminated ***************");
                     break;
                 case "^D":
@@ -85,7 +89,10 @@ public class Console {
         }
     }
 
-
+    /**
+     * Method reads commands from console.
+     * @return String[] with a list of commands, split by spaces.
+     */
     private String[] readCommands(){
         Scanner consoleScanner = new Scanner(System.in);
         String command;
