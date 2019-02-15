@@ -4,9 +4,8 @@ import java.util.LinkedHashSet;
 public class Main {
     public static void main(String[] args) {
 
-        CustomCommands task = new CustomCommands();
-        task.info();
-        task.show();
+        File.save(File.convertToLinkedHashSet());
+
 
 
 //        Human Alice = new Human("Alice",14);
