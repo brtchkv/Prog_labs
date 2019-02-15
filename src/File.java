@@ -12,7 +12,7 @@ public class File {
      * @throws IOException When file is inaccessible or not found
      */
 
-    private static String getFileName() {
+    public static String getFileName() {
         String collectionPath = System.getenv("HUMAN_PATH");
         if (collectionPath == null) {
             System.out.println("Переменная окружения HUMAN_PATH не установлена.");
@@ -72,4 +72,6 @@ public class File {
         }
         return humans;
     }
+
+
 }

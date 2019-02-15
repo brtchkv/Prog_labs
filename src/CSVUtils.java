@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
@@ -10,18 +9,6 @@ public class CSVUtils {
 
     private static final char DEFAULT_SEPARATOR = ',';
     private static final char DEFAULT_QUOTE = '"';
-
-    public static void main(String[] args) throws Exception {
-
-        BufferedReader br = new BufferedReader(new FileReader("/Users/ivan/OneDrive - ITMO UNIVERSITY/Прога/5/Lab/src/human.csv"));
-        String line;
-
-        while ((line = br.readLine()) != null) {
-            List<String> result = parseLine(line);
-            System.out.println("Country [id= " + result.get(0) + ", code= " + result.get(1) + " , name= " + result.get(2) + "]");
-        }
-
-    }
 
     public static List<String> parseLine(String cvsLine) {
         return parseLine(cvsLine, DEFAULT_SEPARATOR, DEFAULT_QUOTE);
