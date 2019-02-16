@@ -72,15 +72,10 @@ public class Console {
                 case "save":
                     File.save(humans);
                     break;
-                case "^C":
+                case "exit":
                     needExit = true;
+                    System.out.println();
                     File.save(humans);
-                    System.out.println("*************** Program Terminated ***************");
-                    break;
-                case "^D":
-                    needExit = true;
-                    File.save(humans);
-                    System.out.println("*************** Successfully exited ***************");
                     break;
 
                 default:
@@ -95,6 +90,20 @@ public class Console {
      */
     private String[] readCommands(){
         Scanner consoleScanner = new Scanner(System.in);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                if(consoleScanner.hasNext()){
+                System.out.println();
+                File.save(humans);
+                }
+                System.out.println("*************** Program Terminated ***************");
+            } catch (Exception e) {
+                System.err.println("************* Fatal Quit: Lost Data **************");
+            }
+        }));
+
+
         String command;
         try {
             System.out.println("Feed me with your commands");

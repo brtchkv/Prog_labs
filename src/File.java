@@ -6,16 +6,15 @@ public class File {
     /**
      * Searches for PATH and converts file to LinkedHashSet
      * @return String with PATH to the file
-     * @throws IOException When file is inaccessible or not found
      */
 
     public static String getFileName() {
         String collectionPath = System.getenv("HUMAN_PATH");
         if (collectionPath == null) {
-            System.out.println("Переменная окружения HUMAN_PATH не установлена.");
+            System.out.println("The environment variable HUMAN_PATH is not set!");
             return null;
         }else if (collectionPath.isEmpty()){
-            System.out.println("Переменная окружения HUMAN_PATH не должна быть пустой.");
+            System.out.println("The environment variable HUMAN_PATH can not be void!");
             return null;
         }else {
             return collectionPath;
@@ -62,13 +61,14 @@ public class File {
                 humans.add(temp);
             }
 
-        } catch (FileNotFoundException e) {
-            System.out.println("Файл не найден.");
-            e.printStackTrace();
+        } catch (NullPointerException | FileNotFoundException e) {
+            System.out.println("File is not found!");
+
         } catch (IOException e){
-            System.out.println("Ошибка чтения/записи.");
-            e.printStackTrace();
+            System.out.println("Error: either reading or writing!");
+
         } catch (Exception e){
+            System.out.println("Some undefined error, while importing a file!");
             e.printStackTrace();
         }
         return humans;
@@ -76,8 +76,7 @@ public class File {
 
     /**
      * Saves a collection to a file in a CSV format
-     * @param humans: (LinkedHashSet<Human></Human>) - a collection to save of Human objects
-     * @throws IOException When file is inaccessible or not found
+     * @param humans: (LinkedHashSet) - a collection to save of Human objects
      */
     public static void save(LinkedHashSet<Human> humans){
 
@@ -112,8 +111,7 @@ public class File {
             System.out.println("<<<<<<<<<<<<<<<<< Successfully saved >>>>>>>>>>>>>>>>>");
 
         }catch (Exception e){
-            System.out.println("Something bad has happened");
-            e.printStackTrace();
+            System.out.println("Something bad has happened; Can't save!");
         }
     }
 
