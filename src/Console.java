@@ -26,7 +26,8 @@ public class Console {
             String[] fullCommand = readCommands();
             Human forAction = null;
             if (fullCommand[0].equals("add") || fullCommand[0].equals("remove")
-                    || fullCommand[0].equals("remove_lower") || fullCommand[0].equals("add_if_min")) {
+                    || fullCommand[0].equals("remove_lower") || fullCommand[0].equals("add_if_min")
+                    || fullCommand[0].equals("remove_greater")) {
                 if(fullCommand.length == 1) {
                     System.out.println("Error, " + fullCommand[0] + " must have an argument.");
                     continue;
@@ -74,7 +75,6 @@ public class Console {
                     break;
                 case "exit":
                     needExit = true;
-                    System.out.println();
                     File.save(humans);
                     break;
 
@@ -97,12 +97,10 @@ public class Console {
                 System.out.println();
                 File.save(humans);
                 }
-                System.out.println("*************** Program Terminated ***************");
             } catch (Exception e) {
                 System.err.println("************* Fatal Quit: Lost Data **************");
             }
         }));
-
 
         String command;
         try {

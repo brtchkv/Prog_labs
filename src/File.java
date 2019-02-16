@@ -108,7 +108,7 @@ public class File {
                 printWriter.println(s);
             }
 
-            System.out.println("<<<<<<<<<<<<<<<<< Successfully saved >>>>>>>>>>>>>>>>>");
+            System.out.println("<<<<<<<<<<<<<<< The source file has been updated >>>>>>>>>>>>>>>");
 
         }catch (Exception e){
             System.out.println("Something bad has happened; Can't save!");

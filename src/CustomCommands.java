@@ -32,8 +32,11 @@ public class CustomCommands {
      * @param humanToRemove : (Human) - Object of class Human
      */
     public void remove(Human humanToRemove) {
-        if (collection.remove(humanToRemove)) System.out.println("The element has been deleted.");
-        else System.out.println("This person doesn't exist in the collection!");
+        if (collection.remove(humanToRemove)) {
+            System.out.println("The element has been deleted.");
+            File.save(collection);
+        }else{ System.out.println("This person doesn't exist in the collection!");}
+        File.save(collection);
     }
 
     /**
@@ -46,12 +49,17 @@ public class CustomCommands {
         int count = 0;
         while (iterator.hasNext()) {
             Human anotherHuman = iterator.next();
-            if (anotherHuman != endObject) {
+            if (anotherHuman.getName().length() < endObject.getName().length()) {
                 iterator.remove();
                 count++;
-            }else {break;}
+            }
         }
-        System.out.println("Deleted " + count + " elements.");
+        if(count != 0) {
+            System.out.println("Deleted " + count + " elements.");
+            File.save(collection);
+        }else{
+            System.out.println("Deleted 0 elements.");
+        }
     }
 
     /**
@@ -59,18 +67,24 @@ public class CustomCommands {
      * @param startObject (Human) - Object of class Human
      */
     public void remove_greater(Human startObject) {
-        Boolean go = Boolean.FALSE;
+
         Iterator<Human> iterator = collection.iterator();
 
         int count = 0;
         while (iterator.hasNext()) {
             Human anotherHuman = iterator.next();
-            if (anotherHuman == startObject) {
-                go = Boolean.TRUE;
-                continue;
-            } else if (go){iterator.remove(); count++;}
+            if (anotherHuman.getName().length() > startObject.getName().length()) {
+                iterator.remove();
+                count++;
+            }
         }
-        System.out.println("Deleted " + count + " elements.");
+        if(count != 0) {
+            System.out.println("Deleted " + count + " elements.");
+            File.save(collection);
+        }else{
+            System.out.println("Deleted 0 elements.");
+        }
+
     }
 
     /**
@@ -78,8 +92,9 @@ public class CustomCommands {
      * @param human : (Human) - Object of class Human
      */
     public void add(Human human) {
-        if (collection.add(human)) System.out.println("An element has been added.");
+        if (collection.add(human)) File.save(collection);
         else System.out.println("Collection stores already this object.");
+
     }
 
     /**
@@ -102,7 +117,7 @@ public class CustomCommands {
 
         if (human.getName().length() < i) {
             collection.add(human);
-            System.out.println("The smallest-named element has been added.");
+            File.save(collection);
         }else{
             System.out.println("An element's name isn't the smallest!");
         }
