@@ -93,7 +93,6 @@ public class CSVUtils {
                     //ignore LF characters
                     continue;
                 } else if (ch == '\n') {
-                    //the end, break!
                     break;
                 } else {
                     curVal.append(ch);

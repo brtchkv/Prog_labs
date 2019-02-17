@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public abstract class God implements  Goddable, Loveable{
     private String name;
     private int age = -1;
@@ -62,7 +64,7 @@ public abstract class God implements  Goddable, Loveable{
 
     @Override
     public int hashCode() {
-        return (getAge() + getName().hashCode() + type.hashCode());
+        return Objects.hash(name, age, type);
     }
 
     @Override
