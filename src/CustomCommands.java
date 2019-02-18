@@ -14,7 +14,7 @@ public class CustomCommands {
     public void info(){
 
         System.out.println("Collection has LinkedHashSet type and contains Human objects.");
-        System.out.println("Generated from " + File.getFileName() + " file.");
+        System.out.println("Generated from " + FileHandler.getFileName() + " file.");
         System.out.println("Currently it contains " + collection.size() + " elements.");
 
     }
@@ -39,7 +39,7 @@ public class CustomCommands {
         if (collection.remove(humanToRemove)) {
             System.out.println("The element has been deleted.");
         }else{ System.out.println("This person doesn't exist in the collection!");}
-        File.save(collection);
+        FileHandler.save(collection);
     }
 
     /**
@@ -124,7 +124,62 @@ public class CustomCommands {
     }
 
     public void save(){
-        File.save(collection);
+        if (FileHandler.checkFileWrite()) {
+            FileHandler.save(collection);
+        }
+    }
+    /**
+     * Method prints information on commands.
+     * @param command : (String) - a string with the command.
+     */
+
+    public void infoCommand(String command){
+
+        String jsonExample = "\r\n{\r\n   \"name\": \"Elizabeth\",\r\n   \"age\": \"16\",\r\n   \"skill\": {\r\n      \"name\": \"\u041F\u0440\u044B\u0433\u0430\u0442\u044C\"\r\n   },\r\n   \"disability\": \"chin\"\r\n}\r";
+        switch (command){
+            case "add":
+                System.out.println("Method adds item to a collection if its name value is less than that of the smallest-named element of this collection.\n" +
+                        "@param human : (Human) - Object of class Human written in JSON format.");
+                System.out.println("Every human MUST have the following attributes:\n"+"\t1) NAME,\n" +"\t2) AGE");
+                System.out.println("Skills and Disabilities are optional.");
+
+                System.out.println("For example:" + jsonExample);
+                break;
+            case "remove":
+                System.out.println("If collection contains an item (argument humanToRemove), delete it. \n@param humanToRemove : (Human) - Object of class Human.");
+                System.out.println("Every human MUST have the following attributes:\n"+"\t1) NAME,\n" +"\t2) AGE");
+                System.out.println("Skills and Disabilities are optional.");
+                System.out.println("For example:" + jsonExample);
+                break;
+
+            case "add_if_min":
+                System.out.println("Method adds item to a collection if its name value is less than that of the smallest-named element of this collection." +
+                        "@param human : (Human) - Object of class Human written in JSON format.");
+                System.out.println("Every human MUST have the following attributes:\n"+"\t1) NAME,\n" +"\t2) AGE");
+                System.out.println("Skills and Disabilities are optional.");
+                System.out.println("For example:" + jsonExample);
+                break;
+            case "remove_greater":
+                System.out.println("Method removes collection's items which greater than argument startObject.");
+                System.out.println("@param startObject (Human) - Object of class Human written in JSON format.");
+                System.out.println("Every human MUST have the following attributes:\n"+"\t1) NAME,\n" +"\t2) AGE");
+                System.out.println("Skills and Disabilities are optional.");
+                System.out.println("For example:" + jsonExample);
+                break;
+            case "remove_lower":
+                System.out.println("Method removes collection's items which lower than argument endObject.");
+                System.out.println("@param endObject (Human) - Object of class Human written in JSON format.");
+                System.out.println("Every human MUST have the following attributes:\n"+"\t1) NAME,\n" +"\t2) AGE");
+                System.out.println("Skills and Disabilities are optional.");
+                System.out.println("For example:" + jsonExample);
+                break;
+
+
+            default:
+                System.out.println("Type \"command arg\" for additional info. i.e \"add arg\"");
+        }
+
+
     }
 
 }

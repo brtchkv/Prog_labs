@@ -10,8 +10,14 @@ public class Console {
     private boolean needExit;
 
     public Console(){
-        this.customCommands = new CustomCommands(File.convertToLinkedHashSet());
-        needExit = false;
+        if(FileHandler.checkFileRead()) {
+            this.customCommands = new CustomCommands(FileHandler.convertToLinkedHashSet());
+            needExit = false;
+            this.execute();
+        }else{
+            System.out.println("hehehe");
+            needExit = true;
+        }
     }
 
     /**
@@ -36,22 +42,30 @@ public class Console {
                     || fullCommand[0].equals("remove_greater")) {
                 if(fullCommand.length == 1) {
                     System.out.println("Error, " + fullCommand[0] + " must have an argument.");
+                    System.out.println("Type \"command arg\" to see more.");
                     continue;
                 }
-                if((fullCommand.length == 2)){
+
+                if((fullCommand.length == 2) && !fullCommand[1].equals("arg")){
                     try{
                         Gson gson = new Gson();
                         forAction = gson.fromJson(fullCommand[1], Temp.class).createHuman();
 
                         if ((forAction == null) || (forAction.getName() == null) || (forAction.getAge() == 0)){
                             System.out.println("Error, the item is set incorrectly - you may not have specified all the values!");
+                            System.out.println("Type \"command arg\" to see more.");
                             continue;
                         }
                     }catch(JsonSyntaxException ex) {
-                        System.out.println("Error, the item is set incorrectly!");
+                        System.out.println("Error, the item is set incorrectly!\nType \"command arg\" to see more.");
                         continue;
                     }
+                }else if (fullCommand[1].equals("arg")){
+                    customCommands.infoCommand(fullCommand[0]);
+                    continue;
                 }
+
+
             }
             switch (fullCommand[0]){
                 case "info":

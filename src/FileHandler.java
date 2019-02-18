@@ -1,9 +1,12 @@
 import java.io.*;
 import java.util.*;
 
+
+
+
 //export HUMAN_PATH="/Users/ivan/OneDrive - ITMO UNIVERSITY/Прога/5/Lab/src/human.csv"
 
-public class File {
+public class FileHandler {
     /**
      * Searches for PATH and converts file to LinkedHashSet
      * @return String with PATH to the file
@@ -11,13 +14,24 @@ public class File {
 
     public static String getFileName() {
         String collectionPath = System.getenv("HUMAN_PATH");
+
+        String extension = "";
+
+        int i = collectionPath.lastIndexOf('.');
+        if (i > 0) {
+            extension = collectionPath.substring(i+1);
+        }
+
         if (collectionPath == null) {
             System.out.println("The environment variable HUMAN_PATH is not set!");
             return null;
         }else if (collectionPath.isEmpty()){
             System.out.println("The environment variable HUMAN_PATH can not be void!");
             return null;
-        }else {
+        }else if (!extension.equals("csv")) {
+            System.out.println("Be careful: the extension of the file is not CSV!");
+            return collectionPath;
+        }else{
             return collectionPath;
         }
 
@@ -29,8 +43,9 @@ public class File {
      */
 
     public static LinkedHashSet convertToLinkedHashSet(){
+
         LinkedHashSet<Human> humans = new LinkedHashSet<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(File.getFileName()))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(FileHandler.getFileName()))) {
             String line;
 
             while ((line = br.readLine()) != null) {
@@ -62,14 +77,12 @@ public class File {
                 humans.add(temp);
             }
 
-        } catch (NullPointerException | FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             System.out.println("File is not found!");
-
         } catch (IOException e){
-            System.out.println("Error: either reading or writing!");
-
+            System.out.println("Can't import file");
         } catch (Exception e){
-            System.out.println("Some undefined error, while importing a file!");
+            System.out.println("Some undefined error, in an attempt to import file!");
             e.printStackTrace();
         }
         return humans;
@@ -81,7 +94,7 @@ public class File {
      */
     public static void save(LinkedHashSet<Human> humans){
 
-        try(    FileOutputStream n = new FileOutputStream(File.getFileName(), false);
+        try(    FileOutputStream n = new FileOutputStream(FileHandler.getFileName(), false);
                 PrintWriter printWriter = new PrintWriter (n)){
 
             Iterator<Human> iterator = humans.iterator();
@@ -117,5 +130,45 @@ public class File {
             System.out.println("Something bad has happened; Can't save!");
         }
     }
+
+    public static boolean checkFileRead(){
+        try {
+            File file = new File(FileHandler.getFileName());
+            boolean exists = file.exists();
+            if (exists) {
+                if (!file.canRead()) {
+                    System.out.println("Permission denied: Can't read the file!");
+                    return false;
+                }else {
+                    return true;
+                }
+            } else {
+                System.out.println("File does not exist!");
+                return false;
+            }
+        }catch (Exception e){
+            System.out.println("hehe");
+            return false;}
+    }
+
+    public static boolean checkFileWrite(){
+        try {
+            File file = new File(FileHandler.getFileName());
+            boolean exists = file.exists();
+            if (exists) {
+                if (!file.canWrite()) {
+                    System.out.println("Permission denied: Can't write to the file!");
+                    System.out.println("hehe");
+                    return false;
+                }else {
+                    return true;
+                }
+            } else {
+                System.out.println("File does not exist!");
+                return false;
+            }
+        }catch (Exception e){return false;}
+    }
+
 
 }

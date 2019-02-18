@@ -49,7 +49,7 @@ public class Human extends God implements Humanable {
 
     public boolean addSkill(Skill skill) {
         if (skills.add(skill)) {
-            System.out.println("Объекту - " + this.getName() + " - успешно присвоена способность " + skill.getName());
+            //System.out.println("Объекту - " + this.getName() + " - успешно присвоена способность " + skill.getName());
             return true;
         } else {
             System.out.println("При добавлении способности произошла ошибка...");
