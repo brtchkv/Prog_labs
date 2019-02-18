@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Skill {
     private String name;
     private String info;
@@ -27,4 +29,18 @@ public class Skill {
         return (this.getName()+ ":"+ getInfo()+ ":" + doSkill());
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Skill skill = (Skill) o;
+        return Objects.equals(name, skill.name) &&
+                Objects.equals(info, skill.info) &&
+                Objects.equals(action, skill.action);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, info, action);
+    }
 }

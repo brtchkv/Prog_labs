@@ -1,6 +1,7 @@
+import java.util.Objects;
+
 public class Disability {
     private String disability;
-    private int value;
 
     public Disability(String disability){
         this.disability = disability;
@@ -8,28 +9,21 @@ public class Disability {
 
     public String getName(){ return this.disability; }
 
-    @Override
-    public boolean equals(Object object)
-    {
-        boolean sameSame = false;
-
-        if (object != null && object instanceof Disability)
-        {
-            sameSame = this.value == ((Disability) object).value;
-        }
-
-        return sameSame;
-    }
-
     public String toString(){
         return this.getName();
     }
 
     @Override
-    public int hashCode() {
-        return (getName().hashCode());
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Disability that = (Disability) o;
+        return Objects.equals(disability, that.disability);
     }
 
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(disability);
+    }
 }

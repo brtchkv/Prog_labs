@@ -63,5 +63,18 @@ public class Human extends God {
         return this.disabilities;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Human human = (Human) o;
+        return Objects.equals(type, human.type) &&
+                skills.equals(human.skills) &&
+                disabilities.equals(human.disabilities);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), type, skills, disabilities);
+    }
 }
