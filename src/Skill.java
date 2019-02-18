@@ -8,10 +8,6 @@ public class Skill {
         this.info = info;
     }
 
-    public Skill(){
-
-    }
-
     public String getName(){ return name; }
 
     public String doSkill(){

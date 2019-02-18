@@ -1,22 +1,22 @@
 import java.util.Objects;
 
-public abstract class God implements  Goddable, Loveable, Comparable<Human>{
+public abstract class God implements Comparable<Human>{
     private String name;
     private int age;
-    private CreatureType type;
+    private String type;
 
-    public God (String name, int age, CreatureType type){
+    public God (String name, int age, String type){
         this.name = name;
         this.age = age;
         this.type = type;
     }
 
-    public God (String name, CreatureType type){
+    public God (String name, String type){
         this.name = name;
         this.type = type;
     }
 
-    public God(CreatureType type){
+    public God(String type){
         this.type = type;
     }
 
@@ -29,20 +29,7 @@ public abstract class God implements  Goddable, Loveable, Comparable<Human>{
     }
 
     public String getType(){
-        return this.type.toString();
-    }
-
-    public void touch (int age) throws NegativeAgeException {
-        try{
-            if (age < 0){
-                throw new NegativeAgeException("Возраст не может быть отрицательным! ", age);
-            }else {
-                this.age = age;
-            }
-
-        }catch (NegativeAgeException e) {
-            System.out.println("Возникло исключение! " + e);
-        }
+        return this.type;
     }
 
     @Override
@@ -50,14 +37,21 @@ public abstract class God implements  Goddable, Loveable, Comparable<Human>{
         return (getName() + " -- " + getType() + " -- " + getAge());
     }
 
+//    @Override
+
     @Override
-    public int hashCode() {
-        return Objects.hash(name, age, type);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        God god = (God) o;
+        return age == god.age &&
+                Objects.equals(name, god.name) &&
+                Objects.equals(type, god.type);
     }
 
     @Override
-    public void love(){
-        System.out.println("Love is the answer!");
+    public int hashCode() {
+        return Objects.hash(name, age, type);
     }
 
     @Override

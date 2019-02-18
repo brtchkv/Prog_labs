@@ -39,7 +39,7 @@ public class CustomCommands {
         if (collection.remove(humanToRemove)) {
             System.out.println("The element has been deleted.");
         }else{ System.out.println("This person doesn't exist in the collection!");}
-        FileHandler.save(collection);
+
     }
 
     /**
@@ -130,7 +130,7 @@ public class CustomCommands {
     }
     /**
      * Method prints information on commands.
-     * @param command : (String) - a string with the command.
+     * @param command : (String) - a string with the command.   
      */
 
     public void infoCommand(String command){
