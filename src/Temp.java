@@ -5,7 +5,9 @@ public class Temp{
     String disability;
 
     public Human createHuman(){
-        Human human = new Human(name, age);
+
+        Human human = age != 0 ? new Human(name, age): new Human(name);
+
         if (skill != null) {
             human.addSkill(skill);
         }

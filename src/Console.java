@@ -1,7 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -9,11 +8,9 @@ public class Console {
 
     private CustomCommands customCommands;
     private boolean needExit;
-    private LinkedHashSet<Human> humans;
 
     public Console(){
-        this.humans = File.convertToLinkedHashSet();
-        this.customCommands = new CustomCommands(humans);
+        this.customCommands = new CustomCommands(File.convertToLinkedHashSet());
         needExit = false;
     }
 
@@ -22,6 +19,15 @@ public class Console {
      */
 
     public void execute(){
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                System.out.println();
+                customCommands.save();
+            } catch (Exception e) {
+                System.err.println("************* Fatal Quit: Lost Data **************");
+            }
+
+        }));
         while(!needExit){
             String[] fullCommand = readCommands();
             Human forAction = null;
@@ -37,13 +43,12 @@ public class Console {
                         Gson gson = new Gson();
                         forAction = gson.fromJson(fullCommand[1], Temp.class).createHuman();
 
-                        if ((forAction == null) || (forAction.getName() == null) || (Integer.toString(forAction.getAge()) == null)){
+                        if ((forAction == null) || (forAction.getName() == null) || (forAction.getAge() == 0)){
                             System.out.println("Error, the item is set incorrectly - you may not have specified all the values!");
                             continue;
                         }
                     }catch(JsonSyntaxException ex) {
                         System.out.println("Error, the item is set incorrectly!");
-                        System.out.println(ex.getCause());
                         continue;
                     }
                 }
@@ -71,12 +76,12 @@ public class Console {
                     customCommands.add_if_min(forAction);
                     break;
                 case "save":
-                    File.save(humans);
+                    customCommands.save();
                     break;
                 case "exit":
                     needExit = true;
-                    File.save(humans);
                     break;
+
 
                 default:
                     System.out.println("Error: undefined command!");
@@ -91,21 +96,13 @@ public class Console {
     private String[] readCommands(){
         Scanner consoleScanner = new Scanner(System.in);
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try {
-                if(consoleScanner.hasNext()){
-                System.out.println();
-                File.save(humans);
-                }
-            } catch (Exception e) {
-                System.err.println("************* Fatal Quit: Lost Data **************");
-            }
-        }));
-
         String command;
         try {
+            System.out.println();
             System.out.println("Feed me with your commands");
             command = consoleScanner.nextLine();
+            System.out.println();
+
         }catch(NoSuchElementException ex){
             command = "exit";
         }

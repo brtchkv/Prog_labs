@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.*;
 
+//export HUMAN_PATH="/Users/ivan/OneDrive - ITMO UNIVERSITY/Прога/5/Lab/src/human.csv"
 
 public class File {
     /**
@@ -34,9 +35,9 @@ public class File {
 
             while ((line = br.readLine()) != null) {
                 List<String> upper = CSVUtils.parseLine(line);
-
-                Human temp = new Human(upper.get(0), Integer.valueOf(upper.get(1)));
-
+                if (upper.get(0) == " ") break;
+                Human temp = upper.size() > 1 ? new Human(upper.get(0), Integer.valueOf(upper.get(1))) : new Human(upper.get(0));
+                temp.welcome();
                 try{
                     String[] skills = upper.get(2).split("-");
                     for (String i: skills){
@@ -87,7 +88,9 @@ public class File {
             while (iterator.hasNext()) {
                 StringBuffer s = new StringBuffer();
                 Human temp = iterator.next();
+
                 s.append("\"" + temp.getName() + "\"," + "\""+ temp.getAge() + "\"");
+
                 Iterator<Skill> iterator_s = temp.getSkills().iterator();
                 if (iterator_s.hasNext()){s.append(",\"");}
                 while (iterator_s.hasNext()) {

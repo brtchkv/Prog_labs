@@ -8,16 +8,25 @@ public class Human extends God implements Humanable {
 
     public Human(String name, int age) {
         super(name, age, CreatureType.Human);
-        System.out.println("---------------------------------");
-        System.out.println("Человек - " + name + " - создан!");
-        System.out.println("---------------------------------");
     }
 
-    public Human() {
+    public Human(String name) {
+        super(name, CreatureType.Human);
+    }
+
+    public Human(){
         super(CreatureType.Human);
-        System.out.println("---------------------------------");
-        System.out.println("Безликий человек успешно создано");
-        System.out.println("---------------------------------");
+    }
+
+    public void welcome(){
+        if (this.getName() != null) {
+            System.out.println("---------------------------------");
+            System.out.println("Человек - " + this.getName() + " - создан!");
+            System.out.println("---------------------------------");
+        }else{
+            System.out.println("---------------------------------");
+            System.out.println("Безликий человек успешно создано");
+            System.out.println("---------------------------------");}
     }
 
     @Override

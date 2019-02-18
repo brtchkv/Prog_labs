@@ -1,8 +1,8 @@
 import java.util.Objects;
 
-public abstract class God implements  Goddable, Loveable{
+public abstract class God implements  Goddable, Loveable, Comparable<Human>{
     private String name;
-    private int age = -1;
+    private int age;
     private CreatureType type;
 
     public God (String name, int age, CreatureType type){
@@ -13,7 +13,6 @@ public abstract class God implements  Goddable, Loveable{
 
     public God (String name, CreatureType type){
         this.name = name;
-        this.age = 0;
         this.type = type;
     }
 
@@ -22,18 +21,7 @@ public abstract class God implements  Goddable, Loveable{
     }
 
     public int getAge() {
-        class Age{
-        int age;
-        Age(int age){this.age = age;}
-
-        int getAge(){
-            return this.age;
-        }
-    }
-
-        Age age = new Age(this.age);
-
-        return age.getAge();
+        return this.age;
     }
 
     public String getName(){
@@ -70,5 +58,10 @@ public abstract class God implements  Goddable, Loveable{
     @Override
     public void love(){
         System.out.println("Love is the answer!");
+    }
+
+    @Override
+    public int compareTo(Human human) {
+        return this.getName().compareTo(human.getName());
     }
 }
