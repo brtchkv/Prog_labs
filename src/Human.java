@@ -31,9 +31,6 @@ public class Human extends God {
     }
 
 
-    public void getSkillInfo(int i) {
-         System.out.println(skills.get(i).getInfo());
-    }
 
     public ArrayList<Skill> getSkills(){
         return this.skills;

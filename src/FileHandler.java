@@ -4,6 +4,9 @@ import java.util.*;
 //export HUMAN_PATH="/Users/ivan/OneDrive - ITMO UNIVERSITY/Прога/5/Lab/src/human.csv"
 
 public class FileHandler {
+
+    private static Boolean savePermission;
+
     /**
      * Searches for PATH and converts file to LinkedHashSet
      * @return String with PATH to the file
@@ -48,21 +51,33 @@ public class FileHandler {
             while ((line = br.readLine()) != null) {
                 List<String> upper = CSVUtils.parseLine(line);
                 if (upper.get(0) == " ") break;
+                try
+                {
+                    Integer.parseInt(upper.get(1));
+                }
+                catch(NumberFormatException nfe)
+                {
+                    System.out.println("Error whilst importing a human!\nPerhaps, \""+ upper.get(0) +"\" Human has an unrecognizable age.");
+                    throw new Exception();
+                }
                 Human temp = upper.size() > 1 ? new Human(upper.get(0), Integer.valueOf(upper.get(1))) : new Human(upper.get(0));
                 temp.welcome();
                 try{
-                    String[] skills = upper.get(2).split("-");
-                    for (String i: skills){
-                        List<String> lower_skill = CSVUtils.parseLine(i.trim(), ':');
-                        temp.addSkill(new Skill(lower_skill.get(0),lower_skill.get(1)){
-                            @Override
-                            public String doSkill(){
-                                return (lower_skill.get(2));
+                    if(upper.size() > 2) {
+                        String[] skills = upper.get(2).split("-");
+                        for (String i : skills) {
+                            List<String> lower_skill = CSVUtils.parseLine(i.trim(), ':');
+                            if(lower_skill.size() > 1) {
+                                temp.addSkill(new Skill(lower_skill.get(0), lower_skill.get(1)));
                             }
-                        });
+                            else {
+                                System.out.println("\nNot enough of attributes for adding \""+ upper.get(0) + "\"'s skill!");
+                                throw new Exception();
+                            }
 
+                        }
                     }
-                }catch (Exception e){}
+                }catch (Exception e){ throw new Exception(); }
 
                 try{
                     List<String> lower_dis = CSVUtils.parseLine(upper.get(3).trim(), '-');
@@ -76,11 +91,13 @@ public class FileHandler {
 
         } catch (FileNotFoundException e) {
             System.out.println("File is not found!");
+            savePermission = false;
         } catch (IOException e){
             System.out.println("Can't import file");
+            savePermission = false;
         } catch (Exception e){
-            System.out.println("Some undefined error, in an attempt to import file!");
-            e.printStackTrace();
+            System.out.println("Some error, in an attempt to import the file!");
+            savePermission = false;
         }
         return humans;
     }
@@ -90,7 +107,6 @@ public class FileHandler {
      * @param humans: (LinkedHashSet) - a collection to save of Human objects
      */
     public static void save(LinkedHashSet<Human> humans){
-
         try(    FileOutputStream n = new FileOutputStream(FileHandler.getFileName(), false);
                 PrintWriter printWriter = new PrintWriter (n)){
 
@@ -167,5 +183,11 @@ public class FileHandler {
         }catch (Exception e){return false;}
     }
 
+    public static void setSavePermission(Boolean mode){
+        savePermission = mode;
+    }
+    public static Boolean getSavePermission(){
+        return savePermission;
+    }
 
 }

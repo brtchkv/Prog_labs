@@ -5,22 +5,26 @@ public class CustomCommands {
     private LinkedHashSet<Human> collection;
 
     public CustomCommands(LinkedHashSet<Human> collection){
-        this.collection = new LinkedHashSet<>(collection);
+        if (collection != null) {
+            this.collection = new LinkedHashSet<>(collection);
+        }else {
+            System.out.println("Due to the recent errors, an empty collection was created.");
+            this.collection = new LinkedHashSet<>();}
     }
 
     /**
-     * Method shows information about storing collection
+     * Method shows information about storing collection.
      */
     public void info(){
 
         System.out.println("Collection has LinkedHashSet type and contains Human objects.");
-        System.out.println("Generated from " + FileHandler.getFileName() + " file.");
+        System.out.println("Generated from \"" + FileHandler.getFileName() + "\" file.");
         System.out.println("Currently it contains " + collection.size() + " elements.");
 
     }
 
     /**
-     * Method outputs all elements of the collection in string representation
+     * Method outputs all elements of the collection in string representation.
      */
     public void show() {
 
@@ -122,10 +126,18 @@ public class CustomCommands {
             System.out.println("An element's name isn't the smallest! This human wasn't added to the collection!");
         }
     }
-
+    /**
+     * Method saves the collection to the source file based on the value of "savePermission" variable.
+     * Besides, checks whether the collection is null.
+     */
     public void save(){
+
         if (FileHandler.checkFileWrite()) {
+            if (collection != null){
             FileHandler.save(collection);
+            }else {
+                System.out.println("Collection is null; Can't be saved!");
+            }
         }
     }
     /**
@@ -176,7 +188,7 @@ public class CustomCommands {
 
 
             default:
-                System.out.println("Type \"command arg\" for additional info. i.e \"add arg\"");
+                System.out.println("Type \"command_name arg\" for additional info. i.e \"add arg\"");
         }
 
 
