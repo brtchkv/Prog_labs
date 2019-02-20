@@ -195,7 +195,6 @@ public class Console {
             System.out.println();
             System.out.println("Feed me with your command:");
             fullCommand[0] = myScan.nextLine();
-            System.out.println();
 
         }catch(NoSuchElementException ex){
             fullCommand[0] = "exit";
@@ -211,13 +210,13 @@ public class Console {
             myInput = myInput.replaceAll("\n", "");
             s.append(myInput);
 
-            if (myInput.equals("{") || myInput.substring(myInput.length() - 1).trim().equals("{")){count++;
-                System.out.println(count);}
-            if (myInput.equals("}")){count--;
-                System.out.println(count);}
-            if (myInput.equals("}") && count == 0){break;}
+            if (myInput.equals("{") || myInput.substring(myInput.length() - 1).trim().equals("{"))
+            {count++;}
+            if (myInput.equals("}") || myInput.contains("},")){count--;}
+            if (myInput.contains("}") && count == 0){break;}
             else if (count < 0){break;}
         }
+        System.out.println();
         fullCommand[1] = s.toString();
         return fullCommand;
     }

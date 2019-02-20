@@ -88,15 +88,19 @@ public class FileHandler {
 
                 humans.add(temp);
             }
+            savePermission = true;
 
         } catch (FileNotFoundException e) {
             System.out.println("File is not found!");
+            humans = null;
             savePermission = false;
         } catch (IOException e){
             System.out.println("Can't import file");
+            humans = null;
             savePermission = false;
         } catch (Exception e){
             System.out.println("Some error, in an attempt to import the file!");
+            humans = null;
             savePermission = false;
         }
         return humans;
