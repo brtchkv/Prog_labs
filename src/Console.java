@@ -161,7 +161,7 @@ public class Console {
             System.out.println("Enter The Number Of The Desired Input Format:");
             System.out.println("\t1) One-lined JSON");
             System.out.println("\t2) Multiple-lined JSON");
-            System.out.println("The default option is the former one - \"One-lined JSON.\"");
+            System.out.println("By default \"One-lined JSON.\" option is chosen.");
             temp = myScan.nextLine().trim();
             if (temp.length() == 1 || temp.equals("1") || temp.equals("2")){
                 type = temp;
