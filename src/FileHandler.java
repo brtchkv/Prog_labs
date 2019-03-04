@@ -164,7 +164,7 @@ public class FileHandler {
                 return false;
             }
         }catch (Exception e){
-            System.out.println("hehe");
+            System.out.println("The environment variable HUMAN_PATH is not set!");
             return false;}
     }
 
