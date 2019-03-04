@@ -13,7 +13,7 @@ public class FileHandler {
      */
 
     public static String getFileName() {
-        String collectionPath = System.getenv("HUMAN_PATH");
+        String collectionPath = System.getenv("HUMAN_PATH").trim();
 
         String extension = "";
 
@@ -21,6 +21,14 @@ public class FileHandler {
         if (i > 0) {
             extension = collectionPath.substring(i+1);
         }
+
+        try {
+            File file = new File(collectionPath);
+            if (file.isDirectory()) {
+                System.out.println("Variable leads to a directory: " + file.getName());
+                return null;
+            }
+        }catch (Exception e){}
 
         if (collectionPath == null) {
             System.out.println("The environment variable HUMAN_PATH is not set!");
@@ -151,6 +159,7 @@ public class FileHandler {
     public static boolean checkFileRead(){
         try {
             File file = new File(FileHandler.getFileName());
+
             boolean exists = file.exists();
             if (exists) {
                 if (!file.canRead()) {
@@ -164,7 +173,6 @@ public class FileHandler {
                 return false;
             }
         }catch (Exception e){
-            System.out.println("The environment variable HUMAN_PATH is not set!");
             return false;}
     }
 
