@@ -58,7 +58,7 @@ public class FileHandler {
 
             while ((line = br.readLine()) != null) {
                 List<String> upper = CSVUtils.parseLine(line);
-                if (upper.get(0) == " ") break;
+                if (upper.get(0).equals(" ")) break;
                 try
                 {
                     Integer.parseInt(upper.get(1));
@@ -85,6 +85,7 @@ public class FileHandler {
 
                         }
                     }
+
                 }catch (Exception e){ throw new Exception(); }
 
                 try{

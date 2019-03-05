@@ -40,86 +40,97 @@ public class Console {
                 System.err.println("********* Fatal Quit: Lost collection data! **********");
             }
         }));
-        while(!needExit){
-            String[] fullCommand;
-            String typeOfInput = whichTypeOfInput();
-            if(typeOfInput.equals("1")){
-                fullCommand = readOneLinedCommands();
-            }else if(typeOfInput.equals("exit")){
-                fullCommand = new String[1];
-                fullCommand[0] = "exit";
-            } else { fullCommand = readMultipleLinedCommand();}
 
-            Human forAction = null;
-            if (fullCommand[0].equals("add") || fullCommand[0].equals("remove")
-                    || fullCommand[0].equals("remove_lower") || fullCommand[0].equals("add_if_min")
-                    || fullCommand[0].equals("remove_greater")) {
-                if(fullCommand.length == 1) {
-                    System.out.println("Error, " + fullCommand[0] + " must have an argument.");
-                    System.out.println("Type \"command_name arg\" for additional info. i.e \"add arg\"");
-                    continue;
+            while (!needExit) {
+                String[] fullCommand;
+                String typeOfInput = whichTypeOfInput();
+                if (typeOfInput.equals("1")) {
+                    fullCommand = readOneLinedCommands();
+                } else if (typeOfInput.equals("exit")) {
+                    fullCommand = new String[1];
+                    fullCommand[0] = "exit";
+                } else {
+                    fullCommand = readMultipleLinedCommand();
                 }
+                try {
 
-                if((fullCommand.length == 2) && !fullCommand[1].equals("arg")){
-                    try{
-                        Gson gson = new Gson();
-                        forAction = gson.fromJson(fullCommand[1], Temp.class).createHuman();
-
-                        if ((forAction == null) || (forAction.getName() == null) || (forAction.getAge() == 0)){
-                            System.out.println("Error, the item is set incorrectly: \n- You may not have specified all the values!");
+                    Human forAction = null;
+                    if (fullCommand[0].equals("add") || fullCommand[0].equals("remove")
+                            || fullCommand[0].equals("remove_lower") || fullCommand[0].equals("add_if_min")
+                            || fullCommand[0].equals("remove_greater")) {
+                        if (fullCommand.length == 1) {
+                            System.out.println("Error, " + fullCommand[0] + " must have an argument.");
                             System.out.println("Type \"command_name arg\" for additional info. i.e \"add arg\"");
                             continue;
                         }
-                    }catch(JsonSyntaxException ex) {
-                        System.out.println("Error, the item is set incorrectly!\nType \"command_name arg\" for additional info. i.e \"add arg\"");
-                        continue;
+
+                        if ((fullCommand.length == 2) && !fullCommand[1].equals("arg")) {
+                            try {
+                                Gson gson = new Gson();
+                                forAction = gson.fromJson(fullCommand[1], Temp.class).createHuman();
+
+                                if ((forAction == null) || (forAction.getName() == null) || (forAction.getAge() == 0)) {
+                                    System.out.println("Error, the item is set incorrectly: \n- You may not have specified all the values!");
+                                    System.out.println("Type \"command_name arg\" for additional info. i.e \"add arg\"");
+                                    continue;
+                                }
+                            } catch (JsonSyntaxException ex) {
+                                System.out.println("Error, the item is set incorrectly!\nType \"command_name arg\" for additional info. i.e \"add arg\"");
+                                continue;
+                            }
+                        } else if (fullCommand[1].equals("arg")) {
+                            customCommands.infoCommand(fullCommand[0]);
+                            continue;
+                        }
+
+
                     }
-                }else if (fullCommand[1].equals("arg")){
-                    customCommands.infoCommand(fullCommand[0]);
+
+                    switch (fullCommand[0]) {
+                        case "info":
+                            customCommands.info();
+                            break;
+                        case "add":
+                            customCommands.add(forAction);
+                            break;
+                        case "remove":
+                            customCommands.remove(forAction);
+                            break;
+                        case "remove_lower":
+                            customCommands.remove_lower(forAction);
+                            break;
+                        case "show":
+                            customCommands.show();
+                            break;
+                        case "remove_greater":
+                            customCommands.remove_greater(forAction);
+                            break;
+                        case "add_if_min":
+                            customCommands.add_if_min(forAction);
+                            break;
+                        case "save":
+                            if (!FileHandler.getSavePermission()) {
+                                promptSave();
+                                if (!FileHandler.getSavePermission()) {
+                                    customCommands.save();
+                                }
+                            } else {
+                                System.err.println("********* Fatal Quit: Lost collection data! **********");
+                            }
+                            break;
+                        case "exit":
+                            needExit = true;
+                            break;
+
+
+                        default:
+                            System.out.println("Error: undefined command!");
+                    }
+                } catch (Exception e) {
+                    System.out.println("The command is set improperly!");
                     continue;
                 }
 
-
-            }
-
-            switch (fullCommand[0]){
-                case "info":
-                    customCommands.info();
-                    break;
-                case "add":
-                    customCommands.add(forAction);
-                    break;
-                case "remove":
-                    customCommands.remove(forAction);
-                    break;
-                case "remove_lower":
-                    customCommands.remove_lower(forAction);
-                    break;
-                case "show":
-                    customCommands.show();
-                    break;
-                case "remove_greater":
-                    customCommands.remove_greater(forAction);
-                    break;
-                case "add_if_min":
-                    customCommands.add_if_min(forAction);
-                    break;
-                case "save":
-                    if (!FileHandler.getSavePermission()) {
-                        promptSave();
-                        if (!FileHandler.getSavePermission()) {
-                            customCommands.save();
-                        }
-                    }else{System.err.println("********* Fatal Quit: Lost collection data! **********");}
-                    break;
-                case "exit":
-                    needExit = true;
-                    break;
-
-
-                default:
-                    System.out.println("Error: undefined command!");
-            }
         }
     }
 
@@ -188,6 +199,7 @@ public class Console {
         String myInput;
         String[] fullCommand = new String[2];
         StringBuffer s = new StringBuffer();
+        String[] temp;
         int count = 0;
 
 
@@ -200,24 +212,46 @@ public class Console {
             fullCommand[0] = "exit";
         }
 
-        if (fullCommand[0].equals("show") || fullCommand[0].equals("info") || fullCommand[0].equals("save")){
-            return fullCommand;
-        }
+        try {
 
-        while (myScan.hasNext()){
-            myInput = myScan.nextLine();
-            myInput = myInput.replaceAll("\t", "");
-            myInput = myInput.replaceAll("\n", "");
-            s.append(myInput);
+            if (fullCommand[0].equals("show") || fullCommand[0].equals("info") || fullCommand[0].equals("save")) {
+                return fullCommand;
+            }
 
-            if (myInput.equals("{") || myInput.substring(myInput.length() - 1).trim().equals("{"))
-            {count++;}
-            if (myInput.equals("}") || myInput.contains("},")){count--;}
-            if (myInput.contains("}") && count == 0){break;}
-            else if (count < 0){break;}
-        }
-        System.out.println();
-        fullCommand[1] = s.toString();
+            if(fullCommand[0].contains("{")){
+                count++;
+                temp = fullCommand[0].split(" ");
+                fullCommand[0] = temp[0];
+                s.append("{");
+
+                if (temp[1].contains("}")) {
+                    s.append("}");
+                    return fullCommand;
+                }
+            }
+            while (myScan.hasNext()) {
+
+                myInput = myScan.nextLine();
+                myInput = myInput.replaceAll("\t", "");
+                myInput = myInput.replaceAll("\n", "");
+                s.append(myInput);
+
+                if (myInput.equals("{") || myInput.substring(myInput.length() - 1).trim().equals("{")) {
+                    count++;
+                }
+                if (myInput.equals("}") || myInput.contains("},") || myInput.substring(myInput.length() - 1).trim().equals("}")) {
+                    count--;
+                }
+                if (myInput.contains("}") && count == 0) {
+                    break;
+                } else if (count < 0) {
+                    break;
+                }
+            }
+            System.out.println();
+            fullCommand[1] = s.toString();
+
+        }catch (Exception e){}
         return fullCommand;
     }
 

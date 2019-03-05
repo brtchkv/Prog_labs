@@ -12,7 +12,7 @@ public class Skill {
     public String getName(){ return name; }
 
     public String doSkill(){
-        if (action.equals("undefined")) return "undefined";
+        if (action == null || action.equals("undefined")) return "undefined";
         else return  action;
     }
 
