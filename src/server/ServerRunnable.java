@@ -1,18 +1,4 @@
-package Server;
-
-import sun.plugin2.message.Message;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.nio.BufferOverflowException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
+package server;
 
 //class ServerRunnable implements Runnable {
 //    private final List<InetSocketAddress> clients = new ArrayList<>(); private final DatagramSocket socket;

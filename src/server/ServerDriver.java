@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import java.net.SocketException;
 import java.util.logging.Logger;
@@ -22,7 +22,7 @@ public class ServerDriver {
             }
         }));
 
-        loggerS.info("Server Running");
+        loggerS.info("server Running");
         new Thread(new Server()).start();
     }
 }

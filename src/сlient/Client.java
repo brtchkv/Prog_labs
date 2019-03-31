@@ -1,10 +1,8 @@
-package Client;
+package ñlient;
 
-import Server.Server;
+import server.Server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -26,7 +24,7 @@ public class Client implements Runnable{
     private byte[] inData;
 
     /*
-     * Our Client.Client constructor which instantiates our clientSocket
+     * Our ñlient.ñlient constructor which instantiates our clientSocket
      * and get's our IPAddress
      */
     public Client() throws SocketException, UnknownHostException{
@@ -40,7 +38,7 @@ public class Client implements Runnable{
     }
 
     public void run() {
-        logger.info("Client Started, Listening for Input:");
+        logger.info("ñlient Started, Listening for Input:");
         Console console = new Console();
         /*
          * Start a while loop that will run until we kill the program, this will continuously
@@ -80,7 +78,7 @@ public class Client implements Runnable{
 
                 System.out.println();
                 String modifiedSentence = new String(in.getData()).trim();
-                logger.info("Client Received: " + modifiedSentence + "\n");
+                logger.info("ñlient Received: " + modifiedSentence + "\n");
 
             } catch (UnknownHostException e) {
                 logger.warning("Error in connection: unknown host!");

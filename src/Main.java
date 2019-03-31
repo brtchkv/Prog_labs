@@ -1,6 +1,6 @@
-import Client.Client;
-import Server.Server;
-import Server.FileHandler;
+import ñlient.Client;
+import server.Server;
+import server.FileHandler;
 
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -27,10 +27,10 @@ public class main {
             }
         }));
 
-        loggerS.info("Server Running");
+        loggerS.info("server Running");
         new Thread(new Server()).start();
 
-        loggerC.info("Starting Client...");
+        loggerC.info("Starting ñlient...");
         new Thread(new Client()).start();
 
     }

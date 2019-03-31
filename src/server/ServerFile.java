@@ -1,4 +1,4 @@
-package Server;
+package server;
 import java.io.*;
 
 import java.net.DatagramPacket;
@@ -8,9 +8,9 @@ import java.net.SocketException;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 
-import Client.FileEvent;
+import ñlient.FileEvent;
 
-import static Server.Server.setCollection;
+import static server.Server.setCollection;
 
 public class ServerFile implements Runnable{
     private DatagramSocket socket = null;

@@ -1,4 +1,4 @@
-package Client;
+package ñlient;
 
 import java.net.SocketException;
 import java.net.UnknownHostException;
@@ -9,7 +9,7 @@ public class ClientDriver {
 
     public static void main(String[] args) throws SocketException, UnknownHostException {
 
-        loggerC.info("Starting Client...");
+        loggerC.info("Starting ñlient...");
         new Thread(new Client()).start();
 
     }

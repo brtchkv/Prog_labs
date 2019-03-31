@@ -1,8 +1,8 @@
-package Server;
+package server;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import Client.ClientFile;
+import ñlient.ClientFile;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -62,7 +62,7 @@ public class Server implements Runnable {
                  * and transform it to uppercase.
                  */
                 String text = new String(receivedPacket.getData()).trim();
-                logger.info("Server Received: " + text
+                logger.info("server Received: " + text
                         + "\nFrom IP: " + IPAddress + "\nPort: " + port);
 
                 try {
@@ -129,7 +129,7 @@ public class Server implements Runnable {
                  * that we received from
                  */
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-                outputStream.write("Your command has been received by Server.".getBytes());
+                outputStream.write("Your command has been received by server.".getBytes());
 
                 byte c[] = outputStream.toByteArray();
                 DatagramPacket sendPacket1 = new DatagramPacket(c, c.length, IPAddress, port);

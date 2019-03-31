@@ -1,6 +1,6 @@
-package Client;
+package ñlient;
 
-import Server.FileHandler;
+import server.FileHandler;
 
 import java.io.*;
 import java.net.*;
