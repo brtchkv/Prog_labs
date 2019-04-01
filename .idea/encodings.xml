@@ -2,10 +2,9 @@
 <project version="4">
   <component name="Encoding" addBOMForNewFiles="with NO BOM">
     <file url="file://$PROJECT_DIR$/src/human.csv" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/human.json" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/human_constant.csv" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/src/Client/human.csv" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/src/Client/human.json" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/src/Client/human_constant.csv" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/shared/human.csv" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/shared/human_constant.csv" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/src/shared/human.csv" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/src/shared/human_constant.csv" charset="UTF-8" />
   </component>
 </project>

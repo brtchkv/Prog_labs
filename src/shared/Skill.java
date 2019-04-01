@@ -1,9 +1,8 @@
-package server;
+package shared;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Skill implements Serializable {
+public class Skill {
     private String name;
     private String action;
 

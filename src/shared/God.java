@@ -1,9 +1,8 @@
-package server;
+package shared;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class God implements Serializable {
+public abstract class God implements Comparable<Human>{
     private String name;
     private int age;
     private String type;
@@ -40,9 +39,14 @@ public abstract class God implements Serializable {
         return (getName() + " -- " + getType() + " -- " + getAge());
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hash(name, age, type);
     }
 
+    @Override
+    public int compareTo(Human human) {
+        return this.getName().compareTo(human.getName());
+    }
 }

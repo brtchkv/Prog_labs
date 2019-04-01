@@ -1,6 +1,7 @@
-package server;
+package shared;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 
@@ -28,7 +29,7 @@ public class CSVUtils {
 
         List<String> result = new ArrayList<>();
 
-        //if empty, return
+        //if empty, return!
         if (cvsLine == null && cvsLine.isEmpty()) {
             return result;
         }
@@ -91,7 +92,7 @@ public class CSVUtils {
                     startCollectChar = false;
 
                 } else if (ch == '\r') {
-
+                    //ignore LF characters
                     continue;
                 } else if (ch == '\n') {
                     break;

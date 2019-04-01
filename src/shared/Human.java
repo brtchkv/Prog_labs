@@ -1,10 +1,9 @@
-package server;
+package shared;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Human extends God implements Comparable<Human>, Serializable {
+public class Human extends God {
     private String type = "Human";
 
     private ArrayList<Skill> skills = new ArrayList<Skill>();
@@ -61,11 +60,6 @@ public class Human extends God implements Comparable<Human>, Serializable {
 
     public ArrayList<Disability> getDisabilities(){
         return this.disabilities;
-    }
-
-    @Override
-    public int compareTo(Human human) {
-        return this.getName().compareTo(human.getName());
     }
 
     @Override

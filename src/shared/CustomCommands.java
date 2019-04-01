@@ -1,41 +1,40 @@
-package server;
+package shared;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.Vector;
 
-public class CustomCommands implements Serializable {
+public class CustomCommands {
+    private Vector<Human> collection;
 
-    private Set<Human> collection;
-
-    public CustomCommands(Set<Human> collection){
+    public CustomCommands(Vector<Human> collection){
         if (collection != null) {
-            this.collection = collection;
+            this.collection = new Vector<>(collection);
         }else {
             System.out.println("Due to the recent errors, an empty collection was created.");
-            this.collection = Collections.synchronizedSet(new LinkedHashSet());}
+            this.collection = new Vector<>();}
     }
 
     /**
      * Method shows information about storing collection.
      */
     public void info(){
-        synchronized(collection) {
-            System.out.println("Collection has LinkedHashSet type and contains Human objects.");
-            System.out.println("Generated from \"" + FileHandler.getFileName() + "\" file.");
-            System.out.println("Currently it contains " + collection.stream().count() + " elements.");
-        }
+
+        System.out.println("Collection has LinkedHashSet type and contains Human objects.");
+        System.out.println("Generated from \"" + FileHandler.getFileName() + "\" file.");
+        System.out.println("Currently it contains " + collection.size() + " elements.");
+
     }
 
     /**
      * Method outputs all elements of the collection in string representation.
      */
     public void show() {
-        synchronized(collection) {
-            collection.forEach(System.out::println);
+
+        Iterator<?> iterator = collection.iterator();
+        while (iterator.hasNext()) {
+                System.out.println(iterator.next().toString());
         }
+
     }
 
     /**
@@ -43,16 +42,9 @@ public class CustomCommands implements Serializable {
      * @param humanToRemove : (Human) - Object of class Human
      */
     public void remove(Human humanToRemove) {
-
-        synchronized(collection) {
-            if (!collection.contains(humanToRemove)) {
-                System.out.println("The element has been deleted.");
-            } else {
-                System.out.println("This person doesn't exist in the collection!");
-            }
-
-            collection.removeIf(x -> !collection.contains(humanToRemove));
-        }
+        if (collection.remove(humanToRemove)) {
+            System.out.println("The element has been deleted.");
+        }else{ System.out.println("This person doesn't exist in the collection!");}
 
     }
 
@@ -61,10 +53,20 @@ public class CustomCommands implements Serializable {
      * @param endObject (Human) - Object of class Human
      */
     public void remove_lower(Human endObject) {
-        synchronized(collection) {
+        Iterator<Human> iterator = collection.iterator();
 
-            collection.removeIf(item -> item.compareTo(endObject) < 0);
-
+        int count = 0;
+        while (iterator.hasNext()) {
+            Human anotherHuman = iterator.next();
+            if (anotherHuman.compareTo(endObject) > 0) {
+                iterator.remove();
+                count++;
+            }
+        }
+        if(count != 0) {
+            System.out.println("Deleted " + count + " elements.");
+        }else{
+            System.out.println("Deleted 0 elements.");
         }
     }
 
@@ -73,9 +75,21 @@ public class CustomCommands implements Serializable {
      * @param startObject (Human) - Object of class Human
      */
     public void remove_greater(Human startObject) {
-        synchronized(collection) {
 
-            collection.removeIf(item -> item.compareTo(startObject) > 0);
+        Iterator<Human> iterator = collection.iterator();
+
+        int count = 0;
+        while (iterator.hasNext()) {
+            Human anotherHuman = iterator.next();
+            if (anotherHuman.compareTo(startObject) < 0) {
+                iterator.remove();
+                count++;
+            }
+        }
+        if(count != 0) {
+            System.out.println("Deleted " + count + " elements.");
+        }else{
+            System.out.println("Deleted 0 elements.");
         }
 
     }
@@ -85,11 +99,9 @@ public class CustomCommands implements Serializable {
      * @param human : (Human) - Object of class Human
      */
     public void add(Human human) {
+        if (collection.add(human)) human.welcome();
+        else System.out.println("Collection already stores this object.");
 
-        synchronized(collection) {
-            if (collection.add(human)) human.welcome();
-            else System.out.println("Collection already stores this object.");
-        }
     }
 
     /**
@@ -98,57 +110,44 @@ public class CustomCommands implements Serializable {
      */
     public void add_if_min(Human human) {
 
-        synchronized(collection) {
+        Iterator<Human> iterator = collection.iterator();
 
-            Human minByName = collection
-                    .stream()
-                    .min(Comparator.comparing(Human :: getName))
-                    .get();
+        int n = iterator.next().getName().length();
 
-            if (minByName.compareTo(human) < 0){
-                collection.remove(human);
-            }else {System.out.println("An element's name isn't the smallest! This human wasn't added to the collection!");}
+        int i = 0;
+        while (iterator.hasNext()) {
+            i = iterator.next().getName().length();
+            if (i < n) {
+                n = i;
+            }
+        }
 
+        if (human.getName().length() < i) {
+            collection.add(human); human.welcome();
+        }else{
+            System.out.println("An element's name isn't the smallest! This human wasn't added to the collection!");
         }
     }
     /**
      * Method saves the collection to the source file based on the value of "savePermission" variable.
      * Besides, checks whether the collection is null.
      */
-    public Set<Human> save(){
+    public void save(){
 
-
-        if (collection != null){
-            return collection;
-        }else {
-
-            System.out.println("Collection is null; Can't be saved!");
-            return null;
+        if (FileHandler.checkFileWrite()) {
+            if (collection != null){
+            FileHandler.save(collection);
+            }else {
+                System.out.println("Collection is null; Can't be saved!");
             }
+        }
     }
-//    /**
-//     * Method imports collection from the source file on server.
-//     */
-//    public void importFile(){
-//        try {
-//
-//            Thread t0 = new Thread(new ServerFile());
-//            t0.start();
-//
-//            Thread t1 = new Thread(new ClientFile());
-//            t1.start();
-//
-//
-//        }catch (Exception e){
-//            System.out.println("Error while transferring the source file!");
-//        }
-//    }
     /**
      * Method prints information on commands.
      * @param command : (String) - a string with the command.   
      */
 
-    public static void infoCommand(String command){
+    public void infoCommand(String command){
 
         String jsonExample = "\r\n{\r\n   \"name\": \"Elizabeth\",\r\n   \"age\": \"16\",\r\n   \"skill\": {\r\n      \"name\": \"\u041F\u0440\u044B\u0433\u0430\u0442\u044C\"\r\n   },\r\n   \"disability\": \"chin\"\r\n}\r";
         switch (command){

@@ -1,15 +1,15 @@
-package ñlient;
+package shared;
 
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class Console {
+public class ConsoleClient {
 
     private boolean needExit;
 
     Scanner myScan = new Scanner(System.in);
 
-    public Console(){
+    public ConsoleClient(){
         needExit = false;
 
     }

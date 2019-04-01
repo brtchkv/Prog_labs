@@ -1,9 +1,8 @@
-package server;
+package shared;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Disability implements Serializable {
+public class Disability {
     private String disability;
 
     public Disability(String disability){

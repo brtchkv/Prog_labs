@@ -1,147 +1,91 @@
 package server;
 
-import java.io.ByteArrayOutputStream;
+
+import shared.*;
+
 import java.io.IOException;
-import сlient.ClientFile;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.nio.channels.DatagramChannel;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import java.util.Vector;
 
-import java.util.Set;
-import java.util.logging.Logger;
+public class Server {
+    private static String Name = "humans";
+    private static String Host = "localhost";
+    private static final int port = 6666;
+    private static final Vector<Human> collection = new Vector<>();
+    private static DatagramChannel serverChannel;
+    private static ServerRunnable serverRunnable;
 
-
-public class Server implements Runnable {
-    final static Logger logger = Logger.getLogger(Server.class.toString());
-
-    private DatagramSocket serverSocket;
-    private static Boolean initImport = true;
-
-    private static Set<Human> collection;
-
-    private byte[] in;
-    private byte[] out;
-
-    /*
-     * Our constructor which instantiates our serverSocket
-     */
-    public Server() throws SocketException {
-        serverSocket = new DatagramSocket(10000);
+    public static int getPort() {
+        return port;
+    }
+    public static Vector<Human> getCollection() {
+        return collection;
+    }
+    public static DatagramChannel getServerChannel() {
+        return serverChannel;
     }
 
-    public static void setInitImport(Boolean initImport) {
-        Server.initImport = initImport;
+    public static void changeCollection (List<Human> newCollection) {
+        collection.removeAllElements();
+        collection.addAll(newCollection);
+        serverRunnable.sendCollectionToAll();
     }
 
-    public static void setCollection(Set<Human> col) {
-        collection = col;
-    }
+    public static void main(String[] args) {
 
-    public void run() {
-        while (true) {
-            try {
-                in = new byte[1024];
-                out = new byte[1024];
-
-                /*
-                 * Create our inbound datagram packet
-                 */
-                DatagramPacket receivedPacket = new DatagramPacket(in, in.length);
-                serverSocket.receive(receivedPacket);
-
-                /*
-                 * Retrieve the IP Address and port number of the datagram packet
-                 * we've just received
-                 */
-                InetAddress IPAddress = receivedPacket.getAddress();
-                int port = receivedPacket.getPort();
-
-                /*
-                 * Get the data from the packet we've just received
-                 * and transform it to uppercase.
-                 */
-                String text = new String(receivedPacket.getData()).trim();
-                logger.info("server Received: " + text
-                        + "\nFrom IP: " + IPAddress + "\nPort: " + port);
-
-                try {
-                    if (text.contains("import") && initImport) {
-                        Thread t0 = new Thread(new ServerFile());
-                        t0.start();
-
-                        Thread t1 = new Thread(new ClientFile());
-                        t1.start();
-                        Thread.sleep(500);
-
-                        if (collection != null) {
-                            setInitImport(false);
-                            out = "The collection has been imported.".getBytes();
-                            DatagramPacket sendPacket = new DatagramPacket(out, out.length, IPAddress, port);
-                            serverSocket.send(sendPacket);
-
-                            continue;
-
-                        }else {
-                            setInitImport(true);
-                            out = ("The collection has not been imported.\n" + FileHandler.getFileName()).getBytes();
-
-                            DatagramPacket sendPacket = new DatagramPacket(out, out.length, IPAddress, port);
-                            serverSocket.send(sendPacket);
-                            continue;
-                        }
-
-                    } else if (text.contains("save") && !initImport){
-                            //TODO: save
-                    } else if (text.contains("import")){
-                        out = "The collection has already been imported!".getBytes();
-                        DatagramPacket sendPacket = new DatagramPacket(out, out.length, IPAddress, port);
-                        serverSocket.send(sendPacket);
-                        continue;
-
-                    }
-
-                }catch (Exception e){
-                    out = "Error while transferring the source file!".getBytes();
-                    DatagramPacket sendPacket = new DatagramPacket(out, out.length, IPAddress, port);
-                    serverSocket.send(sendPacket);
-                    continue;
-                }
-
-
-                if (!initImport){
-                    Console cs = new Console(collection);
-                    cs.execute(text);
-
-                }else {
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-                    outputStream.write("Nothing to execute on. Import a collection!".getBytes());
-
-                    byte c[] = outputStream.toByteArray();
-
-                    DatagramPacket sendPacket = new DatagramPacket(c, c.length, IPAddress, port);
-                    serverSocket.send(sendPacket);
-                    continue;
-                }
-
-                /*
-                 * Create a DatagramPacket which will return our message back to the last system
-                 * that we received from
-                 */
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-                outputStream.write("Your command has been received by server.".getBytes());
-
-                byte c[] = outputStream.toByteArray();
-                DatagramPacket sendPacket1 = new DatagramPacket(c, c.length, IPAddress, port);
-                serverSocket.send(sendPacket1);
-
-            } catch (IOException e) {
-                logger.info("Exception thrown: " + e.getLocalizedMessage());
-            } catch (Exception e) {
-                logger.info("Exception thrown: "+ e.getLocalizedMessage());
-            }
-
+        //открываем канал для исходящих сообщении?
+        try {
+            serverChannel = DatagramChannel.open();
+        } catch (IOException e) {
+            System.err.println("Error in input/output: " + e.getLocalizedMessage());
+            return;
         }
-    }
+        //занимаем порт для входящих сообщении?
+        try {
+            serverRunnable = new ServerRunnable();
+        } catch (IOException e) {
+            System.err.println("Error while accessing the port:");
+            System.err.println(e.getMessage());
+            return;
+        }
+        //поток-сервер
+        final Thread serverThread = new Thread(serverRunnable);
+        serverThread.setDaemon(true);
+        serverThread.start();
 
+        //Сохраняем данные и закрываем соединение при завершении программы
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            //TODO:save
+            }));
+        final Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String command;
+            try {
+                System.out.println();
+                System.out.println("Feed me with your command:");
+                System.out.print("> ");
+                command = scanner.nextLine();
+                System.out.println();
+
+            }catch(NoSuchElementException | IllegalStateException ex){
+                command = "exit";
+            }
+            switch (command.trim().toLowerCase()) {
+                case "\\q": case "close": case "exit": case "quit":case "q":
+                    System.out.println("Shutting down ...");
+                    System.exit(0);
+                    return;
+                case "save":
+                    //TODO:сохранить коллекцию на сервере ?!
+                    break;
+                case "load":
+                    //TODO:загрузить коллекцию ?!
+                    break;
+                default:
+                    System.out.println("There're only 3 commands:\n\t*)save\n\t*)exit\n\t*)load");
+            } }
+    }
 }
