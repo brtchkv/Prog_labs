@@ -1,8 +1,9 @@
 package shared;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class God implements Comparable<Human>{
+public abstract class God implements Comparable<Human>, Serializable {
     private String name;
     private int age;
     private String type;

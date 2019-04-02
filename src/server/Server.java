@@ -1,91 +1,118 @@
 package server;
 
+import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
+import java.io.*;
+import java.net.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+import java.util.Vector;
 import shared.*;
 
-import java.io.IOException;
-import java.nio.channels.DatagramChannel;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-import java.util.Vector;
-
 public class Server {
-    private static String Name = "humans";
-    private static String Host = "localhost";
-    private static final int port = 6666;
-    private static final Vector<Human> collection = new Vector<>();
-    private static DatagramChannel serverChannel;
-    private static ServerRunnable serverRunnable;
 
-    public static int getPort() {
-        return port;
-    }
-    public static Vector<Human> getCollection() {
-        return collection;
-    }
-    public static DatagramChannel getServerChannel() {
-        return serverChannel;
-    }
+    private DatagramChannel udpChannel;
+    private int port;
+    private Vector<Human> storage;
+    private String filename;
 
-    public static void changeCollection (List<Human> newCollection) {
-        collection.removeAllElements();
-        collection.addAll(newCollection);
-        serverRunnable.sendCollectionToAll();
+
+    public Server(int port) throws IOException {
+        this.port = port;
+        this.udpChannel = DatagramChannel.open().bind(new InetSocketAddress("192.168.10.10", port));
+        System.out.println("Server is running on");
+        System.out.println("address: " + InetAddress.getLocalHost());
+        System.out.println("port: " + this.port);
+
     }
 
-    public static void main(String[] args) {
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
-        //открываем канал для исходящих сообщении?
+    public void loadCollection() {
+        System.out.println("Initializing collection...");
         try {
-            serverChannel = DatagramChannel.open();
-        } catch (IOException e) {
-            System.err.println("Error in input/output: " + e.getLocalizedMessage());
-            return;
+            storage = FileHandler.convertToVector(filename);
+            CommandHandler.fileName = filename;
+        } catch (Exception e) {
+            System.err.println("Backup file not found");
+            System.exit(1);
         }
-        //занимаем порт для входящих сообщении?
-        try {
-            serverRunnable = new ServerRunnable();
-        } catch (IOException e) {
-            System.err.println("Error while accessing the port:");
-            System.err.println(e.getMessage());
-            return;
-        }
-        //поток-сервер
-        final Thread serverThread = new Thread(serverRunnable);
-        serverThread.setDaemon(true);
-        serverThread.start();
+    }
 
-        //Сохраняем данные и закрываем соединение при завершении программы
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            //TODO:save
-            }));
-        final Scanner scanner = new Scanner(System.in);
+    private void listen() throws Exception {
+        System.out.println("-- Running Server at " + InetAddress.getLocalHost() + " --");
+        String input;
+
+        CommandHandler handler;
+
         while (true) {
-            String command;
-            try {
-                System.out.println();
-                System.out.println("Feed me with your command:");
-                System.out.print("> ");
-                command = scanner.nextLine();
-                System.out.println();
+            // Receiving udp package
+            ByteBuffer buffer = ByteBuffer.allocate(8192);
+            buffer.clear();
+            InetSocketAddress clientAddress = (InetSocketAddress) udpChannel.receive(buffer);
 
-            }catch(NoSuchElementException | IllegalStateException ex){
-                command = "exit";
+//            // Decoding udp package
+//            input = new String(buffer.array()).trim();
+//            byte[] request = HexBin.decode(input);
+
+            Command command;
+
+            try (ByteArrayInputStream bais = new ByteArrayInputStream(buffer.array());
+                 ObjectInputStream ois = new ObjectInputStream(bais);
+                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                 ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+                Object anObj = ois.readObject();
+                System.out.println(anObj);
+                System.out.println(anObj.toString());
+                command = (Command) ois.readObject();
+                System.out.println("- Client input: " + command.getCommand());
+
+                // creating response for client
+                /*Thread thread = new Thread(() -> {
+                });*/
+                handler = new CommandHandler();
+                handler.start();
+                Response response = new Response(handler.handleCommand(command, storage));
+
+                oos.writeObject(response);
+                oos.flush();
+                buffer.clear();
+                buffer.put(baos.toByteArray());
+                buffer.flip();
+
+                udpChannel.send(buffer, clientAddress);
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
-            switch (command.trim().toLowerCase()) {
-                case "\\q": case "close": case "exit": case "quit":case "q":
-                    System.out.println("Shutting down ...");
-                    System.exit(0);
-                    return;
-                case "save":
-                    //TODO:сохранить коллекцию на сервере ?!
-                    break;
-                case "load":
-                    //TODO:загрузить коллекцию ?!
-                    break;
-                default:
-                    System.out.println("There're only 3 commands:\n\t*)save\n\t*)exit\n\t*)load");
-            } }
+        }
+    }
+
+    public static void showUsage() {
+        System.out.println("To run server properly follow this syntax");
+        System.out.println("java Server <port> <path to backup file>");
+        System.exit(1);
+    }
+
+    public static void main(String[] args) throws Exception {
+        int input_port = -1;
+        if (args.length == 0) {
+            showUsage();
+        }
+
+        try {
+            input_port = Integer.parseInt(args[0]);
+        } catch (IllegalArgumentException e) {
+            showUsage();
+        }
+
+        Server server = new Server(input_port);
+
+        if (args.length == 2) {
+            server.setFilename(args[1]);
+        }
+        server.loadCollection();
+        server.listen();
     }
 }

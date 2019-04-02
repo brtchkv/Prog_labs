@@ -1,9 +1,10 @@
 package shared;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Human extends God {
+public class Human extends God implements Serializable {
     private String type = "Human";
 
     private ArrayList<Skill> skills = new ArrayList<Skill>();

@@ -5,6 +5,7 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class Console {
 
@@ -284,6 +285,24 @@ public class Console {
         }catch(Exception ex){
             System.out.println("Something bad has happened.");
             System.out.println("Your source file WILL NOT be overwritten!");
+        }
+    }
+
+    public static Human parseHumanFromJson(String data){
+        try {
+            Human forAction;
+            Gson gson = new Gson();
+            forAction = gson.fromJson(data, Temp.class).createHuman();
+
+            if ((forAction == null) || (forAction.getName() == null) || (forAction.getAge() == 0)) {
+                System.out.println("Error, the item is set incorrectly: \n- You may not have specified all the values!");
+                System.out.println("Type \"command_name arg\" for additional info. i.e \"add arg\"");
+                return null;
+            }
+            return forAction;
+        } catch (JsonSyntaxException ex) {
+            System.out.println("Error, the item is set incorrectly!\nType \"command_name arg\" for additional info. i.e \"add arg\"");
+            return null;
         }
     }
 

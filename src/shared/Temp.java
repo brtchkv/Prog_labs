@@ -1,6 +1,8 @@
 package shared;
 
-public class Temp{
+import java.io.Serializable;
+
+public class Temp implements Serializable {
     String name ;
     int age;
     Skill skill;
