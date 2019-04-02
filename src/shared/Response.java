@@ -1,8 +1,10 @@
-package server;
+package shared;
 
 import java.io.Serializable;
 
 public class Response implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Object response;
 
     public Response(Object response) {
