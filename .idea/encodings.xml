@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" addBOMForNewFiles="with NO BOM">
-    <file url="file://$PROJECT_DIR$/src/human.csv" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/out/artifacts/Lab_jar/human.csv" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/shared/human.csv" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/shared/human_constant.csv" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/src/shared/human.csv" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/src/shared/human_constant.csv" charset="UTF-8" />
   </component>
 </project>

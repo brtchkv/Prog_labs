@@ -55,7 +55,7 @@ public class CommandHandler extends Thread {
                     buffer = add_if_min(storage, (Human) data);
                     break;
                 case "import":
-                    buffer = _import(storage, (Vector<Human>) data);
+                    buffer = import1(storage, (Vector<Human>) data);
                     break;
                 case "info":
                     buffer = info(storage);
@@ -191,7 +191,7 @@ public class CommandHandler extends Thread {
      *
      * @param storage - ссылка на коллекцию с объектом
      */
-    public byte[] _import(Vector<Human> storage, Vector<Human> importing) {
+    public byte[] import1(Vector<Human> storage, Vector<Human> importing) {
         for (Human human: importing) {
             add(storage, human);
         }
@@ -205,8 +205,7 @@ public class CommandHandler extends Thread {
      * @param storage - ссылка на коллекцию с объектами
      */
     public byte[] info(Vector<Human> storage) {
-        return ("Info about the collection\n" +
-                "Collection has " + storage.getClass() + " type.\n" +
+        return ("Collection is a " + storage.getClass() + " type.\n" +
                 "Currently it contains " + storage.size() + " objects.").getBytes();
     }
 
@@ -230,17 +229,18 @@ public class CommandHandler extends Thread {
      * <p>Выводит информацию о всех доступных командах</p>
      */
     public byte[] help() {
-        String jsonExample = "\r\n{\r\n   \"name\": \"Elizabeth\",\r\n   \"age\": \"16\",\r\n   \"skill\": {\r\n      \"name\": \"\u041F\u0440\u044B\u0433\u0430\u0442\u044C\"\r\n   },\r\n   \"disability\": \"chin\"\r\n}\r";
+        String jsonExample = "\r{\r\n   \"name\": \"Elizabeth\",\r\n   \"age\": \"16\",\r\n   \"skill\": {\r\n      \"name\": \"\u041F\u0440\u044B\u0433\u0430\u0442\u044C\"\r\n   },\r\n   \"disability\": \"chin\"\r\n}\r";
 
         return ("Available commands:" +
-                "\nadd {element} - adds an element to collection, element - is a JSON string, such as:\n" + jsonExample +
-                "\nshow - shows a list of all elements in a collection" +
-                "\nsave - save a collection to a source file" +
-                "\nimport {path} - adds all of the elements to a collection from a file, path - path to the .csv file" +
-                "\ninfo - information about collection" +
-                "\nremove {element} - removes an element from collection, element - is a JSON string, such as:\n" + jsonExample +
-                "\nadd_if_min {element} - adds an element to collection if it's the smallest, element - is a JSON String, such as:\n" + jsonExample +
-                "\nhelp - a list of all available commands").getBytes();
+                "Example of JSON Human declaration:" + jsonExample +
+                "\n* add {element} - adds an element to collection, element - is a JSON string, see above" +
+                "\n* show - shows a list of all elements in a collection" +
+                "\n* save - save a collection to a source file" +
+                "\n* import {path} - adds all of the elements to a collection from a file, path - path to the .csv file" +
+                "\n* info - information about collection" +
+                "\n* remove {element} - removes an element from collection, element - is a JSON string, see above" +
+                "\n* add_if_min {element} - adds an element to collection if it's the smallest, element - is a JSON String, see above" +
+                "\n* help - a list of all available commands").getBytes();
     }
 
     /**

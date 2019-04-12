@@ -74,7 +74,7 @@ public class Client {
         }
 
         if (connected) {
-            System.out.println("Connection with server is established");
+            System.out.println("Connection with the server is established");
         } else {
             System.err.println("Server is unreachable at this moment");
             System.exit(1);
@@ -84,8 +84,8 @@ public class Client {
 
     private int start() throws IOException {
         System.out.println("Client established");
-        System.out.println("Feed me with your command:");
         System.out.println();
+        System.out.println("Feed me with your commands:");
         System.out.print("> ");
         String input;
         String lastCommand = "";
@@ -105,7 +105,7 @@ public class Client {
                     commandEnd = true;
                 }
 
-                if (!commandEnd && (lastCommand.equals("add") || lastCommand.equals("add_if_min"))) {
+                if (!commandEnd && (lastCommand.equals("add") || lastCommand.equals("add_if_min") || lastCommand.equals("remove"))) {
 
                     nestingJSON += charCounter(input, '{');
                     nestingJSON -= charCounter(input, '}');
@@ -141,6 +141,7 @@ public class Client {
                     }
 
                 } else if (command.equals("remove") && commandEnd) {
+
                     lastCommand = "remove";
                     commandEnd = false;
                     correctCommand = true;
@@ -150,6 +151,7 @@ public class Client {
                     if (nestingJSON == 0) {
                         commandEnd = true;
                     }
+
                 }else if (command.equals("show") && commandEnd) {
                     lastCommand = "show";
                     correctCommand = true;
@@ -239,7 +241,7 @@ public class Client {
         byte[] sending;
         Command c = new Command(command, data);
 
-        if (command.equals("add") || command.equals("add_if_min")) {
+        if (command.equals("add") || command.equals("add_if_min") || command.equals("remove")) {
             try {
                 c.setData(Console.parseHumanFromJson(data));
             } catch (Exception e) {

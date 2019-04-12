@@ -107,7 +107,11 @@ public class Server {
         if (args.length == 2) {
             server.setFilename(args[1]);
         }
-        server.loadCollection();
-        server.listen();
+        try {
+            server.loadCollection();
+            server.listen();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }
