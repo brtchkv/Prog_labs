@@ -61,13 +61,13 @@ public class CommandHandler extends Thread {
                     buffer = info(storage);
                     break;
                 case "remove":
-                    buffer = remove(storage, (String) data);
+                    buffer = remove(storage, (Human) data);
                     break;
                 case "help":
                     buffer = help();
                     break;
                 default:
-                    buffer = "Незиветная команда, попробуйте еще раз".getBytes();
+                    buffer = "Error: undefined command!".getBytes();
             }
             return buffer;
         }
@@ -86,7 +86,7 @@ public class CommandHandler extends Thread {
             oos.flush();
             return outputStream.toByteArray();
         } catch (IOException e) {
-            System.err.println("Произошла ошибка");
+            System.err.println("Aliens snatched the collection! Can't show it.");
         }
 
         return null;
@@ -162,9 +162,9 @@ public class CommandHandler extends Thread {
         if (!exist) {
             storage.add(human);
             sortCollection(storage);
-            return "Element successfully added".getBytes();
+            return "An object is successfully added.".getBytes();
         } else {
-            return "Duplicate element".getBytes();
+            return "Collection already stores this object.".getBytes();
         }
     }
 
@@ -179,7 +179,7 @@ public class CommandHandler extends Thread {
             if (human.compareTo(min) < 0) {
                 return add(storage, human);
             } else {
-                return "This element is not the smallest".getBytes();
+                return "An object's name isn't the smallest! Can't add to a collection.".getBytes();
             }
         } else {
             return add(storage, human);
@@ -196,7 +196,7 @@ public class CommandHandler extends Thread {
             add(storage, human);
         }
 
-        return "Команда import выполнена".getBytes();
+        return "+++++ Imported Successfully +++++".getBytes();
     }
 
     /**
@@ -205,43 +205,42 @@ public class CommandHandler extends Thread {
      * @param storage - ссылка на коллекцию с объектами
      */
     public byte[] info(Vector<Human> storage) {
-        return ("Информация о коллекции\n" +
-                "Тип коллекции: " + storage.getClass() + "\n" +
-                "Количество элементов в коллекции: " + storage.size()).getBytes();
+        return ("Info about the collection\n" +
+                "Collection has " + storage.getClass() + " type.\n" +
+                "Currently it contains " + storage.size() + " objects.").getBytes();
     }
 
     /**
      * <p>Удаляет элемент из коллекции</p>
      *
      * @param storage - ссылка на коллекцию с объектами
-     * @param name - уникальное имя объекта
+     * @param human - обьект типа Human
      */
-    public byte[] remove(Vector<Human> storage, String name) {
-        for (Human human: storage) {
-            if (human.getName().toLowerCase().equals(name.toLowerCase())) {
-                System.out.println("Удален человек по имени \"" + human.getName() + "\"");
-                storage.remove(human);
-                return ("Удален человек по имени \"" + human.getName() + "\"").getBytes();
-            }
+    public byte[] remove(Vector<Human> storage, Human human) {
+        if (storage.contains(human)) {
+            System.out.println("A human \"" + human.toString() + "\" has been deleted :(");
+            storage.remove(human);
+            return ("A human \"" + human.toString() + "\" has been deleted :(").getBytes();
         }
 
-        return"Такого объекта не было найдено".getBytes();
+        return "No such object in the collection. Try adding instead.".getBytes();
     }
 
     /**
      * <p>Выводит информацию о всех доступных командах</p>
      */
     public byte[] help() {
+        String jsonExample = "\r\n{\r\n   \"name\": \"Elizabeth\",\r\n   \"age\": \"16\",\r\n   \"skill\": {\r\n      \"name\": \"\u041F\u0440\u044B\u0433\u0430\u0442\u044C\"\r\n   },\r\n   \"disability\": \"chin\"\r\n}\r";
 
-        return ("Доступные команды:" +
-                "\nadd {element} - добавляет элемент в коллекцию, element - строка в формате json" +
-                "\nshow - выводит список всех элементов коллекции" +
-                "\nsave - сохраняет текущую в исходный файл" +
-                "\nimport {path} - добавляет в коллекцию все элементы из файла в формате json, path - путь до .json файла" +
-                "\ninfo - выводит информацию о коллекции" +
-                "\nremove {name} - удаляет элемент из коллекции, name - уникальное имя" +
-                "\nadd_if_min {element} - добавляет элемент в коллекцию если он минимальный, element - строка в формате json" +
-                "\nhelp - выводит список доступных команд").getBytes();
+        return ("Available commands:" +
+                "\nadd {element} - adds an element to collection, element - is a JSON string, such as:\n" + jsonExample +
+                "\nshow - shows a list of all elements in a collection" +
+                "\nsave - save a collection to a source file" +
+                "\nimport {path} - adds all of the elements to a collection from a file, path - path to the .csv file" +
+                "\ninfo - information about collection" +
+                "\nremove {element} - removes an element from collection, element - is a JSON string, such as:\n" + jsonExample +
+                "\nadd_if_min {element} - adds an element to collection if it's the smallest, element - is a JSON String, such as:\n" + jsonExample +
+                "\nhelp - a list of all available commands").getBytes();
     }
 
     /**

@@ -3,7 +3,7 @@ package shared;
 import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class God implements Comparable<Human>, Serializable {
+public abstract class God implements Serializable {
     private String name;
     private int age;
     private String type;
@@ -37,7 +37,7 @@ public abstract class God implements Comparable<Human>, Serializable {
 
     @Override
     public String toString() {
-        return (getName() + " -- " + getType() + " -- " + getAge());
+        return (getName() +  " -- " + getAge());
     }
 
 
@@ -46,8 +46,4 @@ public abstract class God implements Comparable<Human>, Serializable {
         return Objects.hash(name, age, type);
     }
 
-    @Override
-    public int compareTo(Human human) {
-        return this.getName().compareTo(human.getName());
-    }
 }

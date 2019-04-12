@@ -4,11 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Human extends God implements Serializable {
+public class Human extends God implements Serializable, Comparable<Human> {
     private String type = "Human";
 
-    private ArrayList<Skill> skills = new ArrayList<Skill>();
-    private ArrayList<Disability> disabilities = new ArrayList<Disability>();
+
+    private ArrayList<Skill> skills = new ArrayList<>();
+    private ArrayList<Disability> disabilities = new ArrayList<>();
 
     public Human(String name, int age) {
         super(name, age, "Human");
@@ -77,4 +78,10 @@ public class Human extends God implements Serializable {
     public int hashCode() {
         return Objects.hash(super.hashCode(), type, skills, disabilities);
     }
+
+    @Override
+    public int compareTo(Human human) {
+        return this.getName().compareTo(human.getName());
+    }
+
 }
