@@ -18,10 +18,10 @@ public class Server {
     public Server(int port) throws IOException {
         this.port = port;
         this.udpChannel = DatagramChannel.open().bind(new InetSocketAddress("192.168.10.10", port));
-        System.out.println("!We Have A Lift Off!");
-        System.out.println("Server is in the sky at:");
-        System.out.println("address: " + InetAddress.getLocalHost());
-        System.out.println("port: " + this.port);
+        System.out.println("-- Yahoo! We Have A Lift Off! --");
+        System.out.println("-- UDP Server settings --");
+        System.out.println("-- UDP address: " + InetAddress.getLocalHost() + " --");
+        System.out.println("-- UDP port: " + this.port + " --");
 
     }
 
@@ -35,7 +35,7 @@ public class Server {
             storage = FileHandler.convertToVector(filename);
             CommandHandler.fileName = filename;
         } catch (Exception e) {
-            System.err.println("On no, backup file is not found. Do you even care about accidents?!");
+            System.err.println("On no, backup file is not found. Do you even care ?!");
             System.exit(1);
         }
     }
@@ -63,9 +63,6 @@ public class Server {
                 command = (Command) ois.readObject();
                 System.out.println("-- Client's input: " + command.getCommand());
 
-                // creating response for client
-                /*Thread thread = new Thread(() -> {
-                });*/
                 handler = new CommandHandler();
                 handler.start();
                 Response response = new Response(handler.handleCommand(command, storage));
@@ -85,8 +82,8 @@ public class Server {
 
     public static void showUsage() {
         System.out.println("Hello stranger,");
-        System.out.println("To run server properly you need to follow some rules");
-        System.out.println("\tjava Server <port> <path to backup file>");
+        System.out.println("To run the server properly you need to follow some rules");
+        System.out.println("\tjava -jar Server.jar <port> <path to backup file>");
         System.exit(1);
     }
 

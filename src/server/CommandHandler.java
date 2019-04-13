@@ -10,6 +10,7 @@ public class CommandHandler extends Thread {
     private InetAddress inetAddress;
     private int port;
     public static String fileName;
+    private static String FILEPATH = "human.csv";
 
     public CommandHandler(InetAddress inetAddress, int port) {
         this.inetAddress = inetAddress;
@@ -42,17 +43,36 @@ public class CommandHandler extends Thread {
                 case "connecting":
                     buffer = "connected".getBytes();
                     break;
+                case "add":
+                    if (data != null) {
+                        buffer = add(storage, (Human) data);
+                    } else {buffer = help();}
+                    break;
+                case "add_if_min":
+                    if (data != null) {
+                        buffer = add_if_min(storage, (Human) data);
+                    } else {buffer = help();}
+                    break;
+                case "remove":
+                    if (data != null) {
+                        buffer = remove(storage, (Human) data);
+                    } else {buffer = help();}
+                    break;
+                case "remove_greater":
+                    if (data != null) {
+                        buffer = remove_greater(storage, (Human) data);
+                    } else {buffer = help();}
+                    break;
+                case "remove_lower":
+                    if (data != null) {
+                        buffer = remove_lower(storage, (Human) data);
+                    } else {buffer = help();}
+                    break;
                 case "show":
                     buffer = show(storage);
                     break;
                 case "save":
                     buffer = save(storage);
-                    break;
-                case "add":
-                    buffer = add(storage, (Human) data);
-                    break;
-                case "add_if_min":
-                    buffer = add_if_min(storage, (Human) data);
                     break;
                 case "import":
                     buffer = import1(storage, (Vector<Human>) data);
@@ -60,14 +80,11 @@ public class CommandHandler extends Thread {
                 case "info":
                     buffer = info(storage);
                     break;
-                case "remove":
-                    buffer = remove(storage, (Human) data);
-                    break;
                 case "help":
                     buffer = help();
                     break;
                 default:
-                    buffer = "Error: undefined command!".getBytes();
+                    buffer = "Error: undefined command! Type \"help\" for a list of available commands".getBytes();
             }
             return buffer;
         }
@@ -99,72 +116,28 @@ public class CommandHandler extends Thread {
      * @param storage - ссылка на коллекцию с объектами
      */
     public byte[] save(Vector<Human> storage) {
-        try (FileOutputStream n = new FileOutputStream(FileHandler.getFileName(), false);
-             PrintWriter printWriter = new PrintWriter(n)) {
 
-            Iterator<Human> iterator = storage.iterator();
-            while (iterator.hasNext()) {
-                StringBuffer s = new StringBuffer();
-                Human temp = iterator.next();
-
-                s.append("\"" + temp.getName() + "\"," + "\"" + temp.getAge() + "\"");
-
-                Iterator<Skill> iterator_s = temp.getSkills().iterator();
-                if (iterator_s.hasNext()) {
-                    s.append(",\"");
-                }
-                while (iterator_s.hasNext()) {
-                    Skill skill = iterator_s.next();
-                    if (iterator_s.hasNext()) {
-                        s.append(skill.toString() + "-");
-                    } else {
-                        s.append(skill.toString() + "\"");
-                    }
-                }
-
-                Iterator<Disability> iterator_d = temp.getDisabilities().iterator();
-                if (iterator_d.hasNext()) {
-                    s.append(",\"");
-                }
-                while (iterator_d.hasNext()) {
-                    Disability disability = iterator_d.next();
-                    if (iterator_d.hasNext()) {
-                        s.append(disability.toString() + "-");
-                    } else {
-                        s.append(disability.toString() + "\"");
-                    }
-                }
-                printWriter.println(s);
-            }
-
-            return ("<<<<<<<<<<<<<<< The source file has been updated >>>>>>>>>>>>>>>").getBytes();
-
-        } catch (Exception e) {
-            return ("Something bad has happened; Can't save!").getBytes();
+        if (FileHandler.checkFileWrite(FILEPATH)) {
+            return FileHandler.save(storage, FILEPATH);
         }
+        return "Can't write to a file. Check permissions.".getBytes();
     }
 
     /**
      * <p>Добавляет элемент в коллекцию</p>
      *
      * @param storage - ссылка на коллекцию с объектами
+     * @param human - объект Human, который надо добавить
      */
     public byte[] add(Vector<Human> storage, Human human) {
-        boolean exist = false;
-
-        for (Human current: storage) {
-            if (current.getName().toLowerCase().equals(human.getName().toLowerCase())) {
-                exist = true;
-                break;
+        synchronized (storage) {
+            if (storage.add(human)) {
+                sortCollection(storage);
+                System.out.println("A human " + human.toString()+ " was successfully added.");
+                return ("A human " + human.toString()+ " was successfully added.").getBytes();
+            } else {
+                return "Collection already stores this object.".getBytes();
             }
-        }
-
-        if (!exist) {
-            storage.add(human);
-            sortCollection(storage);
-            return "An object is successfully added.".getBytes();
-        } else {
-            return "Collection already stores this object.".getBytes();
         }
     }
 
@@ -172,14 +145,20 @@ public class CommandHandler extends Thread {
      * <p>Добавляет элемент в коллекцию если он является уникальным</p>
      *
      * @param storage - ссылка на коллекцию с объектами
+     * @param human - обьект, который надо добавить
      */
     public byte[] add_if_min(Vector<Human> storage, Human human) {
         if (storage.size() > 0) {
-            Human min = storage.stream().min(Human::compareTo).get();
-            if (human.compareTo(min) < 0) {
-                return add(storage, human);
-            } else {
-                return "An object's name isn't the smallest! Can't add to a collection.".getBytes();
+            synchronized (storage) {
+                Human min = storage
+                        .stream()
+                        .min(Human::compareTo)
+                        .get();
+                if (human.compareTo(min) < 0) {
+                    return add(storage, human);
+                } else {
+                    return (human.getName()+ "'s name isn't the smallest: Can't add to a collection!").getBytes();
+                }
             }
         } else {
             return add(storage, human);
@@ -190,13 +169,16 @@ public class CommandHandler extends Thread {
      * <p>Импортирует все объекты из заданного json файла</p>
      *
      * @param storage - ссылка на коллекцию с объектом
+     * @param importing - ссылка на импортируемую коллекцию
      */
     public byte[] import1(Vector<Human> storage, Vector<Human> importing) {
+        long start = storage.stream().count();
         for (Human human: importing) {
             add(storage, human);
         }
-
-        return "+++++ Imported Successfully +++++".getBytes();
+        long end = storage.stream().count();
+        System.out.println("Imported "+ (end-start) + " objects.");
+        return ("+++++ Imported "+ (end-start) + " objects +++++").getBytes();
     }
 
     /**
@@ -216,22 +198,60 @@ public class CommandHandler extends Thread {
      * @param human - обьект типа Human
      */
     public byte[] remove(Vector<Human> storage, Human human) {
-        if (storage.contains(human)) {
-            System.out.println("A human \"" + human.toString() + "\" has been deleted :(");
-            storage.remove(human);
-            return ("A human \"" + human.toString() + "\" has been deleted :(").getBytes();
-        }
 
-        return "No such object in the collection. Try adding instead.".getBytes();
+        long start = storage.stream().count();
+        synchronized(storage) {
+            storage.removeIf(x -> !storage.contains(human));
+        }
+        long end = storage.stream().count();
+        if ((start - end) > 0) {
+            System.out.println("A human \"" + human.toString() + "\" has been deleted");
+            return ("A human \"" + human.toString() + "\" has been deleted :(").getBytes();
+        } else {return "There's no such object in the collection. Try adding instead.".getBytes();}
     }
+
+    /**
+     * <p>Удаляет все элементы меньше аргумента</p>
+     * @param endObject (Human) - Object of class Human
+     */
+    public byte[] remove_lower(Vector<Human> storage, Human endObject) {
+
+
+        long start = storage.stream().count();
+        synchronized(storage) {
+            storage.removeIf(item -> item.compareTo(endObject) > 0);
+        }
+        long end = storage.stream().count();
+
+
+        System.out.println("Deleted " + (start - end) + " objects.");
+        return ("Deleted " + (start - end) + " objects. :(").getBytes();
+
+    }
+
+    /**
+     * <p>Удаляет все элементы больше аргумента</p>
+     * @param startObject (Human) - Object of class Human
+     */
+    public byte[] remove_greater(Vector<Human> storage, Human startObject) {
+
+        long start = storage.stream().count();
+        synchronized(storage) {
+            storage.removeIf(item -> item.compareTo(startObject) < 0);
+        }
+        long end = storage.stream().count();
+        System.out.println("Deleted " + (start - end) + " objects.");
+        return ("Deleted " + (start - end) + " objects. :(").getBytes();
+    }
+
 
     /**
      * <p>Выводит информацию о всех доступных командах</p>
      */
     public byte[] help() {
-        String jsonExample = "\r{\r\n   \"name\": \"Elizabeth\",\r\n   \"age\": \"16\",\r\n   \"skill\": {\r\n      \"name\": \"\u041F\u0440\u044B\u0433\u0430\u0442\u044C\"\r\n   },\r\n   \"disability\": \"chin\"\r\n}\r";
+        String jsonExample = "\r\n{\r\n   \"name\": \"Elizabeth\",\r\n   \"age\": \"16\",\r\n   \"skill\": {\r\n      \"name\": \"\u041F\u0440\u044B\u0433\u0430\u0442\u044C\"\r\n   },\r\n   \"disability\": \"chin\"\r\n}\r";
 
-        return ("Available commands:" +
+        return ("\nAvailable commands: \n" +
                 "Example of JSON Human declaration:" + jsonExample +
                 "\n* add {element} - adds an element to collection, element - is a JSON string, see above" +
                 "\n* show - shows a list of all elements in a collection" +
@@ -240,6 +260,8 @@ public class CommandHandler extends Thread {
                 "\n* info - information about collection" +
                 "\n* remove {element} - removes an element from collection, element - is a JSON string, see above" +
                 "\n* add_if_min {element} - adds an element to collection if it's the smallest, element - is a JSON String, see above" +
+                "\n* remove_greater {element} - removes objects greater than an element, element - is a JSON String, see above" +
+                "\n* remove_lower {element} - removes objects lower than an element, element - is a JSON String, see above" +
                 "\n* help - a list of all available commands").getBytes();
     }
 

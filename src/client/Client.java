@@ -27,23 +27,17 @@ public class Client {
 
     public static void showUsage() {
         System.out.println("Hello stranger,");
-        System.out.println("To run client properly you need to follow some rules");
-        System.out.println("\tjava Client <host> <port>");
+        System.out.println("To run the client properly you need to follow some rules");
+        System.out.println("\tjava -jar Client.jar <host> <port>");
         System.exit(1);
     }
 
     public void testServerConnection() throws IOException {
-        System.out.println("Trying to reach remote host...");
+        System.out.println("Trying to reach a remote host...");
         DatagramPacket testRequest = createRequest("connecting", "");
 
         byte[] buf = new byte[256];
         DatagramPacket testResponse = new DatagramPacket(buf, buf.length);
-
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        ObjectOutputStream oos = new ObjectOutputStream(outputStream);
-//        oos.writeObject(c);
-//        oos.flush();
-//        DatagramPacket testRequest = new DatagramPacket(outputStream.toByteArray(),outputStream.toByteArray().length, serverAddress, port);
 
         boolean connected = false;
         this.udpSocket.setSoTimeout(1000);
@@ -66,7 +60,6 @@ public class Client {
                 connectString = "Not connected";
             }
 
-            //System.out.println(response);
             if (connectString.equals("connected")) {
                 connected = true;
                 break;
@@ -83,7 +76,7 @@ public class Client {
     }
 
     private int start() throws IOException {
-        System.out.println("Client established");
+        System.out.println("Client is established");
         System.out.println();
         System.out.println("Feed me with your commands:");
         System.out.print("> ");
@@ -105,7 +98,9 @@ public class Client {
                     commandEnd = true;
                 }
 
-                if (!commandEnd && (lastCommand.equals("add") || lastCommand.equals("add_if_min") || lastCommand.equals("remove"))) {
+                if (!commandEnd && (lastCommand.equals("add") || lastCommand.equals("add_if_min")
+                        || lastCommand.equals("remove") || lastCommand.equals("remove_greater")
+                        || lastCommand.equals("remove_lower"))) {
 
                     nestingJSON += charCounter(input, '{');
                     nestingJSON -= charCounter(input, '}');
@@ -152,6 +147,30 @@ public class Client {
                         commandEnd = true;
                     }
 
+                }else if (command.equals("remove_greater") && commandEnd) {
+
+                    lastCommand = "remove_greater";
+                    commandEnd = false;
+                    correctCommand = true;
+                    addStr = input.substring(14).trim();
+                    nestingJSON += charCounter(addStr, '{');
+                    nestingJSON -= charCounter(addStr, '}');
+                    if (nestingJSON == 0) {
+                        commandEnd = true;
+                    }
+
+                }else if (command.equals("remove_lower") && commandEnd) {
+
+                    lastCommand = "remove_lower";
+                    commandEnd = false;
+                    correctCommand = true;
+                    addStr = input.substring(12).trim();
+                    nestingJSON += charCounter(addStr, '{');
+                    nestingJSON -= charCounter(addStr, '}');
+                    if (nestingJSON == 0) {
+                        commandEnd = true;
+                    }
+
                 }else if (command.equals("show") && commandEnd) {
                     lastCommand = "show";
                     correctCommand = true;
@@ -187,6 +206,14 @@ public class Client {
                     correctCommand = true;
                 } else if (lastCommand.equals("remove") && commandEnd && correctCommand){
                     request = createRequest("remove", addStr);
+                    addStr = "";
+                    correctCommand = true;
+                } else if (lastCommand.equals("remove_greater") && commandEnd && correctCommand){
+                    request = createRequest("remove_greater", addStr);
+                    addStr = "";
+                    correctCommand = true;
+                } else if (lastCommand.equals("remove_lower") && commandEnd && correctCommand){
+                    request = createRequest("remove_lower", addStr);
                     addStr = "";
                     correctCommand = true;
                 }
@@ -241,7 +268,9 @@ public class Client {
         byte[] sending;
         Command c = new Command(command, data);
 
-        if (command.equals("add") || command.equals("add_if_min") || command.equals("remove")) {
+        if (command.equals("add") || command.equals("add_if_min")
+                || command.equals("remove") || command.equals("remove_greater")
+                || command.equals("remove_lower")) {
             try {
                 c.setData(Console.parseHumanFromJson(data));
             } catch (Exception e) {
@@ -272,8 +301,8 @@ public class Client {
             try (ByteArrayInputStream bais = new ByteArrayInputStream((byte[])response.getResponse());
                  ObjectInputStream ois = new ObjectInputStream(bais)) {
                 Vector<Human> storage = (Vector<Human>) ois.readObject();
-                for (Human human : storage) {
-                    System.out.println(human.toString());
+                synchronized (storage) {
+                    storage.forEach(System.out::println);
                 }
             } catch (IOException | ClassNotFoundException e) {
 
@@ -309,12 +338,12 @@ public class Client {
             System.out.println("-- Running UDP Client at " + InetAddress.getLocalHost() + " --");
             System.out.println("-- UDP client settings --");
             System.out.println("-- UDP connection to " + args[0] + " host --");
-            System.out.println("-- UDP port " + args[1] + " --");
+            System.out.println("-- UDP port: " + args[1] + " --");
             sender.testServerConnection();
             sender.start();
         } catch (Exception e) {
             System.err.println("Oh no, something bad has happened!");
-            e.printStackTrace();
+            e.getMessage();
             showUsage();
         }
     }

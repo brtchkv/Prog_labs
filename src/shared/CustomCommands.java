@@ -134,11 +134,11 @@ public class CustomCommands {
      */
     public void save(){
 
-        if (FileHandler.checkFileWrite()) {
+        if (FileHandler.checkFileWrite(FileHandler.getFILEPATH())) {
             if (collection != null){
-            FileHandler.save(collection);
+                FileHandler.save(collection);
             }else {
-                System.out.println("Collection is null; Can't be saved!");
+                System.out.println("The Collection is null; Can't be saved!");
             }
         }
     }

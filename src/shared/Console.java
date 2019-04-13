@@ -14,7 +14,7 @@ public class Console {
     Scanner myScan = new Scanner(System.in);
 
     public Console(){
-        if(FileHandler.checkFileRead()) {
+        if(FileHandler.checkFileRead(FileHandler.getFILEPATH())) {
             this.customCommands = new CustomCommands(FileHandler.convertToVector(FileHandler.getFILEPATH()));
             needExit = false;
             this.execute();
@@ -296,12 +296,11 @@ public class Console {
 
             if ((forAction == null) || (forAction.getName() == null) || (forAction.getAge() == 0)) {
                 System.out.println("Error, the item is set incorrectly: \n- You may not have specified all the values!");
-                System.out.println("Type \"command_name arg\" for additional info. i.e \"add arg\"");
                 return null;
             }
             return forAction;
         } catch (JsonSyntaxException ex) {
-            System.out.println("Error, the item is set incorrectly!\nType \"command_name arg\" for additional info. i.e \"add arg\"");
+            System.out.println("Error, the item is set incorrectly!");
             return null;
         }
     }
