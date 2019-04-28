@@ -20,7 +20,7 @@ public class Client {
     private InetAddress serverAddress;
     private int port;
     private Scanner scanner;
-    private static boolean isAuth = false;
+    private boolean isAuth = false;
     private java.io.Console console = System.console();
     private String username;
 
@@ -89,8 +89,8 @@ public class Client {
                 "login - login with the already registered account");
     }
 
-    public static void setIsAuth(boolean isAuth) {
-        Client.isAuth = isAuth;
+    public void setIsAuth(boolean isAuth) {
+        this.isAuth = isAuth;
     }
 
     private int start() throws IOException {
@@ -253,7 +253,8 @@ public class Client {
                 }
 
             } else {
-                switch (input.split(" ")[0].toLowerCase().trim()) {
+                lastCommand = input.split(" ")[0].toLowerCase().trim();
+                switch (lastCommand) {
                     case "help":
                         helpAuth();
                         break;
@@ -310,8 +311,6 @@ public class Client {
 //                            request = createRequest("register", username + " " + email + " " + hash);
 //                        } else System.out.println("The passwords you've entered doesn't match!");
 
-
-                        lastCommand = "register";
                         correctCommand = true;
                         request = createRequest("register", username + " " + email + " " + DataBaseConnection.getToken());
                         break;
@@ -332,20 +331,19 @@ public class Client {
                         String password;
                         if (console != null) password = new String(console.readPassword()).trim();
                         else password = scanner.nextLine().trim();
-                        password = server.DataBaseConnection.encryptString(password);
-                        lastCommand = "login";
+                        //password = server.DataBaseConnection.encryptString(password);
                         correctCommand = true;
                         request = createRequest("login", login + " " + password);
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            System.out.println(e.getMessage());
-                        }
+                        System.out.println(login + " " + password);
+//                        try {
+//                            Thread.sleep(1000);
+//                        } catch (InterruptedException e) {
+//                            System.out.println(e.getMessage());
+//                        }
                         break;
 
                     default:
-                        System.out.println("Unsupported command");
-
+                        correctCommand = false;
                 }
             }
 
@@ -380,12 +378,12 @@ public class Client {
                     System.err.println("Wrong data, try again later");
                 }
                 System.out.print((char)27 + "[34m" + "> " + (char)27 + "[37m");
-            } else if (commandEnd) {
+            } else if (commandEnd && !lastCommand.equals("help")) {
                 if (!input.trim().equals("")) {
                     System.err.println("Error: undefined command!");
                     System.out.print((char)27 + "[31m" + "> " + (char)27 + "[37m");
-                } else {System.out.print((char)27 + "[34m" + "> " + (char)27 + "[37m");}
-            }
+                } else { System.out.print((char)27 + "[34m" + "> " + (char)27 + "[37m"); }
+            }else { System.out.print((char)27 + "[34m" + "> " + (char)27 + "[37m"); }
 
         }
 
@@ -435,9 +433,9 @@ public class Client {
             } catch (IOException | ClassNotFoundException e){ }
         } else if (command.equals("Email registration is approved!")){
             setIsAuth(true);
-            System.out.println("An email with the password was sent to you address\nNext time just type \"login\" with your account credentials");
-        } else if (command.equals("Logged in")) {
-            setIsAuth(true);
+            return ("An email with the password was sent to you address\nNext time just type \"login\" with your account credentials").getBytes();
+        } else if (command.equals("login")) {
+            if ((new String((byte[])response.getResponse())).equals("Logged in")){setIsAuth(true);}
         } else {
             return (byte[])response.getResponse();
         }

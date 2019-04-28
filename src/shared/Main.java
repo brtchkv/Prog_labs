@@ -12,15 +12,7 @@ public class Main {
     private static String pass = "lab1234";
 
     public static void main(String[] args){
-        try {
-            Class.forName("org.postgresql.Driver");
-            System.out.println("Installed Driver");
-            connection = DriverManager.getConnection(url, name, pass);
-            System.out.println("The Connection is successfully established\n");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Can't connect to the database");
-        }
+        System.out.print((char)27 + "[31m" + "> " + (char)27 + "[37m");
 
     }
 }

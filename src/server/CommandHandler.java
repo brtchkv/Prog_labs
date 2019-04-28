@@ -82,7 +82,9 @@ public class CommandHandler extends Thread {
                     break;
                 case "login":
                     String logData = (String) data;
-                    int result = db.executeLogin(logData.split(" ")[0].trim(), logData.split(" ")[1].trim());
+                    System.out.println(logData.split(" ")[0].trim());
+                    System.out.println(logData.split(" ")[1]);
+                    int result = db.executeLogin(logData.split(" ")[0].trim(), logData.split(" ")[1]);
                     if (result == 0){buffer = "Logged in".getBytes();}
                     else {buffer = "Error whilst logging in".getBytes();}
                     break;

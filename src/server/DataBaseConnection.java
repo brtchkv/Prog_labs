@@ -89,8 +89,8 @@ public class DataBaseConnection {
             while (iterator.hasNext()) {
                 Human h = iterator.next();
                 Statement statement = connection.createStatement();
-                String query = "UPDATE persons SET name ="+h.getName()+ ", "
-                        + "age ="+h.getAge() + "skill =" + h.getSkills().toString() + " WHERE username='"+ h.getOwner() + "';";
+                String query = "UPDATE persons SET name =" + h.getName() + ", "
+                        + "age =" + h.getAge() + ", skill =" + h.getSkills().toString() + " WHERE username='"+ h.getOwner() + "';";
                 statement.executeUpdate(query);
             }
         } catch (Exception e) {
@@ -101,7 +101,7 @@ public class DataBaseConnection {
     public int executeLogin(String login, String pass) {
         try {
             Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("SELECT * FROM users WHERE username='" + login + "', "+ "hash='" + pass + "';");
+            ResultSet result = statement.executeQuery("SELECT * FROM users WHERE username='" + login + "' and "+ "hash='" + pass + "';");
             if (result.next()) return 0;
             else return 1;
         } catch (Exception e) {
@@ -211,7 +211,7 @@ public class DataBaseConnection {
         try {
             int leftLimit = 97; // letter 'a'
             int rightLimit = 122; // letter 'z'
-            int targetStringLength = 10;
+            int targetStringLength = 8;
             Random random = new Random(); // get random string
             StringBuilder buffer = new StringBuilder(targetStringLength);
             for (int i = 0; i < targetStringLength; i++) {
@@ -261,4 +261,5 @@ public class DataBaseConnection {
             return null;
         }
     }
+
 }
