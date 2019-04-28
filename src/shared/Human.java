@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Human extends God implements Serializable, Comparable<Human> {
-    private String type = "Human";
 
+    private String type = "Human";
+    private String owner = "everyone";
 
     private ArrayList<Skill> skills = new ArrayList<>();
     private ArrayList<Disability> disabilities = new ArrayList<>();
@@ -34,7 +35,13 @@ public class Human extends God implements Serializable, Comparable<Human> {
             System.out.println("---------------------------------");}
     }
 
+    public String getOwner() {
+        return owner;
+    }
 
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
     public ArrayList<Skill> getSkills(){
         return this.skills;

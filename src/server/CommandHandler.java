@@ -1,25 +1,16 @@
 package server;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.util.*;
 import shared.*;
 
 public class CommandHandler extends Thread {
 
-    private InetAddress inetAddress;
-    private int port;
     public static String fileName;
     private static String FILEPATH = "human.csv";
 
-    public CommandHandler(InetAddress inetAddress, int port) {
-        this.inetAddress = inetAddress;
-        this.port = port;
-    }
 
-    public CommandHandler() {
-
-    }
+    public CommandHandler() { }
 
     @Override
     public void run() {
@@ -32,7 +23,7 @@ public class CommandHandler extends Thread {
      * @param com - команда
      * @param storage - ссылка на коллекцию с объектами
      */
-    public Object handleCommand(Command com, Vector<Human> storage) {
+    public Object handleCommand(Command com, Vector<Human> storage, DataBaseConnection db) {
         synchronized (CommandHandler.class) {
             String command = com.getCommand();
             Object data = com.getData();
@@ -82,6 +73,18 @@ public class CommandHandler extends Thread {
                     break;
                 case "help":
                     buffer = help();
+                    break;
+                case "register":
+                    String regData = (String) data;
+                    if (db.executeRegister(regData.split(" ")[0].trim(), regData.split(" ")[1].trim(), regData.split(" ")[2].trim())) {
+                        buffer = "Email registration is approved!".getBytes();
+                    }else {buffer = "Can't register you".getBytes();}
+                    break;
+                case "login":
+                    String logData = (String) data;
+                    int result = db.executeLogin(logData.split(" ")[0].trim(), logData.split(" ")[1].trim());
+                    if (result == 0){buffer = "Logged in".getBytes();}
+                    else {buffer = "Error whilst logging in".getBytes();}
                     break;
                 default:
                     buffer = "Error: undefined command! Type \"help\" for a list of available commands".getBytes();
@@ -201,9 +204,10 @@ public class CommandHandler extends Thread {
 
         long start = storage.stream().count();
         synchronized(storage) {
-            storage.removeIf(x -> !storage.contains(human));
+            storage.removeIf(x -> !storage.contains(human) && human.getOwner().equals(x.getOwner()));
         }
         long end = storage.stream().count();
+
         if ((start - end) > 0) {
             System.out.println("A human \"" + human.toString() + "\" has been deleted");
             return ("A human \"" + human.toString() + "\" has been deleted :(").getBytes();
@@ -219,7 +223,7 @@ public class CommandHandler extends Thread {
 
         long start = storage.stream().count();
         synchronized(storage) {
-            storage.removeIf(item -> item.compareTo(endObject) > 0);
+            storage.removeIf(item -> item.compareTo(endObject) > 0 && endObject.getOwner().equals(item.getOwner()));
         }
         long end = storage.stream().count();
 
@@ -237,7 +241,7 @@ public class CommandHandler extends Thread {
 
         long start = storage.stream().count();
         synchronized(storage) {
-            storage.removeIf(item -> item.compareTo(startObject) < 0);
+            storage.removeIf(item -> item.compareTo(startObject) < 0 && startObject.getOwner().equals(item.getOwner()));
         }
         long end = storage.stream().count();
         System.out.println("Deleted " + (start - end) + " objects.");

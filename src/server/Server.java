@@ -11,17 +11,24 @@ public class Server {
 
     private DatagramChannel udpChannel;
     private int port;
-    private Vector<Human> storage;
+    private Vector<Human> storage = new Vector<>();
     private String filename;
+    private DataBaseConnection db;
 
 
     public Server(int port) throws IOException {
         this.port = port;
-        this.udpChannel = DatagramChannel.open().bind(new InetSocketAddress("192.168.10.10", port));
+        this.udpChannel = DatagramChannel.open().bind(new InetSocketAddress("localhost", port));
         System.out.println("-- Yahoo! We Have A Lift Off! --");
         System.out.println("-- UDP Server settings --");
         System.out.println("-- UDP address: " + InetAddress.getLocalHost() + " --");
         System.out.println("-- UDP port: " + this.port + " --");
+        db = new DataBaseConnection();
+        System.out.println("Added " + db.loadPersons(storage) + " humans from the Database.");
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            db.savePersons(storage);
+            System.out.println("The DataBase has been updated.");
+        }));
 
     }
 
@@ -30,13 +37,15 @@ public class Server {
     }
 
     public void loadCollection() {
-        System.out.println("Loading the collection...");
-        try {
-            storage = FileHandler.convertToVector(filename);
-            CommandHandler.fileName = filename;
-        } catch (Exception e) {
-            System.err.println("On no, backup file is not found. Do you even care ?!");
-            System.exit(1);
+        if (storage == null || storage.size() == 0) {
+            System.out.println("Loading the collection from the back-up file...");
+            try {
+                storage = FileHandler.convertToVector(filename);
+                CommandHandler.fileName = filename;
+            } catch (Exception e) {
+                System.err.println("On no, backup file is not found. Do you even care ?!");
+                System.exit(1);
+            }
         }
     }
 
@@ -63,9 +72,13 @@ public class Server {
                 command = (Command) ois.readObject();
                 System.out.println("-- Client's input: " + command.getCommand());
 
+                // creating response for client
+                /*Thread thread = new Thread(() -> {
+                });*/
+
                 handler = new CommandHandler();
                 handler.start();
-                Response response = new Response(handler.handleCommand(command, storage));
+                Response response = new Response(handler.handleCommand(command, storage, db));
 
                 oos.writeObject(response);
                 oos.flush();
@@ -111,4 +124,5 @@ public class Server {
             System.out.println(e.getMessage());
         }
     }
+
 }

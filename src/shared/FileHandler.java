@@ -99,10 +99,12 @@ public class FileHandler {
                     throw new Exception();
                 }
                 Human temp = upper.size() > 1 ? new Human(upper.get(0), Integer.valueOf(upper.get(1))) : new Human(upper.get(0));
+
+                temp.setOwner(upper.get(2));
                 temp.welcome();
                 try{
-                    if(upper.size() > 2) {
-                        String[] skills = upper.get(2).split("-");
+                    if(upper.size() > 3) {
+                        String[] skills = upper.get(3).split("-");
                         for (String i : skills) {
                             List<String> lower_skill = CSVUtils.parseLine(i.trim(), ':');
                             if(lower_skill.size() > 1) {
@@ -119,7 +121,7 @@ public class FileHandler {
                 }catch (Exception e){ throw new Exception(); }
 
                 try{
-                    List<String> lower_dis = CSVUtils.parseLine(upper.get(3).trim(), '-');
+                    List<String> lower_dis = CSVUtils.parseLine(upper.get(4).trim(), '-');
                     for (int i = lower_dis.size() - 1; i >= 0; i--) {
                         temp.addDisability(new Disability(lower_dis.get(i)));
                     }
@@ -159,7 +161,7 @@ public class FileHandler {
                     StringBuffer s = new StringBuffer();
                     Human temp = iterator.next();
 
-                    s.append("\"" + temp.getName() + "\"," + "\"" + temp.getAge() + "\"");
+                    s.append("\"" + temp.getName() + "\"," + "\"" + temp.getAge() + "\"" + ",\"" + temp.getOwner() + "\"");
 
                     Iterator<Skill> iterator_s = temp.getSkills().iterator();
                     if (iterator_s.hasNext()) {
@@ -186,6 +188,7 @@ public class FileHandler {
                             s.append(disability.toString() + "\"");
                         }
                     }
+
                     printWriter.println(s);
                 }
 

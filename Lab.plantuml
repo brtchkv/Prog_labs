@@ -2,69 +2,112 @@
 
 title __LAB's Class Diagram__\n
 
-  package  {
+  package shared {
     class CSVUtils {
     }
   }
   
 
-  package  {
+  package client {
+    class Client {
+    }
+  }
+  
+
+  package shared {
+    class Command {
+    }
+  }
+  
+
+  package server {
+    class CommandHandler {
+    }
+  }
+  
+
+  package shared {
     class Console {
     }
   }
   
 
-  package  {
+  package shared {
+    class ConsoleClient {
+    }
+  }
+  
+
+  package shared {
     class CustomCommands {
     }
   }
   
 
-  package  {
+  package shared {
     class Disability {
     }
   }
   
 
-  package  {
+  package shared {
     class FileHandler {
     }
   }
   
 
-  package  {
+  package shared {
     abstract class God {
     }
   }
   
 
-  package  {
+  package shared {
     class Human {
     }
   }
   
 
-  package  {
+  package shared {
     class Main {
     }
   }
   
 
-  package  {
+  package shared {
+    class Response {
+    }
+  }
+  
+
+  package server {
+    class Server {
+    }
+  }
+  
+
+  package shared {
     class Skill {
     }
   }
   
 
-  package  {
+  package shared {
     class Temp {
     }
   }
   
 
+  Command -up-|> Serializable
   Console o-- CustomCommands : customCommands
-  God -up-|> Comparable
+  Disability -up-|> Serializable
+  God -up-|> Serializable
+  Human -up-|> Serializable
+  Human -up-|> Comparable
   Human -up-|> God
+  Response -up-|> Serializable
+  Skill -up-|> Serializable
+  Temp -up-|> Serializable
   Temp o-- Skill : skill
 
 

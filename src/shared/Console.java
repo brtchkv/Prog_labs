@@ -288,7 +288,7 @@ public class Console {
         }
     }
 
-    public static Human parseHumanFromJson(String data){
+    public static Human parseHumanFromJson(String data, String username){
         try {
             Human forAction;
             Gson gson = new Gson();
@@ -298,6 +298,7 @@ public class Console {
                 System.out.println("Error, the item is set incorrectly: \n- You may not have specified all the values!");
                 return null;
             }
+            forAction.setOwner(username);
             return forAction;
         } catch (JsonSyntaxException ex) {
             System.out.println("Error, the item is set incorrectly!");

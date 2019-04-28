@@ -1,12 +1,18 @@
 package shared;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public abstract class God implements Serializable {
     private String name;
     private int age;
     private String type;
+    private OffsetDateTime dateTime = OffsetDateTime.now(); // Current date time with an offset
+
+    public void setDateTime(OffsetDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
 
     public God (String name, int age, String type){
         this.name = name;
@@ -19,7 +25,7 @@ public abstract class God implements Serializable {
         this.type = type;
     }
 
-    public God(String type){
+    public God(String type) {
         this.type = type;
     }
 
@@ -33,6 +39,10 @@ public abstract class God implements Serializable {
 
     public String getType(){
         return this.type;
+    }
+
+    public OffsetDateTime getDateTime() {
+        return dateTime;
     }
 
     @Override

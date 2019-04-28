@@ -1,11 +1,26 @@
 package shared;
 
-import java.util.*;
+import server.CommandHandler;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class Main {
-    public static void main(String[] args) {
-        Set g = new LinkedHashSet();
-        g.add(2); g.add(1); g.add(3); g.add(2); g.add(4); g.remove(3);
-        System.out.println(Arrays.toString(g.toArray()));
+    private static Connection connection;
+    private static String url = "jdbc:postgresql://localhost:5432/postgres";
+    private static String name = "lab";
+    private static String pass = "lab1234";
+
+    public static void main(String[] args){
+        try {
+            Class.forName("org.postgresql.Driver");
+            System.out.println("Installed Driver");
+            connection = DriverManager.getConnection(url, name, pass);
+            System.out.println("The Connection is successfully established\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Can't connect to the database");
+        }
+
     }
 }
