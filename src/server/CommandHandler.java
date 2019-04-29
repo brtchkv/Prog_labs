@@ -87,6 +87,7 @@ public class CommandHandler extends Thread {
                     int result = db.executeLogin(logData.split(" ")[0].trim(), logData.split(" ")[1]);
                     if (result == 0){buffer = "Logged in".getBytes();}
                     else if (result == 1){buffer = "You need to register first!".getBytes();}
+                    else if (result == 2) {buffer = "Wrong Password!".getBytes();}
                     else {buffer = "Can't log in".getBytes();}
                     break;
                 default:

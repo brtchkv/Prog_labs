@@ -439,6 +439,7 @@ public class Client {
             if ((new String((byte[])response.getResponse())).equals("Logged in")){
                 setIsAuth(true);
                 return "~~~ Successfully logged in! ~~~".getBytes();}
+            else {return (byte[])response.getResponse();}
         } else {
             return (byte[])response.getResponse();
         }

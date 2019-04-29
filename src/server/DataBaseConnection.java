@@ -1,10 +1,8 @@
 package server;
 
 import shared.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+
+import java.sql.*;
 import java.time.OffsetDateTime;
 import java.util.Iterator;
 import java.util.Random;
@@ -40,8 +38,9 @@ public class DataBaseConnection {
         try {
             int i = 0;
             OffsetDateTime time = OffsetDateTime.now();
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("SELECT * FROM \"persons\";");
+           // Statement statement = connection.createStatement();
+            PreparedStatement preStatement = connection.prepareStatement("SELECT * FROM \"persons\";");
+            ResultSet result = preStatement.executeQuery();
             while (result.next()) {
                 String username = result.getString("username");
                 String name = result.getString("name");
@@ -71,8 +70,7 @@ public class DataBaseConnection {
 
     public void addToDB(Human human) {
         try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("INSERT INTO persons VALUES ('" + human.getName() + "', '" +
+            PreparedStatement preStatement = connection.prepareStatement("INSERT INTO persons VALUES ('" + human.getName() + "', '" +
                     human.getClass().toString().replace("class Entities.", "") + "', '"
                     +human.getAge() + "', '"+ human.getSkills() + "', '" + human.getDisabilities() + "', '"
                     + human.getOwner() + "', '" + human.getDateTime().toString().replace("T", " ") +"');");
@@ -87,19 +85,17 @@ public class DataBaseConnection {
 
                 Iterator<Human> iterator = humans.iterator();
                 if (iterator.hasNext()) {
-                    Statement emptyAll = connection.createStatement();
-                    emptyAll.execute("TRUNCATE persons;");
+                    PreparedStatement preStatement = connection.prepareStatement("TRUNCATE persons;");
+                    preStatement.execute();
                 }
 
                 while (iterator.hasNext()) {
                     Human h = iterator.next();
-                    Statement statement = connection.createStatement();
-                    System.out.println(h.toString() + " "+ h.getName());
                     String skills = h.getSkills().toString() != "[]" && h.getSkills().toString() != null ? h.getSkills().toString() : "NULL";
-                    String query = "INSERT INTO persons VALUES ('" + h.getName() + "', "
+                    PreparedStatement preStatement = connection.prepareStatement("INSERT INTO persons VALUES ('" + h.getName() + "', "
                             + "'" + h.getAge() + "', '" + skills + "', '" + h.getOwner() +
-                            "', '" + h.getDateTime().toString() + "');";
-                    statement.executeUpdate(query);
+                            "', '" + h.getDateTime().toString() + "');");
+                    preStatement.executeUpdate();
                 }
             }
         } catch (Exception e) {
@@ -110,10 +106,15 @@ public class DataBaseConnection {
 
     public int executeLogin(String login, String hash) {
         try {
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("SELECT * FROM users WHERE username='" + login + "' and "+ "hash='" + hash + "';");
+            PreparedStatement preStatement = connection.prepareStatement("SELECT * FROM users WHERE username='" + login + "' and "+ "hash='" + hash + "';");
+            ResultSet result = preStatement.executeQuery();
             if (result.next()) return 0;
-            else return 1;
+            else {
+                PreparedStatement preStatement2 = connection.prepareStatement("SELECT * FROM users WHERE username='" + login + "';");
+                ResultSet result2 = preStatement2.executeQuery();
+                if (result2.next()) return 2;
+                else return 1;
+            }
         } catch (Exception e) {
             System.out.println("Login error");
             return -1;
@@ -136,12 +137,12 @@ public class DataBaseConnection {
     public int executeRegister(String login, String mail, String pass) {
         try {
 
-            Statement iflog = connection.createStatement();
-            ResultSet result = iflog.executeQuery("SELECT * FROM users WHERE username='" + login + "';");
+            PreparedStatement iflog = connection.prepareStatement("SELECT * FROM users WHERE username='" + login + "';");
+            ResultSet result = iflog.executeQuery();
             if (result.next()){return 0;}
-            Statement statement = connection.createStatement();
             String hash = DataBaseConnection.encryptString(pass);
-            statement.executeUpdate("INSERT INTO users VALUES ('" + login + "', '" + mail + "', '" + hash + "');");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO users VALUES ('" + login + "', '" + mail + "', '" + hash + "');");
+            statement.executeUpdate();
             new Thread(() -> JavaMail.registration(mail, pass)).start();
             return 1;
         } catch (Exception e) {

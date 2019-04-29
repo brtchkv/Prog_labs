@@ -10,7 +10,7 @@ class JavaMail {
 
     public static void registration(String email, String reg_token){
         String subject = "Confirm registration";
-        String content = "Random Password: " + reg_token +"\nDon't show it to anyone!";
+        String content = "Random Password: " + reg_token +". Don't show it to anyone!";
         String smtpHost="mail.0hcow.com";
         String from= "sadiya.nooriya@0hcow.com";
         String login="sadiya.nooriya";
@@ -26,7 +26,7 @@ class JavaMail {
 
     public static void main(String args[]) {
         String subject = "Confirm registration";
-        String content = "Registration token: ";
+        String content = "Random Password: \n" + "efrrewgwrg" + ".\t\nDon't show it to anyone!";
         String smtpHost = "mail.0hcow.com";
         String from = "sadiya.nooriya@0hcow.com";
         String login = "sadiya.nooriya";
