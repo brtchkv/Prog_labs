@@ -259,7 +259,7 @@ public class Client {
                         helpAuth();
                         break;
                     case "register":
-                        System.out.println("Enter your username");
+                        System.out.println("Enter your username without any whitespaces:");
                         System.out.print((char)27 + "[33m" + "> "+ (char)27 + "[37m");
                         String username = scanner.nextLine().trim().replaceAll("\\s+", "");
 
@@ -326,15 +326,16 @@ public class Client {
                             login = scanner.nextLine().trim();
                         }
 
+                        this.username = login;
+
                         System.out.println("Enter your password:");
                         System.out.print((char)27 + "[33m" + "> " + (char)27 + "[37m");
                         String password;
                         if (console != null) password = new String(console.readPassword()).trim();
                         else password = scanner.nextLine().trim();
-                        //password = server.DataBaseConnection.encryptString(password);
+                        password = server.DataBaseConnection.encryptString(password);
                         correctCommand = true;
                         request = createRequest("login", login + " " + password);
-                        System.out.println(login + " " + password);
 //                        try {
 //                            Thread.sleep(1000);
 //                        } catch (InterruptedException e) {
@@ -398,7 +399,7 @@ public class Client {
                 || command.equals("remove") || command.equals("remove_greater")
                 || command.equals("remove_lower")) {
             try {
-                c.setData(Console.parseHumanFromJson(data, username));
+                c.setData(Console.parseHumanFromJson(data, this.username));
             } catch (Exception e) {
                 return null;
             }
@@ -430,12 +431,14 @@ public class Client {
                 synchronized (storage) {
                     storage.forEach(System.out::println);
                 }
-            } catch (IOException | ClassNotFoundException e){ }
+            } catch (IOException | ClassNotFoundException e){}
         } else if (command.equals("Email registration is approved!")){
             setIsAuth(true);
             return ("An email with the password was sent to you address\nNext time just type \"login\" with your account credentials").getBytes();
         } else if (command.equals("login")) {
-            if ((new String((byte[])response.getResponse())).equals("Logged in")){setIsAuth(true);}
+            if ((new String((byte[])response.getResponse())).equals("Logged in")){
+                setIsAuth(true);
+                return "~~~ Successfully logged in! ~~~".getBytes();}
         } else {
             return (byte[])response.getResponse();
         }

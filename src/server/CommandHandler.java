@@ -63,7 +63,7 @@ public class CommandHandler extends Thread {
                     buffer = show(storage);
                     break;
                 case "save":
-                    buffer = save(storage);
+                    buffer = save(storage, db);
                     break;
                 case "import":
                     buffer = import1(storage, (Vector<Human>) data);
@@ -76,17 +76,18 @@ public class CommandHandler extends Thread {
                     break;
                 case "register":
                     String regData = (String) data;
-                    if (db.executeRegister(regData.split(" ")[0].trim(), regData.split(" ")[1].trim(), regData.split(" ")[2].trim())) {
+                    int resultR = db.executeRegister(regData.split(" ")[0].trim(), regData.split(" ")[1].trim(), regData.split(" ")[2].trim());
+                    if (resultR == 1) {
                         buffer = "Email registration is approved!".getBytes();
-                    }else {buffer = "Can't register you".getBytes();}
+                    }else if (resultR == 0){buffer = "You've already registered!".getBytes();}
+                    else {buffer = "Can't register you".getBytes();}
                     break;
                 case "login":
                     String logData = (String) data;
-                    System.out.println(logData.split(" ")[0].trim());
-                    System.out.println(logData.split(" ")[1]);
                     int result = db.executeLogin(logData.split(" ")[0].trim(), logData.split(" ")[1]);
                     if (result == 0){buffer = "Logged in".getBytes();}
-                    else {buffer = "Error whilst logging in".getBytes();}
+                    else if (result == 1){buffer = "You need to register first!".getBytes();}
+                    else {buffer = "Can't log in".getBytes();}
                     break;
                 default:
                     buffer = "Error: undefined command! Type \"help\" for a list of available commands".getBytes();
@@ -120,12 +121,18 @@ public class CommandHandler extends Thread {
      *
      * @param storage - ссылка на коллекцию с объектами
      */
-    public byte[] save(Vector<Human> storage) {
+    public byte[] save(Vector<Human> storage, DataBaseConnection db) {
 
-        if (FileHandler.checkFileWrite(FILEPATH)) {
-            return FileHandler.save(storage, FILEPATH);
-        }
-        return "Can't write to a file. Check permissions.".getBytes();
+//        if (FileHandler.checkFileWrite(FILEPATH)) {
+//            return FileHandler.save(storage, FILEPATH);
+//        }
+//        return "Can't write to a file. Check permissions.".getBytes();
+
+        if (storage != null) {
+            db.savePersons(storage);
+            return "Saved Humans to the DataBase".getBytes();
+        } else return "Collection is empty; nothing to save!".getBytes();
+
     }
 
     /**
@@ -203,17 +210,16 @@ public class CommandHandler extends Thread {
      * @param human - обьект типа Human
      */
     public byte[] remove(Vector<Human> storage, Human human) {
-
-        long start = storage.stream().count();
         synchronized(storage) {
-            storage.removeIf(x -> !storage.contains(human) && human.getOwner().equals(x.getOwner()));
-        }
-        long end = storage.stream().count();
+            String owner = human.getOwner();
 
-        if ((start - end) > 0) {
-            System.out.println("A human \"" + human.toString() + "\" has been deleted");
-            return ("A human \"" + human.toString() + "\" has been deleted :(").getBytes();
-        } else {return "There's no such object in the collection. Try adding instead.".getBytes();}
+            if (storage.removeIf(x -> storage.contains(human) && owner.equals(x.getOwner()))) {
+                System.out.println("A human " + human.toString() + " has been deleted");
+                return ("A human " + human.toString() + " has been deleted :(").getBytes();
+            } else {
+                return "There's no such object in the collection. Try adding instead.\nPerhaps, you don't have rights to delete it!".getBytes();
+            }
+        }
     }
 
     /**

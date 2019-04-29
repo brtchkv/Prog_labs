@@ -13,6 +13,7 @@ public class Main {
 
     public static void main(String[] args){
         System.out.print((char)27 + "[31m" + "> " + (char)27 + "[37m");
-
+        Human h = new Human("Alice", 123);
+        System.out.println(h.getOwner());
     }
 }

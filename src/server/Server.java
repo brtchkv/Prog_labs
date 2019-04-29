@@ -11,7 +11,7 @@ public class Server {
 
     private DatagramChannel udpChannel;
     private int port;
-    private Vector<Human> storage = new Vector<>();
+    private Vector<Human> storage;
     private String filename;
     private DataBaseConnection db;
 
@@ -24,6 +24,7 @@ public class Server {
         System.out.println("-- UDP address: " + InetAddress.getLocalHost() + " --");
         System.out.println("-- UDP port: " + this.port + " --");
         db = new DataBaseConnection();
+        storage = new Vector<>();
         System.out.println("Added " + db.loadPersons(storage) + " humans from the Database.");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             db.savePersons(storage);
@@ -73,20 +74,22 @@ public class Server {
                 System.out.println("-- Client's input: " + command.getCommand());
 
                 // creating response for client
-                /*Thread thread = new Thread(() -> {
-                });*/
+                //Thread thread = new Thread(() -> {
+                //});
 
                 handler = new CommandHandler();
                 handler.start();
-                Response response = new Response(handler.handleCommand(command, storage, db));
+                synchronized (storage) {
+                    Response response = new Response(handler.handleCommand(command, storage, db));
 
-                oos.writeObject(response);
-                oos.flush();
-                buffer.clear();
-                buffer.put(baos.toByteArray());
-                buffer.flip();
+                    oos.writeObject(response);
+                    oos.flush();
+                    buffer.clear();
+                    buffer.put(baos.toByteArray());
+                    buffer.flip();
 
-                udpChannel.send(buffer, clientAddress);
+                    udpChannel.send(buffer, clientAddress);
+                }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -116,9 +119,13 @@ public class Server {
 
         if (args.length == 2) {
             server.setFilename(args[1]);
+            try {
+                server.loadCollection();
+            } catch (Exception e){
+                System.out.println("Can't import your back-up file!");
+            }
         }
         try {
-            server.loadCollection();
             server.listen();
         }catch (Exception e){
             System.out.println(e.getMessage());

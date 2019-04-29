@@ -1,12 +1,10 @@
 package server;
 
 import shared.*;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Iterator;
 import java.util.Random;
@@ -56,7 +54,7 @@ public class DataBaseConnection {
                 Human h = new Human(name, age);
                 h.setDateTime(time);
                 h.setOwner(username);
-                if (skills != null) {
+                if (skills != null && !skills.equals("[]") && !skills.toLowerCase().trim().equals("null")) {
                     h.addSkill(new Skill(skills.split(" ")[0], skills.split(" ")[1]));
                 }
                 storage.add(h);
@@ -85,23 +83,35 @@ public class DataBaseConnection {
 
     public void savePersons(Vector<Human> humans) {
         try {
-            Iterator<Human> iterator = humans.iterator();
-            while (iterator.hasNext()) {
-                Human h = iterator.next();
-                Statement statement = connection.createStatement();
-                String query = "UPDATE persons SET name =" + h.getName() + ", "
-                        + "age =" + h.getAge() + ", skill =" + h.getSkills().toString() + " WHERE username='"+ h.getOwner() + "';";
-                statement.executeUpdate(query);
+            if (humans != null) {
+
+                Iterator<Human> iterator = humans.iterator();
+                if (iterator.hasNext()) {
+                    Statement emptyAll = connection.createStatement();
+                    emptyAll.execute("TRUNCATE persons;");
+                }
+
+                while (iterator.hasNext()) {
+                    Human h = iterator.next();
+                    Statement statement = connection.createStatement();
+                    System.out.println(h.toString() + " "+ h.getName());
+                    String skills = h.getSkills().toString() != "[]" && h.getSkills().toString() != null ? h.getSkills().toString() : "NULL";
+                    String query = "INSERT INTO persons VALUES ('" + h.getName() + "', "
+                            + "'" + h.getAge() + "', '" + skills + "', '" + h.getOwner() +
+                            "', '" + h.getDateTime().toString() + "');";
+                    statement.executeUpdate(query);
+                }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Error whilst saving Humans to the DataBase");
         }
     }
 
-    public int executeLogin(String login, String pass) {
+    public int executeLogin(String login, String hash) {
         try {
             Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("SELECT * FROM users WHERE username='" + login + "' and "+ "hash='" + pass + "';");
+            ResultSet result = statement.executeQuery("SELECT * FROM users WHERE username='" + login + "' and "+ "hash='" + hash + "';");
             if (result.next()) return 0;
             else return 1;
         } catch (Exception e) {
@@ -110,64 +120,6 @@ public class DataBaseConnection {
         }
     }
 
-//    public boolean checkAuthToken(Client client, String user, String token) {
-//        try {
-//            Statement statement = connection.createStatement();
-//            ResultSet result = statement.executeQuery("SELECT * FROM user_tokens WHERE username='" + user + "' AND "+ " auth_token='"+token+"';");
-//            if (result.next()) {
-//                LocalDateTime reg_time = LocalDateTime.parse(result.getString("auth_token_time").replace(" ", "T"));
-//                LocalDateTime now = LocalDateTime.now();
-//                long time = Duration.between(reg_time, now).get(SECONDS);
-//                if (time > 90) {
-//                    client.sendMessage(cActions.SEND, "Срок действия токена истёк\n");
-//                    client.setIsAuth(false);
-//                    client.setIsTokenValid(false);
-//                    client.setHuman(null);
-//                    client.sendMessage(cActions.DEAUTH, null);
-//                    client.getServer().sendToAllClients(client.getUserName()+ " отключился от сервера.", null);
-//                } else {
-//                    statement.executeUpdate("UPDATE user_tokens SET auth_token_time='"+LocalDateTime.now()+"' WHERE username='"+user+"';");
-//                    return true;
-//                }
-//            } else client.sendMessage(cActions.SEND, "Неверный токен\n");
-//        } catch (Exception e) {
-//            System.out.println("Ошибка при проверке токена");
-//        }
-//        return false;
-//    }
-
-    public String checkRegToken(String user, String token) {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("SELECT * FROM user_tokens WHERE username='" + user + "' AND "+ " reg_token='"+token+"';");
-            if (result.next()) {
-                confirmRegister(user);
-                return "Email registration is approved!";
-            } else return "Wrong Token\n";
-        } catch (Exception e) {
-            e.getMessage();
-            System.out.println("Error while proof checking your token");
-            return "Error while proof checking your token";
-        }
-    }
-
-    public void setAuthToken(String username, String token) {
-        try {
-            Statement state = connection.createStatement();
-            state.executeUpdate("UPDATE user_tokens SET auth_token='" + token + "', auth_token_time='"+LocalDateTime.now()+  "' WHERE username='"+username+"';");
-        } catch (Exception e) {
-            System.out.println("Ошибка при обновлении авторизационного токена");
-        }
-    }
-
-    public void confirmRegister(String username) {
-        try {
-            Statement state = connection.createStatement();
-            state.executeUpdate("UPDATE users SET email_conf='TRUE' WHERE username='"+username+"';");
-        } catch (Exception e) {
-            System.out.println("Ошибка при подтвеждении регистрации");
-        }
-    }
 
     public boolean removePerson(String username, String name) {
         try {
@@ -180,29 +132,22 @@ public class DataBaseConnection {
         }
     }
 
-//    public void loadPersons(Client client) {
-//        try {
-//            Statement statement = connection.createStatement();
-//            ResultSet result = statement.executeQuery("SELECT * FROM persons WHERE username='" + client.getUserName() + "';");
-//            while (result.next()) {
-//                Human person = WorldManager.getInstance().getHuman(client.getUserName() + result.getString("name"));
-//                client.addHuman(result.getString("name"), person);
-//            }
-//        } catch (Exception e) {
-//            System.out.println("Ошибка при загрузке персонажей");
-//        }
-//    }
 
-    public boolean executeRegister(String login, String mail, String hash) {
+    public int executeRegister(String login, String mail, String pass) {
         try {
+
+            Statement iflog = connection.createStatement();
+            ResultSet result = iflog.executeQuery("SELECT * FROM users WHERE username='" + login + "';");
+            if (result.next()){return 0;}
             Statement statement = connection.createStatement();
+            String hash = DataBaseConnection.encryptString(pass);
             statement.executeUpdate("INSERT INTO users VALUES ('" + login + "', '" + mail + "', '" + hash + "');");
-            new Thread(() -> JavaMail.registration(mail, hash)).start();
-            return true;
+            new Thread(() -> JavaMail.registration(mail, pass)).start();
+            return 1;
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error whilst registration");
-            return false;
+            return -1;
         }
     }
 
@@ -221,8 +166,8 @@ public class DataBaseConnection {
             }
 
             //encrypt random string with SHA-224
+            return buffer.toString();
 
-            return encryptString(buffer.toString());
         } catch (Exception e) {
             return null;
         }

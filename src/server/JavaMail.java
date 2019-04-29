@@ -10,7 +10,7 @@ class JavaMail {
 
     public static void registration(String email, String reg_token){
         String subject = "Confirm registration";
-        String content = "Registration token: " + reg_token;
+        String content = "Random Password: " + reg_token +"\nDon't show it to anyone!";
         String smtpHost="mail.0hcow.com";
         String from= "sadiya.nooriya@0hcow.com";
         String login="sadiya.nooriya";
@@ -19,6 +19,7 @@ class JavaMail {
         try {
             sendSimpleMessage(login, password, from, email, content, subject, smtpPort, smtpHost);
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Error whilst sending email");
         }
     }

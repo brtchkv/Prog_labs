@@ -10,5 +10,6 @@
     <orderEntry type="library" exported="" name="gson-2.8.2" level="project" />
     <orderEntry type="library" exported="" name="postgresql-42.2.5" level="project" />
     <orderEntry type="library" exported="" name="javax.mail" level="project" />
+    <orderEntry type="library" name="activation" level="project" />
   </component>
 </module>
