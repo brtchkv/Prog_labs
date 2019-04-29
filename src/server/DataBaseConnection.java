@@ -38,7 +38,6 @@ public class DataBaseConnection {
         try {
             int i = 0;
             OffsetDateTime time = OffsetDateTime.now();
-           // Statement statement = connection.createStatement();
             PreparedStatement preStatement = connection.prepareStatement("SELECT * FROM \"persons\";");
             ResultSet result = preStatement.executeQuery();
             while (result.next()) {
@@ -97,6 +96,9 @@ public class DataBaseConnection {
                             "', '" + h.getDateTime().toString() + "');");
                     preStatement.executeUpdate();
                 }
+                System.out.println("The DataBase has been updated.");
+            } else {
+                System.out.println("Collection is empty; nothing to save!");
             }
         } catch (Exception e) {
             e.printStackTrace();

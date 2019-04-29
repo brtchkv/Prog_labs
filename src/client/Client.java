@@ -275,42 +275,6 @@ public class Client {
                         System.out.print((char)27 + "[33m" + "> " + (char)27 + "[37m");
                         String email = scanner.nextLine();
 
-//                        System.out.println("Enter your password:");
-//                        System.out.print("> ");
-//                        String pass;
-//                        String passAgain;
-//                        if (console == null) {
-//                            pass = scanner.nextLine().trim();
-//
-//                            while (pass.length() < 4) {
-//                                System.out.println("The minimum size is 4 chars");
-//                                pass = scanner.nextLine().trim();
-//                            }
-//                            System.out.println("Enter your password again:");
-//                            System.out.print("> ");
-//                            passAgain = scanner.nextLine().trim();
-//                        } else {
-//                            pass = new String(console.readPassword()).trim();
-//
-//                            while (pass.length() < 4) {
-//                                System.out.println("The minimum size is 4 chars");
-//                                pass = new String(console.readPassword()).trim();
-//                            }
-//                            System.out.println("Enter your password:");
-//                            System.out.print("> ");
-//                            passAgain = new String(console.readPassword()).trim();
-//                        }
-//
-//                        boolean match = pass.equals(passAgain);
-//
-//                        String hash = server.DataBaseConnection.encryptString(pass);
-//
-//                        if (match) {
-//                            lastCommand = "register";
-//                            correctCommand = true;
-//                            request = createRequest("register", username + " " + email + " " + hash);
-//                        } else System.out.println("The passwords you've entered doesn't match!");
-
                         correctCommand = true;
                         request = createRequest("register", username + " " + email + " " + DataBaseConnection.getToken());
                         break;
@@ -336,11 +300,6 @@ public class Client {
                         password = server.DataBaseConnection.encryptString(password);
                         correctCommand = true;
                         request = createRequest("login", login + " " + password);
-//                        try {
-//                            Thread.sleep(1000);
-//                        } catch (InterruptedException e) {
-//                            System.out.println(e.getMessage());
-//                        }
                         break;
 
                     default:
@@ -404,7 +363,7 @@ public class Client {
                 return null;
             }
         } else if (command.equals("import")) {
-            c.setData(FileHandler.convertToVector(data));
+            c.setData(FileHandler.convertToVector(data, this.username));
             if (c.getData() == null) {
                 return null;
             }
@@ -438,7 +397,7 @@ public class Client {
         } else if (command.equals("login")) {
             if ((new String((byte[])response.getResponse())).equals("Logged in")){
                 setIsAuth(true);
-                return "~~~ Successfully logged in! ~~~".getBytes();}
+                return "~~~~~ Successfully logged in! ~~~~~~".getBytes();}
             else {return (byte[])response.getResponse();}
         } else {
             return (byte[])response.getResponse();

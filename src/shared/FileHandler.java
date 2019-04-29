@@ -59,7 +59,7 @@ public class FileHandler {
      * @return LinkedHashSet with HUMAN objects
      */
 
-    public static Vector<Human> convertToVector(String path){
+    public static Vector<Human> convertToVector(String path, String username){
 
         Vector<Human> humans = new Vector<>();
 
@@ -100,7 +100,9 @@ public class FileHandler {
                 }
                 Human temp = upper.size() > 1 ? new Human(upper.get(0), Integer.valueOf(upper.get(1))) : new Human(upper.get(0));
 
-                temp.setOwner(upper.get(2));
+                try {
+                    temp.setOwner(username);
+                }catch (Exception e){}
                 temp.welcome();
                 try{
                     if(upper.size() > 3) {
@@ -114,7 +116,6 @@ public class FileHandler {
                                 System.out.println("\nNot enough of attributes for adding \""+ upper.get(0) + "\"'s skill!");
                                 throw new Exception();
                             }
-
                         }
                     }
 

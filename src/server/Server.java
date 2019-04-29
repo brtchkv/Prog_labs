@@ -28,7 +28,6 @@ public class Server {
         System.out.println("Added " + db.loadPersons(storage) + " humans from the Database.");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             db.savePersons(storage);
-            System.out.println("The DataBase has been updated.");
         }));
 
     }
@@ -41,7 +40,7 @@ public class Server {
         if (storage == null || storage.size() == 0) {
             System.out.println("Loading the collection from the back-up file...");
             try {
-                storage = FileHandler.convertToVector(filename);
+                storage = FileHandler.convertToVector(filename, "");
                 CommandHandler.fileName = filename;
             } catch (Exception e) {
                 System.err.println("On no, backup file is not found. Do you even care ?!");

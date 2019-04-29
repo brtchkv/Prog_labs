@@ -15,7 +15,7 @@ public class Console {
 
     public Console(){
         if(FileHandler.checkFileRead(FileHandler.getFILEPATH())) {
-            this.customCommands = new CustomCommands(FileHandler.convertToVector(FileHandler.getFILEPATH()));
+            this.customCommands = new CustomCommands(FileHandler.convertToVector(FileHandler.getFILEPATH(), "all"));
             needExit = false;
             this.execute();
         }else{

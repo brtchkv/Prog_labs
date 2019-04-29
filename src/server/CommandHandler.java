@@ -213,8 +213,7 @@ public class CommandHandler extends Thread {
     public byte[] remove(Vector<Human> storage, Human human) {
         synchronized(storage) {
             String owner = human.getOwner();
-
-            if (storage.removeIf(x -> storage.contains(human) && owner.equals(x.getOwner()))) {
+            if (storage.removeIf(x -> storage.contains(human) && (owner.equals(x.getOwner()) || x.getOwner().equals("all")))) {
                 System.out.println("A human " + human.toString() + " has been deleted");
                 return ("A human " + human.toString() + " has been deleted :(").getBytes();
             } else {
@@ -231,8 +230,9 @@ public class CommandHandler extends Thread {
 
 
         long start = storage.stream().count();
+        String owner = endObject.getOwner();
         synchronized(storage) {
-            storage.removeIf(item -> item.compareTo(endObject) > 0 && endObject.getOwner().equals(item.getOwner()));
+            storage.removeIf(item -> item.compareTo(endObject) > 0 && (owner.equals(item.getOwner()) || item.getOwner().equals("all")));
         }
         long end = storage.stream().count();
 
@@ -249,8 +249,9 @@ public class CommandHandler extends Thread {
     public byte[] remove_greater(Vector<Human> storage, Human startObject) {
 
         long start = storage.stream().count();
+        String owner = startObject.getOwner();
         synchronized(storage) {
-            storage.removeIf(item -> item.compareTo(startObject) < 0 && startObject.getOwner().equals(item.getOwner()));
+            storage.removeIf(item -> item.compareTo(startObject) < 0 && (owner.equals(item.getOwner()) || item.getOwner().equals("all")));
         }
         long end = storage.stream().count();
         System.out.println("Deleted " + (start - end) + " objects.");
