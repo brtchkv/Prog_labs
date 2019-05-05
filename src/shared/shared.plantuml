@@ -109,12 +109,15 @@ title __SHARED's Class Diagram__\n
         - name : String
         - age : int
         - type : String
+        - dateTime : OffsetDateTime
+        + setDateTime()
         + God()
         + God()
         + God()
         + getAge()
         + getName()
         + getType()
+        + getDateTime()
         + toString()
         + hashCode()
     }
@@ -124,12 +127,15 @@ title __SHARED's Class Diagram__\n
   package shared {
     class Human {
         - type : String
+        - owner : String
         - skills : ArrayList<Skill>
         - disabilities : ArrayList<Disability>
         + Human()
         + Human()
         + Human()
         + welcome()
+        + getOwner()
+        + setOwner()
         + getSkills()
         + addSkill()
         + addDisability()
@@ -143,6 +149,10 @@ title __SHARED's Class Diagram__\n
 
   package shared {
     class Main {
+        {static} - connection : Connection
+        {static} - url : String
+        {static} - name : String
+        {static} - pass : String
         {static} + main()
     }
   }

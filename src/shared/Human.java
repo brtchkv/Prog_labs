@@ -49,7 +49,6 @@ public class Human extends God implements Serializable, Comparable<Human> {
 
     public boolean addSkill(Skill skill) {
         if (skills.add(skill)) {
-            //System.out.println("Объекту - " + this.getName() + " - успешно присвоена способность " + skill.getName());
             return true;
         } else {
             System.out.println("При добавлении способности произошла ошибка...");
@@ -59,7 +58,6 @@ public class Human extends God implements Serializable, Comparable<Human> {
 
     public boolean addDisability(Disability d) {
         if (disabilities.add(d)) {
-            //System.out.println("Объекту - " + this.getName() + " - успешно присвоена несовершенность " + d.getName()+".");
             return true;
         } else {
             System.out.println("При добавлении несовершенности произошла ошибка...");

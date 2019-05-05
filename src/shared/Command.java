@@ -7,6 +7,11 @@ public class Command implements Serializable {
 
     private String command;
     private Object data;
+    private Object credentials;
+
+    public Object getCredentials() {
+        return credentials;
+    }
 
     public Command(String command) {
         this.command = command;
@@ -18,12 +23,14 @@ public class Command implements Serializable {
         this.data = data;
     }
 
-    public String getCommand() {
-        return command;
+    public Command(String command, String data, String credentials) {
+        this.command = command;
+        this.data = data;
+        this.credentials = credentials;
     }
 
-    public void setCommand(String command) {
-        this.command = command;
+    public String getCommand() {
+        return command;
     }
 
     public Object getData() {
@@ -38,7 +45,8 @@ public class Command implements Serializable {
     public String toString() {
         return "Command{" +
                 "command='" + command + '\'' +
-                ", data=" + data +
+                ", data=" + data + '\'' +
+                ", credentials=" + credentials + '\'' +
                 '}';
     }
 }

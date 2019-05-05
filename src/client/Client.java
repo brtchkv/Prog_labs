@@ -23,6 +23,7 @@ public class Client {
     private boolean isAuth = false;
     private java.io.Console console = System.console();
     private String username;
+    private String password;
 
     private Client(String destinationAddr, int port) throws IOException {
 
@@ -42,7 +43,7 @@ public class Client {
 
     public void testServerConnection() throws IOException {
         System.out.println("Trying to reach a remote host...");
-        DatagramPacket testRequest = createRequest("connecting", "");
+        DatagramPacket testRequest = createRequest("connecting", null, null);
 
         byte[] buf = new byte[256];
         DatagramPacket testResponse = new DatagramPacket(buf, buf.length);
@@ -98,6 +99,7 @@ public class Client {
         System.out.println();
         System.out.println("Feed me with your commands:");
         System.out.print((char)27 + "[34m" + "> " + (char)27 + "[37m");
+
         String input;
         String lastCommand = "";
         String addStr = "";
@@ -193,23 +195,23 @@ public class Client {
                     } else if (command.equals("show") && commandEnd) {
                         lastCommand = "show";
                         correctCommand = true;
-                        request = createRequest("show", null);
+                        request = createRequest("show", null, this.username + " " + this.password);
                     } else if (command.equals("save") && commandEnd) {
                         lastCommand = "save";
                         correctCommand = true;
-                        request = createRequest("save", null);
+                        request = createRequest("save", null, this.username + " " + this.password);
                     } else if (command.equals("import") && commandEnd) {
                         lastCommand = "import";
                         correctCommand = true;
-                        request = createRequest("import", input.substring(6).trim());
+                        request = createRequest("import", input.substring(6).trim(), this.username + " " + this.password);
                     } else if (command.equals("info") && commandEnd) {
                         lastCommand = "info";
                         correctCommand = true;
-                        request = createRequest("info", null);
+                        request = createRequest("info", null, this.username + " " + this.password);
                     } else if (command.equals("help") && commandEnd) {
                         lastCommand = "help";
                         correctCommand = true;
-                        request = createRequest("help", null);
+                        request = createRequest("help", null, this.username + " " + this.password);
                     } else if (command.equals("register") && commandEnd){
                         lastCommand = "register";
                         correctCommand = false;
@@ -226,23 +228,23 @@ public class Client {
                     }
 
                     if (lastCommand.equals("add") && commandEnd && correctCommand) {
-                        request = createRequest("add", addStr);
+                        request = createRequest("add", addStr, this.username + " " + this.password);
                         addStr = "";
                         correctCommand = true;
                     } else if (lastCommand.equals("add_if_min") && commandEnd && correctCommand) {
-                        request = createRequest("add_if_min", addStr);
+                        request = createRequest("add_if_min", addStr, this.username + " " + this.password);
                         addStr = "";
                         correctCommand = true;
                     } else if (lastCommand.equals("remove") && commandEnd && correctCommand) {
-                        request = createRequest("remove", addStr);
+                        request = createRequest("remove", addStr, this.username + " " + this.password);
                         addStr = "";
                         correctCommand = true;
                     } else if (lastCommand.equals("remove_greater") && commandEnd && correctCommand) {
-                        request = createRequest("remove_greater", addStr);
+                        request = createRequest("remove_greater", addStr, this.username + " " + this.password);
                         addStr = "";
                         correctCommand = true;
                     } else if (lastCommand.equals("remove_lower") && commandEnd && correctCommand) {
-                        request = createRequest("remove_lower", addStr);
+                        request = createRequest("remove_lower", addStr, this.username + " " + this.password);
                         addStr = "";
                         correctCommand = true;
                     }
@@ -276,30 +278,29 @@ public class Client {
                         String email = scanner.nextLine();
 
                         correctCommand = true;
-                        request = createRequest("register", username + " " + email + " " + DataBaseConnection.getToken());
+                        request = createRequest("register", null, username + " " + email + " " + DataBaseConnection.getToken());
                         break;
 
                     case "login":
                         System.out.println("Enter your username without any whitespaces:");
                         System.out.print((char)27 + "[33m" + "> " + (char)27 + "[37m");
-                        String login = scanner.nextLine().trim();
+                        this.username = scanner.nextLine().trim();
 
-                        while (login.equals("")) {
+                        while (this.username.equals("")) {
                             System.out.println("Your username can't be void :(");
                             System.out.print((char)27 + "[31m" + "> " + (char)27 + "[37m");
-                            login = scanner.nextLine().trim();
+                            this.username = scanner.nextLine().trim();
                         }
 
-                        this.username = login;
 
                         System.out.println("Enter your password:");
                         System.out.print((char)27 + "[33m" + "> " + (char)27 + "[37m");
-                        String password;
+
                         if (console != null) password = new String(console.readPassword()).trim();
                         else password = scanner.nextLine().trim();
-                        password = server.DataBaseConnection.encryptString(password);
+                        this.password = server.DataBaseConnection.encryptString(password);
                         correctCommand = true;
-                        request = createRequest("login", login + " " + password);
+                        request = createRequest("login", null, this.username + " " + this.password);
                         break;
 
                     default:
@@ -350,9 +351,9 @@ public class Client {
         return 0;
     }
 
-    private DatagramPacket createRequest(String command, String data) throws IOException {
+    private DatagramPacket createRequest(String command, String data, String credentials) throws IOException {
         byte[] sending;
-        Command c = new Command(command, data);
+        Command c = new Command(command, data, credentials);
 
         if (command.equals("add") || command.equals("add_if_min")
                 || command.equals("remove") || command.equals("remove_greater")

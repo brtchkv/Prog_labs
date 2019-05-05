@@ -26,9 +26,6 @@ public class Server {
         db = new DataBaseConnection();
         storage = new Vector<>();
         System.out.println("Added " + db.loadPersons(storage) + " humans from the Database.");
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            db.savePersons(storage);
-        }));
 
     }
 
@@ -40,7 +37,7 @@ public class Server {
         if (storage == null || storage.size() == 0) {
             System.out.println("Loading the collection from the back-up file...");
             try {
-                storage = FileHandler.convertToVector(filename, "");
+                storage = FileHandler.convertToVector(filename, "all");
                 CommandHandler.fileName = filename;
             } catch (Exception e) {
                 System.err.println("On no, backup file is not found. Do you even care ?!");
@@ -72,23 +69,19 @@ public class Server {
                 command = (Command) ois.readObject();
                 System.out.println("-- Client's input: " + command.getCommand());
 
-                // creating response for client
-                //Thread thread = new Thread(() -> {
-                //});
-
                 handler = new CommandHandler();
                 handler.start();
-                synchronized (storage) {
-                    Response response = new Response(handler.handleCommand(command, storage, db));
 
-                    oos.writeObject(response);
-                    oos.flush();
-                    buffer.clear();
-                    buffer.put(baos.toByteArray());
-                    buffer.flip();
+                Response response = new Response(handler.handleCommand(command, storage, db));
 
-                    udpChannel.send(buffer, clientAddress);
-                }
+                oos.writeObject(response);
+                oos.flush();
+                buffer.clear();
+                buffer.put(baos.toByteArray());
+                buffer.flip();
+
+                udpChannel.send(buffer, clientAddress);
+
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }

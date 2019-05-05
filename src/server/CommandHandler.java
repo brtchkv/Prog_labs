@@ -1,13 +1,21 @@
 package server;
 
-import java.io.*;
-import java.util.*;
-import shared.*;
+import shared.Command;
+import shared.Human;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Vector;
 
 public class CommandHandler extends Thread {
 
     public static String fileName;
-    private static String FILEPATH = "human.csv";
+    private String username = null;
+    private String password = null;
+    private String mail = null;
 
 
     public CommandHandler() { }
@@ -24,76 +32,102 @@ public class CommandHandler extends Thread {
      * @param storage - ссылка на коллекцию с объектами
      */
     public Object handleCommand(Command com, Vector<Human> storage, DataBaseConnection db) {
+        Object credentials = com.getCredentials();
+        if (com.getCredentials() != null && ((String) credentials).split(" ").length > 2) {
+            username = ((String) credentials).split(" ")[0];
+            mail = ((String) credentials).split(" ")[1];
+            password = ((String) credentials).split(" ")[2];
+        } else if (credentials != null) {
+            username = ((String) credentials).split(" ")[0];
+            password = ((String) credentials).split(" ")[1];
+        }
+
         synchronized (CommandHandler.class) {
             String command = com.getCommand();
             Object data = com.getData();
+            if (db.executeLogin(username, password) == 0 || command.toLowerCase().equals("connecting") || command.toLowerCase().equals("register")) {
+                byte[] buffer;
 
-            byte[] buffer;
-
-            switch (command.toLowerCase()) {
-                case "connecting":
-                    buffer = "connected".getBytes();
-                    break;
-                case "add":
-                    if (data != null) {
-                        buffer = add(storage, (Human) data);
-                    } else {buffer = help();}
-                    break;
-                case "add_if_min":
-                    if (data != null) {
-                        buffer = add_if_min(storage, (Human) data);
-                    } else {buffer = help();}
-                    break;
-                case "remove":
-                    if (data != null) {
-                        buffer = remove(storage, (Human) data);
-                    } else {buffer = help();}
-                    break;
-                case "remove_greater":
-                    if (data != null) {
-                        buffer = remove_greater(storage, (Human) data);
-                    } else {buffer = help();}
-                    break;
-                case "remove_lower":
-                    if (data != null) {
-                        buffer = remove_lower(storage, (Human) data);
-                    } else {buffer = help();}
-                    break;
-                case "show":
-                    buffer = show(storage);
-                    break;
-                case "save":
-                    buffer = save(storage, db);
-                    break;
-                case "import":
-                    buffer = import1(storage, (Vector<Human>) data);
-                    break;
-                case "info":
-                    buffer = info(storage);
-                    break;
-                case "help":
-                    buffer = help();
-                    break;
-                case "register":
-                    String regData = (String) data;
-                    int resultR = db.executeRegister(regData.split(" ")[0].trim(), regData.split(" ")[1].trim(), regData.split(" ")[2].trim());
-                    if (resultR == 1) {
-                        buffer = "Email registration is approved!".getBytes();
-                    }else if (resultR == 0){buffer = "You've already registered!".getBytes();}
-                    else {buffer = "Can't register you".getBytes();}
-                    break;
-                case "login":
-                    String logData = (String) data;
-                    int result = db.executeLogin(logData.split(" ")[0].trim(), logData.split(" ")[1]);
-                    if (result == 0){buffer = "Logged in".getBytes();}
-                    else if (result == 1){buffer = "You need to register first!".getBytes();}
-                    else if (result == 2) {buffer = "Wrong Password!".getBytes();}
-                    else {buffer = "Can't log in".getBytes();}
-                    break;
-                default:
-                    buffer = "Error: undefined command! Type \"help\" for a list of available commands".getBytes();
-            }
-            return buffer;
+                switch (command.toLowerCase()) {
+                    case "connecting":
+                        buffer = "connected".getBytes();
+                        break;
+                    case "add":
+                        if (data != null) {
+                            buffer = add(storage, (Human) data, db, username);
+                        } else {
+                            buffer = help();
+                        }
+                        break;
+                    case "add_if_min":
+                        if (data != null) {
+                            buffer = add_if_min(storage, (Human) data, db, username);
+                        } else {
+                            buffer = help();
+                        }
+                        break;
+                    case "remove":
+                        if (data != null) {
+                            buffer = remove(storage, (Human) data, db, username);
+                        } else {
+                            buffer = help();
+                        }
+                        break;
+                    case "remove_greater":
+                        if (data != null) {
+                            buffer = remove_greater(storage, (Human) data, db, username);
+                        } else {
+                            buffer = help();
+                        }
+                        break;
+                    case "remove_lower":
+                        if (data != null) {
+                            buffer = remove_lower(storage, (Human) data, db, username);
+                        } else {
+                            buffer = help();
+                        }
+                        break;
+                    case "show":
+                        buffer = show(storage);
+                        break;
+                    case "save":
+                        buffer = save(storage, db);
+                        break;
+                    case "import":
+                        buffer = import1(storage, (Vector<Human>) data, db, username);
+                        break;
+                    case "info":
+                        buffer = info(storage);
+                        break;
+                    case "help":
+                        buffer = help();
+                        break;
+                    case "register":
+                        int resultR = db.executeRegister(username, mail, password);
+                        if (resultR == 1) {
+                            buffer = "Email registration is approved!".getBytes();
+                        } else if (resultR == 0) {
+                            buffer = "You've already registered!".getBytes();
+                        } else {
+                            buffer = "Can't register you".getBytes();
+                        }
+                        break;
+                    case "login":
+                        int result = db.executeLogin(username, password);
+                        if (result == 0) {
+                            buffer = "Logged in".getBytes();
+                        } else if (result == 1) {
+                            buffer = "You need to register first!".getBytes();
+                        } else if (result == 2) {
+                            buffer = "Wrong Password!".getBytes();
+                        } else {
+                            buffer = "Can't log in".getBytes();
+                        }
+                        break;
+                    default:
+                        buffer = "Error: undefined command! Type \"help\" for a list of available commands".getBytes();
+                }return buffer;
+            }else return "User is not authorized".getBytes();
         }
     }
 
@@ -103,7 +137,6 @@ public class CommandHandler extends Thread {
      * @param storage - ссылка на коллекцию с объектами
      */
     public byte[] show(Vector<Human> storage) {
-
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(outputStream)){
             oos.writeObject(storage);
@@ -123,12 +156,6 @@ public class CommandHandler extends Thread {
      * @param storage - ссылка на коллекцию с объектами
      */
     public byte[] save(Vector<Human> storage, DataBaseConnection db) {
-
-//        if (FileHandler.checkFileWrite(FILEPATH)) {
-//            return FileHandler.save(storage, FILEPATH);
-//        }
-//        return "Can't write to a file. Check permissions.".getBytes();
-
         if (storage != null) {
             db.savePersons(storage);
             return "Saved Humans to the DataBase".getBytes();
@@ -142,16 +169,17 @@ public class CommandHandler extends Thread {
      * @param storage - ссылка на коллекцию с объектами
      * @param human - объект Human, который надо добавить
      */
-    public byte[] add(Vector<Human> storage, Human human) {
-        synchronized (storage) {
-            if (storage.add(human)) {
-                sortCollection(storage);
-                System.out.println("A human " + human.toString()+ " was successfully added.");
-                return ("A human " + human.toString()+ " was successfully added.").getBytes();
-            } else {
-                return "Collection already stores this object.".getBytes();
-            }
+    public byte[] add(Vector<Human> storage, Human human, DataBaseConnection db, String username) {
+
+        if (storage.add(human)) {
+            sortCollection(storage);
+            db.addToDB(human, username);
+            System.out.println("A human " + human.toString()+ " was successfully added.");
+            return ("A human " + human.toString()+ " was successfully added.").getBytes();
+        } else {
+            return "Collection already stores this object.".getBytes();
         }
+
     }
 
     /**
@@ -160,21 +188,19 @@ public class CommandHandler extends Thread {
      * @param storage - ссылка на коллекцию с объектами
      * @param human - обьект, который надо добавить
      */
-    public byte[] add_if_min(Vector<Human> storage, Human human) {
+    public byte[] add_if_min(Vector<Human> storage, Human human, DataBaseConnection db, String username) {
         if (storage.size() > 0) {
-            synchronized (storage) {
-                Human min = storage
-                        .stream()
-                        .min(Human::compareTo)
-                        .get();
-                if (human.compareTo(min) < 0) {
-                    return add(storage, human);
-                } else {
-                    return (human.getName()+ "'s name isn't the smallest: Can't add to a collection!").getBytes();
-                }
+            Human min = storage
+                    .stream()
+                    .min(Human::compareTo)
+                    .get();
+            if (human.compareTo(min) < 0) {
+                return add(storage, human, db, username);
+            } else {
+                return (human.getName()+ "'s name isn't the smallest: Can't add to a collection!").getBytes();
             }
         } else {
-            return add(storage, human);
+            return add(storage, human, db, username);
         }
     }
 
@@ -184,10 +210,10 @@ public class CommandHandler extends Thread {
      * @param storage - ссылка на коллекцию с объектом
      * @param importing - ссылка на импортируемую коллекцию
      */
-    public byte[] import1(Vector<Human> storage, Vector<Human> importing) {
+    public byte[] import1(Vector<Human> storage, Vector<Human> importing, DataBaseConnection db, String username) {
         long start = storage.stream().count();
         for (Human human: importing) {
-            add(storage, human);
+            add(storage, human, db, username);
         }
         long end = storage.stream().count();
         System.out.println("Imported "+ (end-start) + " objects.");
@@ -210,15 +236,13 @@ public class CommandHandler extends Thread {
      * @param storage - ссылка на коллекцию с объектами
      * @param human - обьект типа Human
      */
-    public byte[] remove(Vector<Human> storage, Human human) {
-        synchronized(storage) {
-            String owner = human.getOwner();
-            if (storage.removeIf(x -> storage.contains(human) && (owner.equals(x.getOwner()) || x.getOwner().equals("all")))) {
-                System.out.println("A human " + human.toString() + " has been deleted");
-                return ("A human " + human.toString() + " has been deleted :(").getBytes();
-            } else {
-                return "There's no such object in the collection. Try adding instead.\nPerhaps, you don't have rights to delete it!".getBytes();
-            }
+    public byte[] remove(Vector<Human> storage, Human human, DataBaseConnection db, String username) {
+        if (storage.removeIf(x -> storage.contains(human) && (username.equals(x.getOwner()) || x.getOwner().equals("all")))) {
+            db.removePerson(username, human);
+            System.out.println("A human " + human.toString() + " has been deleted");
+            return ("A human " + human.toString() + " has been deleted :(").getBytes();
+        } else {
+            return "There's no such object in the collection. Try adding instead.\nPerhaps, you don't have rights to delete it!".getBytes();
         }
     }
 
@@ -226,32 +250,34 @@ public class CommandHandler extends Thread {
      * <p>Удаляет все элементы меньше аргумента</p>
      * @param endObject (Human) - Object of class Human
      */
-    public byte[] remove_lower(Vector<Human> storage, Human endObject) {
-
-
+    public byte[] remove_lower(Vector<Human> storage, Human endObject, DataBaseConnection db, String username) {
         long start = storage.stream().count();
-        String owner = endObject.getOwner();
-        synchronized(storage) {
-            storage.removeIf(item -> item.compareTo(endObject) > 0 && (owner.equals(item.getOwner()) || item.getOwner().equals("all")));
+        synchronized (storage) {
+            storage.stream()
+                    .filter(x -> x.compareTo(endObject) < 0 && (username.equals(x.getOwner()) || x.getOwner().equals("all")))
+                    .forEach(x -> {
+                        db.removePerson(username, x);
+                    });
+            storage.removeIf(item -> item.compareTo(endObject) < 0 && (username.equals(item.getOwner()) || item.getOwner().equals("all")));
         }
         long end = storage.stream().count();
-
-
         System.out.println("Deleted " + (start - end) + " objects.");
         return ("Deleted " + (start - end) + " objects. :(").getBytes();
-
     }
 
     /**
      * <p>Удаляет все элементы больше аргумента</p>
      * @param startObject (Human) - Object of class Human
      */
-    public byte[] remove_greater(Vector<Human> storage, Human startObject) {
-
+    public byte[] remove_greater(Vector<Human> storage, Human startObject, DataBaseConnection db, String username) {
         long start = storage.stream().count();
-        String owner = startObject.getOwner();
-        synchronized(storage) {
-            storage.removeIf(item -> item.compareTo(startObject) < 0 && (owner.equals(item.getOwner()) || item.getOwner().equals("all")));
+        synchronized (storage) {
+            storage.stream()
+                    .filter(x -> x.compareTo(startObject) > 0 && (username.equals(x.getOwner()) || x.getOwner().equals("all")))
+                    .forEach(x -> {
+                        db.removePerson(username, x);
+                    });
+            storage.removeIf(item -> item.compareTo(startObject) > 0 && (username.equals(item.getOwner()) || item.getOwner().equals("all")));
         }
         long end = storage.stream().count();
         System.out.println("Deleted " + (start - end) + " objects.");

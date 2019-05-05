@@ -2,6 +2,12 @@
 
 title __LAB's Class Diagram__\n
 
+  package server {
+    class Auth {
+    }
+  }
+  
+
   package shared {
     class CSVUtils {
     }
@@ -44,6 +50,12 @@ title __LAB's Class Diagram__\n
   }
   
 
+  package server {
+    class DataBaseConnection {
+    }
+  }
+  
+
   package shared {
     class Disability {
     }
@@ -64,6 +76,12 @@ title __LAB's Class Diagram__\n
 
   package shared {
     class Human {
+    }
+  }
+  
+
+  package server {
+    class JavaMail {
     }
   }
   
@@ -98,14 +116,17 @@ title __LAB's Class Diagram__\n
   }
   
 
+  Auth -up-|> Authenticator
   Command -up-|> Serializable
   Console o-- CustomCommands : customCommands
+  DataBaseConnection o-- CommandHandler : command
   Disability -up-|> Serializable
   God -up-|> Serializable
   Human -up-|> Serializable
   Human -up-|> Comparable
   Human -up-|> God
   Response -up-|> Serializable
+  Server o-- DataBaseConnection : db
   Skill -up-|> Serializable
   Temp -up-|> Serializable
   Temp o-- Skill : skill

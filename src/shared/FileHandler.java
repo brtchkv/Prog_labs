@@ -3,8 +3,6 @@ package shared;
 import java.io.*;
 import java.util.*;
 
-//export HUMAN_PATH="/Users/ivan/OneDrive - ITMO UNIVERSITY/Прога/5/Lab/src/human.csv"
-
 public class FileHandler {
 
     private static Boolean savePermission;

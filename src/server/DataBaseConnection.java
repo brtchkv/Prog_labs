@@ -1,14 +1,11 @@
 package server;
 
 import shared.*;
-
 import java.sql.*;
 import java.time.OffsetDateTime;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.Vector;
-
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -67,15 +64,23 @@ public class DataBaseConnection {
         }
     }
 
-    public void addToDB(Human human) {
+    public void addToDB(Human h, String username) {
         try {
-            PreparedStatement preStatement = connection.prepareStatement("INSERT INTO persons VALUES ('" + human.getName() + "', '" +
-                    human.getClass().toString().replace("class Entities.", "") + "', '"
-                    +human.getAge() + "', '"+ human.getSkills() + "', '" + human.getDisabilities() + "', '"
-                    + human.getOwner() + "', '" + human.getDateTime().toString().replace("T", " ") +"');");
+            addHuman(h, username);
         } catch (Exception e) {
-            System.out.println("Ошибка при добавлении в БД персонажа");
+            System.out.println("Error while adding /a human to a DataBase");
         }
+    }
+
+    private void addHuman(Human h, String username) throws SQLException {
+        String skills = !h.getSkills().toString().equals("[]") && h.getSkills().toString() != null ? h.getSkills().toString() : "NULL";
+        PreparedStatement preStatement = connection.prepareStatement("INSERT INTO persons VALUES (?, ?, ?, ?, ?);");
+        preStatement.setString(1, h.getName());
+        preStatement.setInt(2,h.getAge());
+        preStatement.setString(3,skills);
+        preStatement.setString(4,username);
+        preStatement.setString(5,h.getDateTime().toString());
+        preStatement.executeUpdate();
     }
 
     public void savePersons(Vector<Human> humans) {
@@ -90,11 +95,7 @@ public class DataBaseConnection {
 
                 while (iterator.hasNext()) {
                     Human h = iterator.next();
-                    String skills = h.getSkills().toString() != "[]" && h.getSkills().toString() != null ? h.getSkills().toString() : "NULL";
-                    PreparedStatement preStatement = connection.prepareStatement("INSERT INTO persons VALUES ('" + h.getName() + "', "
-                            + "'" + h.getAge() + "', '" + skills + "', '" + h.getOwner() +
-                            "', '" + h.getDateTime().toString() + "');");
-                    preStatement.executeUpdate();
+                    addHuman(h, h.getOwner());
                 }
                 System.out.println("The DataBase has been updated.");
             } else {
@@ -108,11 +109,14 @@ public class DataBaseConnection {
 
     public int executeLogin(String login, String hash) {
         try {
-            PreparedStatement preStatement = connection.prepareStatement("SELECT * FROM users WHERE username='" + login + "' and "+ "hash='" + hash + "';");
+            PreparedStatement preStatement = connection.prepareStatement("SELECT * FROM users WHERE username=? and hash=?;");
+            preStatement.setString(1,login);
+            preStatement.setString(2,hash);
             ResultSet result = preStatement.executeQuery();
             if (result.next()) return 0;
             else {
-                PreparedStatement preStatement2 = connection.prepareStatement("SELECT * FROM users WHERE username='" + login + "';");
+                PreparedStatement preStatement2 = connection.prepareStatement("SELECT * FROM users WHERE username=?;");
+                preStatement2.setString(1,login);
                 ResultSet result2 = preStatement2.executeQuery();
                 if (result2.next()) return 2;
                 else return 1;
@@ -124,13 +128,18 @@ public class DataBaseConnection {
     }
 
 
-    public boolean removePerson(String username, String name) {
+    public boolean removePerson(String username, Human human) {
         try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("DELETE FROM persons WHERE name='"+name+"' AND username='"+username+"';");
+            String skills = !human.getSkills().toString().equals("[]") && human.getSkills().toString() != null ? human.getSkills().toString() : "NULL";
+            PreparedStatement preStatement = connection.prepareStatement(("DELETE FROM persons WHERE name=? AND username=? AND age=? AND skill=?;"));
+            preStatement.setString(1, human.getName());
+            preStatement.setString(2,username);
+            preStatement.setInt(3,human.getAge());
+            preStatement.setString(4,skills);
+            preStatement.executeUpdate();
             return true;
         } catch (Exception e) {
-            System.out.println("Ошибка при удалении персонажа");
+            System.out.println("Error while removing a human from a DataBase");
             return false;
         }
     }
@@ -139,11 +148,15 @@ public class DataBaseConnection {
     public int executeRegister(String login, String mail, String pass) {
         try {
 
-            PreparedStatement iflog = connection.prepareStatement("SELECT * FROM users WHERE username='" + login + "';");
-            ResultSet result = iflog.executeQuery();
+            PreparedStatement ifLog = connection.prepareStatement("SELECT * FROM users WHERE username=?;");
+            ifLog.setString(1,login);
+            ResultSet result = ifLog.executeQuery();
             if (result.next()){return 0;}
             String hash = DataBaseConnection.encryptString(pass);
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO users VALUES ('" + login + "', '" + mail + "', '" + hash + "');");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO users VALUES (?, ?, ?);");
+            statement.setString(1, login);
+            statement.setString(2, mail);
+            statement.setString(3, hash);
             statement.executeUpdate();
             new Thread(() -> JavaMail.registration(mail, pass)).start();
             return 1;
@@ -168,7 +181,7 @@ public class DataBaseConnection {
                 buffer.append((char) randomLimitedInt);
             }
 
-            //encrypt random string with SHA-224
+            //encrypt random string with MD2
             return buffer.toString();
 
         } catch (Exception e) {
@@ -179,8 +192,8 @@ public class DataBaseConnection {
     public static String encryptString(String input)
     {
         try {
-            // getInstance() method is called with algorithm SHA-224
-            MessageDigest md = MessageDigest.getInstance("SHA-224");
+            // getInstance() method is called with algorithm MD2
+            MessageDigest md = MessageDigest.getInstance("MD2");
 
             // digest() method is called
             // to calculate message digest of the input string
@@ -191,15 +204,15 @@ public class DataBaseConnection {
             BigInteger no = new BigInteger(1, messageDigest);
 
             // Convert message digest into hex value
-            String hashtext = no.toString(16);
+            StringBuilder hashText = new StringBuilder(no.toString(16));
 
             // Add preceding 0s to make it 32 bit
-            while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
+            while (hashText.length() < 32) {
+                hashText.insert(0, "0");
             }
 
             // return the HashText
-            return hashtext;
+            return hashText.toString();
         }
 
         // For specifying wrong message digest algorithms
