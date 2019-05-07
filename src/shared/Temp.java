@@ -21,5 +21,3 @@ public class Temp implements Serializable {
         return human;
     }
 }
-
-

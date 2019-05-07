@@ -142,6 +142,10 @@ public class Console {
      * @return String[] with a list of commands, split by spaces.
      */
     private String[] readOneLinedCommands(){
+        return getStrings(myScan);
+    }
+
+    static String[] getStrings(Scanner myScan) {
         String command;
         try {
             System.out.println();
@@ -169,6 +173,10 @@ public class Console {
      * @return String with a type of a command ("1" or "2").
      */
     private String whichTypeOfInput(){
+        return getString(myScan);
+    }
+
+    static String getString(Scanner myScan) {
         String type = "1";
         String temp;
         try {

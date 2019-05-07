@@ -3,6 +3,9 @@ package shared;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import static shared.Console.getString;
+import static shared.Console.getStrings;
+
 public class ConsoleClient {
 
     private boolean needExit;
@@ -101,25 +104,7 @@ public class ConsoleClient {
      * @return String[] with a list of commands, split by spaces.
      */
     private String[] readOneLinedCommands(){
-        String command;
-        try {
-            System.out.println();
-            System.out.println("Feed me with your command:");
-            System.out.print("> ");
-            command = myScan.nextLine();
-            System.out.println();
-
-        }catch(NoSuchElementException | IllegalStateException ex){
-            command = "exit";
-        }
-        command = command.trim();
-        String[] fullCommand = command.split(" ",2);
-        if(fullCommand.length > 1) {
-            while (fullCommand[1].contains("  ")) {
-                fullCommand[1] = fullCommand[1].replaceAll("  ", " ");
-            }
-        }
-        return fullCommand;
+        return getStrings(myScan);
     }
 
     /**
@@ -128,30 +113,7 @@ public class ConsoleClient {
      * @return String with a type of a command ("1" or "2").
      */
     private String whichTypeOfInput(){
-        String type = "1";
-        String temp;
-        try {
-            System.out.println();
-            System.out.println("Enter The Number Of The Desired Input Format:");
-            System.out.println("\t1) One-lined JSON");
-            System.out.println("\t2) Multiple-lined JSON");
-            System.out.println("By default \"One-lined JSON.\" option is chosen.");
-            System.out.print("> ");
-            temp = myScan.nextLine().trim();
-            if (temp.length() == 1 || temp.equals("1") || temp.equals("2")){
-                type = temp;
-            }else {
-                System.out.println("\nYour choice exceeds our abilities!\nCheck your spelling next time.\nYou're now running the default option.");
-            }
-
-
-        }catch(NoSuchElementException | IllegalStateException ex){
-            type = "exit";
-        }
-
-        type = type.trim();
-
-        return type;
+        return getString(myScan);
     }
 
     /**

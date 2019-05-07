@@ -145,7 +145,6 @@ public class CommandHandler extends Thread {
         } catch (IOException e) {
             System.err.println("Aliens snatched the collection! Can't show it.");
         }
-
         return null;
 
     }
@@ -254,7 +253,8 @@ public class CommandHandler extends Thread {
         long start = storage.stream().count();
         synchronized (storage) {
             storage.stream()
-                    .filter(x -> x.compareTo(endObject) < 0 && (username.equals(x.getOwner()) || x.getOwner().equals("all")))
+                    .filter(x -> (username.equals(x.getOwner()) || x.getOwner().equals("all")))
+                    .filter(x -> x.compareTo(endObject) < 0)
                     .forEach(x -> {
                         db.removePerson(username, x);
                     });
@@ -273,7 +273,8 @@ public class CommandHandler extends Thread {
         long start = storage.stream().count();
         synchronized (storage) {
             storage.stream()
-                    .filter(x -> x.compareTo(startObject) > 0 && (username.equals(x.getOwner()) || x.getOwner().equals("all")))
+                    .filter(x -> (username.equals(x.getOwner()) || x.getOwner().equals("all")))
+                    .filter(x -> x.compareTo(startObject) > 0)
                     .forEach(x -> {
                         db.removePerson(username, x);
                     });
@@ -289,10 +290,11 @@ public class CommandHandler extends Thread {
      * <p>Выводит информацию о всех доступных командах</p>
      */
     public byte[] help() {
-        String jsonExample = "\r\n{\r\n   \"name\": \"Elizabeth\",\r\n   \"age\": \"16\",\r\n   \"skill\": {\r\n      \"name\": \"\u041F\u0440\u044B\u0433\u0430\u0442\u044C\"\r\n   },\r\n   \"disability\": \"chin\"\r\n}\r";
+        String jsonExample = "\r\n{\r\n   \"name\": \"Elizabeth\",\r\n   \"age\": \"16\",\r\n   \"skill\": {\r\n      \"name\": \"\u041F\u0440\u044B\u0433\u0430\u0442\u044C\",\n" +
+                "      \"info\": \"Спорт\"\n\r   }\r\n}\r\n";
 
-        return ("\nAvailable commands: \n" +
-                "Example of JSON Human declaration:" + jsonExample +
+        return ("Example of JSON Human declaration:" + jsonExample +
+                "\nAvailable commands: \n" +
                 "\n* add {element} - adds an element to collection, element - is a JSON string, see above" +
                 "\n* show - shows a list of all elements in a collection" +
                 "\n* save - save a collection to a source file" +

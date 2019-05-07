@@ -5,18 +5,18 @@ import java.util.Objects;
 
 public class Skill implements Serializable {
     private String name;
-    private String action;
+    private String info;
 
     public Skill(String name, String info){
         this.name = name;
-        this.action = info;
+        this.info = info;
     }
 
     public String getName(){ return name; }
 
     public String doSkill(){
-        if (action == null || action.equals("undefined")) return "undefined";
-        else return  action;
+        if (info == null || info.equals("undefined")) return "undefined";
+        else return  info;
     }
 
 
@@ -30,11 +30,15 @@ public class Skill implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Skill skill = (Skill) o;
         return Objects.equals(name, skill.name) &&
-                Objects.equals(action, skill.action);
+                Objects.equals(info, skill.info);
+    }
+
+    public String getAction() {
+        return info;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, action);
+        return Objects.hash(name, info);
     }
 }

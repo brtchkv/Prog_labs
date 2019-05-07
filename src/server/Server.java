@@ -53,7 +53,6 @@ public class Server {
         CommandHandler handler;
 
         while (true) {
-            // Receiving udp package
             ByteBuffer buffer = ByteBuffer.allocate(8192);
             buffer.clear();
             InetSocketAddress clientAddress = (InetSocketAddress) udpChannel.receive(buffer);

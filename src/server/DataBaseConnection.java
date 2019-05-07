@@ -16,7 +16,7 @@ public class DataBaseConnection {
     private String name = "lab";
     private String pass = "lab1234";
     private Connection connection = null;
-    private CommandHandler command = null;
+    private CommandHandler command;
 
     {
         try {
@@ -35,13 +35,14 @@ public class DataBaseConnection {
         try {
             int i = 0;
             OffsetDateTime time = OffsetDateTime.now();
-            PreparedStatement preStatement = connection.prepareStatement("SELECT * FROM \"persons\";");
+            PreparedStatement preStatement = connection.prepareStatement("SELECT * FROM \"humans\";");
+            PreparedStatement getSkills;
             ResultSet result = preStatement.executeQuery();
             while (result.next()) {
                 String username = result.getString("username");
                 String name = result.getString("name");
                 int age = result.getInt("age");
-                String skills = result.getString("skill");
+                int skillId = result.getInt("skill_id");
                 String date = result.getString("creation_date");
                 if (date != null) {
                     time = OffsetDateTime.parse(result.getString("creation_date").replace(" ", "T"));
@@ -49,11 +50,14 @@ public class DataBaseConnection {
                 Human h = new Human(name, age);
                 h.setDateTime(time);
                 h.setOwner(username);
-                if (skills != null && !skills.equals("[]") && !skills.toLowerCase().trim().equals("null")) {
-                    h.addSkill(new Skill(skills.split(" ")[0], skills.split(" ")[1]));
+
+                getSkills = connection.prepareStatement("SELECT * FROM \"skills\" WHERE id=?");
+                getSkills.setInt(1,skillId);
+                ResultSet resSkill = getSkills.executeQuery();
+                if (resSkill.next()) {
+                    h.addSkill(new Skill(resSkill.getString("name"), resSkill.getString("info")));
                 }
                 storage.add(h);
-
                 i++;
             }
             return i;
@@ -68,19 +72,34 @@ public class DataBaseConnection {
         try {
             addHuman(h, username);
         } catch (Exception e) {
-            System.out.println("Error while adding /a human to a DataBase");
+            e.printStackTrace();
+            System.out.println("Error while adding a human to a DataBase");
         }
     }
 
     private void addHuman(Human h, String username) throws SQLException {
-        String skills = !h.getSkills().toString().equals("[]") && h.getSkills().toString() != null ? h.getSkills().toString() : "NULL";
-        PreparedStatement preStatement = connection.prepareStatement("INSERT INTO persons VALUES (?, ?, ?, ?, ?);");
-        preStatement.setString(1, h.getName());
+        int skillId = h.getDateTime().getNano();
+        PreparedStatement preStatement = connection.prepareStatement("INSERT INTO humans VALUES (?, ?, ?, ?, ?);");
+        preStatement.setString(1,h.getName());
         preStatement.setInt(2,h.getAge());
-        preStatement.setString(3,skills);
-        preStatement.setString(4,username);
-        preStatement.setString(5,h.getDateTime().toString());
+        preStatement.setString(3,username);
+        preStatement.setString(4,h.getDateTime().toString());
+        preStatement.setInt(5,skillId);
         preStatement.executeUpdate();
+        PreparedStatement statementSkills = connection.prepareStatement("INSERT INTO skills VALUES (?, ?, ?);");
+        statementSkills.setInt(1,skillId);
+        Iterator<Skill> iterator = h.getSkills().iterator();
+        if (iterator.hasNext()) {
+            Skill skill = iterator.next();
+            statementSkills.setString(2, skill.getName());
+            if (skill.getAction() != null && !skill.getAction().trim().isEmpty()) {
+                statementSkills.setString(3, skill.getAction());
+            }else {statementSkills.setString(3, "NULL");}
+        } else {
+            statementSkills.setString(2,"NULL");
+            statementSkills.setString(3, "NULL");
+        }
+        statementSkills.executeUpdate();
     }
 
     public void savePersons(Vector<Human> humans) {
@@ -88,10 +107,6 @@ public class DataBaseConnection {
             if (humans != null) {
 
                 Iterator<Human> iterator = humans.iterator();
-                if (iterator.hasNext()) {
-                    PreparedStatement preStatement = connection.prepareStatement("TRUNCATE persons;");
-                    preStatement.execute();
-                }
 
                 while (iterator.hasNext()) {
                     Human h = iterator.next();
@@ -131,7 +146,7 @@ public class DataBaseConnection {
     public boolean removePerson(String username, Human human) {
         try {
             String skills = !human.getSkills().toString().equals("[]") && human.getSkills().toString() != null ? human.getSkills().toString() : "NULL";
-            PreparedStatement preStatement = connection.prepareStatement(("DELETE FROM persons WHERE name=? AND username=? AND age=? AND skill=?;"));
+            PreparedStatement preStatement = connection.prepareStatement(("DELETE FROM humans WHERE name=? AND username=? AND age=? AND skill=?;"));
             preStatement.setString(1, human.getName());
             preStatement.setString(2,username);
             preStatement.setInt(3,human.getAge());

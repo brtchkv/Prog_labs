@@ -103,8 +103,8 @@ public class FileHandler {
                 }catch (Exception e){}
                 temp.welcome();
                 try{
-                    if(upper.size() > 3) {
-                        String[] skills = upper.get(3).split("-");
+                    if(upper.size() > 2) {
+                        String[] skills = upper.get(2).split("-");
                         for (String i : skills) {
                             List<String> lower_skill = CSVUtils.parseLine(i.trim(), ':');
                             if(lower_skill.size() > 1) {
@@ -115,6 +115,7 @@ public class FileHandler {
                                 throw new Exception();
                             }
                         }
+
                     }
 
                 }catch (Exception e){ throw new Exception(); }
