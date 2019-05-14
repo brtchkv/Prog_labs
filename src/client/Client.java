@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.Scanner;
 import java.util.Vector;
+import javafx.application.Application;
 
 import server.DataBaseConnection;
 import shared.*;
@@ -103,12 +104,26 @@ public class Client {
         String input;
         String lastCommand = "";
         String addStr = "";
+        String data;
         boolean commandEnd = true;
         boolean correctCommand = false;
         int nestingJSON = 0;
         DatagramPacket request = null;
 
-        while (!(input = scanner.nextLine().trim()).toLowerCase().equals("exit")) {
+
+        while (true) {
+            if (SkeletonLogin.getNickname() == null || SkeletonLogin.getPassword() == null){
+                if (SkeletonRegister.getNickname() != null && SkeletonRegister.getEmailAddress() != null){
+                    input = "register";
+                    data = SkeletonRegister.getNickname() + " " + SkeletonRegister.getEmailAddress();
+                } else {
+                    input = "";
+                    data = "";
+                }
+            }else {
+                input = "login";
+                data = SkeletonRegister.getNickname() + " " + SkeletonRegister.getEmailAddress();
+            }
             if (isAuth) {
                 if (!input.equals("")) {
                     String command = input.split(" ")[0].toLowerCase();
@@ -263,19 +278,21 @@ public class Client {
                     case "register":
                         System.out.println("Enter your username without any whitespaces:");
                         System.out.print((char)27 + "[33m" + "> "+ (char)27 + "[37m");
-                        String username = scanner.nextLine().trim().replaceAll("\\s+", "");
+//                        String username = scanner.nextLine().trim().replaceAll("\\s+", "");
+//
+//                        while (username.equals("")) {
+//                            System.out.println("Your username can't be void :(");
+//                            System.out.print((char)27 + "[31m" + "> " + (char)27 + "[37m");
+//                            username = scanner.nextLine().trim().replaceAll("\\s+", "");
+//                        }
 
-                        while (username.equals("")) {
-                            System.out.println("Your username can't be void :(");
-                            System.out.print((char)27 + "[31m" + "> " + (char)27 + "[37m");
-                            username = scanner.nextLine().trim().replaceAll("\\s+", "");
-                        }
+                        this.username = data.split(" ")[0];
+//
+//                        System.out.println("Enter your email:");
+//                        System.out.print((char)27 + "[33m" + "> " + (char)27 + "[37m");
+//                        String email = scanner.nextLine();
 
-                        this.username = username;
-
-                        System.out.println("Enter your email:");
-                        System.out.print((char)27 + "[33m" + "> " + (char)27 + "[37m");
-                        String email = scanner.nextLine();
+                        String email = data.split(" ")[1];
 
                         correctCommand = true;
                         request = createRequest("register", null, username + " " + email + " " + DataBaseConnection.getToken());
@@ -284,21 +301,22 @@ public class Client {
                     case "login":
                         System.out.println("Enter your username without any whitespaces:");
                         System.out.print((char)27 + "[33m" + "> " + (char)27 + "[37m");
-                        this.username = scanner.nextLine().trim();
+                        //this.username = scanner.nextLine().trim();
+                        this.username = data.split(" ")[0];
 
-                        while (this.username.equals("")) {
-                            System.out.println("Your username can't be void :(");
-                            System.out.print((char)27 + "[31m" + "> " + (char)27 + "[37m");
-                            this.username = scanner.nextLine().trim();
-                        }
+//                        while (this.username.equals("")) {
+//                            System.out.println("Your username can't be void :(");
+//                            System.out.print((char)27 + "[31m" + "> " + (char)27 + "[37m");
+//                            this.username = scanner.nextLine().trim();
+//                        }
 
 
                         System.out.println("Enter your password:");
                         System.out.print((char)27 + "[33m" + "> " + (char)27 + "[37m");
 
-                        if (console != null) password = new String(console.readPassword()).trim();
-                        else password = scanner.nextLine().trim();
-                        this.password = server.DataBaseConnection.encryptString(password);
+//                        if (console != null) password = new String(console.readPassword()).trim();
+//                        else password = scanner.nextLine().trim();
+                        this.password = server.DataBaseConnection.encryptString(data.split(" ")[1]);
                         correctCommand = true;
                         request = createRequest("login", null, this.username + " " + this.password);
                         break;
@@ -347,8 +365,6 @@ public class Client {
             }else { System.out.print((char)27 + "[34m" + "> " + (char)27 + "[37m"); }
 
         }
-
-        return 0;
     }
 
     private DatagramPacket createRequest(String command, String data, String credentials) throws IOException {
@@ -433,10 +449,11 @@ public class Client {
             System.out.println("-- UDP connection to " + args[0] + " host --");
             System.out.println("-- UDP port: " + args[1] + " --");
             sender.testServerConnection();
+            Application.launch(Login.class, args);
             sender.start();
         } catch (Exception e) {
             System.err.println("Oh no, something bad has happened!");
-            e.getMessage();
+            e.printStackTrace();
             showUsage();
         }
     }
