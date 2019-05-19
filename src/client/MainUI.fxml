@@ -135,8 +135,8 @@
                               <TextField fx:id="skillInfo" layoutX="16.0" layoutY="93.0" promptText="Info" />
                            </children>
                         </Pane>
-                         <Button defaultButton="true" layoutX="208.0" layoutY="268.0" mnemonicParsing="false" onAction="#submit" prefHeight="27.0" prefWidth="63.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#5a61af, #51536d),         linear-gradient(#e4fbff 0%,#cee6fb 10%, #a5d3fb 50%, #88c6fb 51%, #d5faff 100%); -fx-text-fill: #242d35; -fx-font-size: 13px; -fx-background-radius: 5,5,4;" text="Submit" textFill="#367c05" />
-                         <Button cancelButton="true" layoutX="43.0" layoutY="268.0" mnemonicParsing="false" onAction="#clear" prefHeight="27.0" prefWidth="55.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#9a9a9a, #909090),         linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%); -fx-background-insets: 0 0 -1 0,0,1; -fx-text-fill: #242d35; -fx-font-size: 13px; -fx-background-radius: 5,5,4;" text="Clear" textFill="#da1c1c" />
+                         <Button defaultButton="true" layoutX="206.0" layoutY="269.0" mnemonicParsing="false" onAction="#submit" prefHeight="23.0" prefWidth="62.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#5a61af, #51536d),         linear-gradient(#e4fbff 0%,#cee6fb 10%, #a5d3fb 50%, #88c6fb 51%, #d5faff 100%); -fx-text-fill: #242d35; -fx-font-size: 13px; -fx-background-radius: 5,5,4;" text="Submit" textFill="#367c05" />
+                         <Button cancelButton="true" layoutX="44.0" layoutY="269.0" mnemonicParsing="false" onAction="#clear" prefHeight="23.0" prefWidth="52.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#9a9a9a, #909090),         linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%); -fx-background-insets: 0 0 -1 0,0,1; -fx-text-fill: #242d35; -fx-font-size: 13px; -fx-background-radius: 5,5,4;" text="Clear" textFill="#da1c1c" />
                      </children>
                   </Pane>
           </children>
@@ -159,7 +159,7 @@
                   <Insets left="5.0" />
                </padding>
         </Label>
-            <Label fx:id="lastCommand" prefHeight="15.0" prefWidth="298.0" text="remove greater" wrapText="true">
+            <Label fx:id="lastCommand" prefHeight="15.0" prefWidth="298.0" text="Command" wrapText="true">
                <font>
                   <Font size="11.0" />
                </font>
@@ -168,7 +168,7 @@
                </padding>
             </Label>
             <Label prefHeight="17.0" prefWidth="81.0" text="Last Human:" />
-            <Label fx:id="lastHumanName" prefHeight="14.0" prefWidth="310.0" text="Human.name">
+            <Label fx:id="lastHumanName" prefHeight="14.0" prefWidth="310.0" text="Name">
                <font>
                   <Font size="11.0" />
                </font>
