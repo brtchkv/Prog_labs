@@ -17,22 +17,21 @@ import shared.Console;
 
 public class Client {
 
-    private DatagramSocket udpSocket;
-    private InetAddress serverAddress;
-    private int port;
+    public static DatagramSocket udpSocket;
+    private static InetAddress serverAddress;
+    private static int port;
     private Scanner scanner;
-    private boolean isAuth = false;
+    private static boolean isAuth = false;
     private java.io.Console console = System.console();
     private String username;
     private String password;
 
-    private Client(String destinationAddr, int port) throws IOException {
-
+    public Client(String destinationAddr, int port) throws IOException {
         this.serverAddress = InetAddress.getByName(destinationAddr);
         this.port = port;
         this.udpSocket = new DatagramSocket();
-        scanner = new Scanner(System.in);
-        helpAuth();
+        //scanner = new Scanner(System.in);
+        //helpAuth();
     }
 
     public static void showUsage() {
@@ -95,36 +94,41 @@ public class Client {
         this.isAuth = isAuth;
     }
 
-    private int start() throws IOException {
+    public static DatagramSocket getUdpSocket() {
+        return udpSocket;
+    }
+
+    public static InetAddress getServerAddress() {
+        return serverAddress;
+    }
+
+    public static int getPort() {
+        return port;
+    }
+
+    public static boolean isAuth() {
+        return isAuth;
+    }
+
+    private void start(Command com) throws IOException {
         System.out.println("Client is established");
         System.out.println();
         System.out.println("Feed me with your commands:");
         System.out.print((char)27 + "[34m" + "> " + (char)27 + "[37m");
 
-        String input;
+        String input = com.getCommand();
         String lastCommand = "";
         String addStr = "";
-        String data;
+        String data = "";
         boolean commandEnd = true;
         boolean correctCommand = false;
         int nestingJSON = 0;
         DatagramPacket request = null;
 
 
-        while (true) {
-            if (SkeletonLogin.getNickname() == null || SkeletonLogin.getPassword() == null){
-                if (SkeletonRegister.getNickname() != null && SkeletonRegister.getEmailAddress() != null){
-                    input = "register";
-                    data = SkeletonRegister.getNickname() + " " + SkeletonRegister.getEmailAddress();
-                } else {
-                    input = "";
-                    data = "";
-                }
-            }else {
-                input = "login";
-                data = SkeletonRegister.getNickname() + " " + SkeletonRegister.getEmailAddress();
-            }
-            if (isAuth) {
+        //while (!SkeletonLogin.isAuth()) {
+
+            if (correctCommand) {
                 if (!input.equals("")) {
                     String command = input.split(" ")[0].toLowerCase();
                     if (nestingJSON < 0) {
@@ -364,10 +368,10 @@ public class Client {
                 } else { System.out.print((char)27 + "[34m" + "> " + (char)27 + "[37m"); }
             }else { System.out.print((char)27 + "[34m" + "> " + (char)27 + "[37m"); }
 
-        }
+        //}
     }
 
-    private DatagramPacket createRequest(String command, String data, String credentials) throws IOException {
+    public DatagramPacket createRequest(String command, String data, String credentials) throws IOException {
         byte[] sending;
         Command c = new Command(command, data, credentials);
 
@@ -396,10 +400,9 @@ public class Client {
             throw new IOException();
         }
 
-
     }
 
-    private byte[] decodeResponse(String command, Response response) {
+    public byte[] decodeResponse(String command, Response response) {
         if (command.equals("show")) {
             try (ByteArrayInputStream bais = new ByteArrayInputStream((byte[])response.getResponse());
                  ObjectInputStream ois = new ObjectInputStream(bais)) {
@@ -438,6 +441,7 @@ public class Client {
     }
 
     public static void main(String[] args) {
+
         if (args.length != 2) {
             showUsage();
         }
@@ -449,8 +453,8 @@ public class Client {
             System.out.println("-- UDP connection to " + args[0] + " host --");
             System.out.println("-- UDP port: " + args[1] + " --");
             sender.testServerConnection();
-            Application.launch(Login.class, args);
-            sender.start();
+            //Application.launch(Login.class, args);
+            //sender.start();
         } catch (Exception e) {
             System.err.println("Oh no, something bad has happened!");
             e.printStackTrace();

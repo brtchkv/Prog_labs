@@ -4,7 +4,10 @@ import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import shared.*;
 
 public class Server {
@@ -66,7 +69,11 @@ public class Server {
                  ObjectOutputStream oos = new ObjectOutputStream(baos)) {
 
                 command = (Command) ois.readObject();
-                System.out.println("-- Client's input: " + command.getCommand());
+
+                if (command.getCommand().equals("login")){
+                    System.out.println("-- Client's input: " + command.getCommand() + " " + ((String)command.getCredentials()).split(" ")[0]);
+                } else if (command.getCommand().equals("show")){}
+                  else {System.out.println("-- Client's input: " + command.getCommand());}
 
                 handler = new CommandHandler();
                 handler.start();

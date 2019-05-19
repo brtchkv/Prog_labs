@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shared.SkeletonRegister">
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.SkeletonRegister">
   <children>
     <MenuBar prefHeight="16.0" prefWidth="376.0" VBox.vgrow="ALWAYS">
       <menus>
@@ -26,6 +26,14 @@
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#loginWindow" text="Login" />
                </items></Menu>
+            <Menu mnemonicParsing="false" text="Language">
+              <items>
+                <MenuItem mnemonicParsing="false" text="English" />
+                  <MenuItem mnemonicParsing="false" text="Russian" />
+                  <MenuItem mnemonicParsing="false" text="Swedish" />
+                  <MenuItem mnemonicParsing="false" text="Spanish" />
+              </items>
+            </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
             <MenuItem mnemonicParsing="false" onAction="#showHelp" text="About" />
@@ -61,7 +69,7 @@
             <TextField fx:id="email" layoutX="105.0" layoutY="209.0" promptText="Email" />
             <AmbientLight color="CHARTREUSE" lightOn="true" />
             <Button cancelButton="true" layoutX="106.0" layoutY="259.0" mnemonicParsing="false" onAction="#clear" text="Clear" textFill="#da1c1c" />
-            <Button layoutX="210.0" layoutY="259.0" mnemonicParsing="false" onAction="#register" text="Submit" textFill="#367c05" />
+            <Button defaultButton="true" layoutX="210.0" layoutY="259.0" mnemonicParsing="false" onAction="#register" text="Submit" textFill="#367c05" />
       </children>
          <cursor>
             <Cursor fx:constant="DEFAULT" />

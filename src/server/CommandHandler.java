@@ -237,6 +237,7 @@ public class CommandHandler extends Thread {
      */
     public byte[] remove(Vector<Human> storage, Human human, DataBaseConnection db, String username) {
         if (storage.removeIf(x -> storage.contains(human) && (username.equals(x.getOwner()) || x.getOwner().equals("all")))) {
+
             db.removePerson(username, human);
             System.out.println("A human " + human.toString() + " has been deleted");
             return ("A human " + human.toString() + " has been deleted :(").getBytes();

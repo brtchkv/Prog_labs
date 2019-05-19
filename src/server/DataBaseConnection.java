@@ -145,12 +145,21 @@ public class DataBaseConnection {
 
     public boolean removePerson(String username, Human human) {
         try {
-            String skills = !human.getSkills().toString().equals("[]") && human.getSkills().toString() != null ? human.getSkills().toString() : "NULL";
-            PreparedStatement preStatement = connection.prepareStatement(("DELETE FROM humans WHERE name=? AND username=? AND age=? AND skill=?;"));
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT skill_id FROM humans WHERE name=? AND username=? AND age=?;");
+            preparedStatement.setString(1, human.getName());
+            preparedStatement.setString(2,username);
+            preparedStatement.setInt(3,human.getAge());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                int skill_id = resultSet.getInt("skill_id");
+                PreparedStatement preparedStatementSkill = connection.prepareStatement("DELETE FROM skills WHERE id=?;");
+                preparedStatementSkill.setInt(1, skill_id);
+                preparedStatementSkill.execute();
+            }
+            PreparedStatement preStatement = connection.prepareStatement("DELETE FROM humans WHERE name=? AND username=? AND age=?;");
             preStatement.setString(1, human.getName());
             preStatement.setString(2,username);
             preStatement.setInt(3,human.getAge());
-            preStatement.setString(4,skills);
             preStatement.executeUpdate();
             return true;
         } catch (Exception e) {

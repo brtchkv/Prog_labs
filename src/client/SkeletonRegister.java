@@ -1,10 +1,14 @@
-package shared;
+package client;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import server.DataBaseConnection;
+import java.io.IOException;
+import java.net.DatagramPacket;
 
 public class SkeletonRegister {
     private static String nickname;
@@ -34,7 +38,24 @@ public class SkeletonRegister {
     void register(ActionEvent event) {
         this.nickname = nick.getCharacters().toString();
         this.emailAddress = email.getCharacters().toString();
-        System.out.println(nickname + emailAddress);
+        try {
+            SkeletonLogin.client.udpSocket.send(SkeletonLogin.client.createRequest("register", null, nickname + " " + emailAddress + " " + DataBaseConnection.getToken()));
+            byte[] resp = new byte[8192];
+            DatagramPacket responsePacket = new DatagramPacket(resp, resp.length);
+
+            SkeletonLogin.client.udpSocket.receive(responsePacket);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Registration");
+            alert.setContentText("The password was sent to your email.\nUse it in order to login.");
+            alert.showAndWait();
+
+        }catch (IOException e){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Server Connection");
+            alert.setContentText("Disconnected from the server\nTry again later!");
+            alert.showAndWait();
+        }
     }
 
     @FXML
