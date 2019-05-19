@@ -82,7 +82,10 @@ public class SkeletonMain implements Initializable {
 
     @FXML
     void fun(ActionEvent event) {
-        Alert alert = new Alert(Alert.AlertType.WARNING, "" , ButtonType.CANCEL);
+        ButtonType sorry = new ButtonType("Sorry");
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.getButtonTypes().clear();
+        alert.getButtonTypes().add(sorry);
         Image image = new Image("https://pp.userapi.com/c846122/v846122122/2079a6/DR7KMr5rkv0.jpg",500, 500, true, true);
         ImageView imageView = new ImageView(image);
         alert.setGraphic(imageView);
