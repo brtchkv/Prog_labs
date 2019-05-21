@@ -26,12 +26,17 @@ public class Client {
     private String username;
     private String password;
 
+
     public Client(String destinationAddr, int port) throws IOException {
         this.serverAddress = InetAddress.getByName(destinationAddr);
         this.port = port;
         this.udpSocket = new DatagramSocket();
         //scanner = new Scanner(System.in);
         //helpAuth();
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public static void showUsage() {

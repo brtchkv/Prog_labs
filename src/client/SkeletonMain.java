@@ -18,6 +18,7 @@ import javafx.stage.Window;
 import shared.Response;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
@@ -28,10 +29,10 @@ import java.util.Timer;
 
 public class SkeletonMain implements Initializable {
     @FXML
-    private Label nickname;
+    private Label collectionInfo;
 
     @FXML
-    private Label collectionInfo;
+    private Label nickname;
 
     @FXML
     private ComboBox<?> commandsList;
@@ -43,16 +44,29 @@ public class SkeletonMain implements Initializable {
     private TextField humanAge;
 
     @FXML
+    private TextField height;
+
+    @FXML
+    private TextField width;
+
+    @FXML
     private TextField skillName;
 
     @FXML
     private TextField skillInfo;
 
     @FXML
+    private TextField xCoordinate;
+
+    @FXML
+    private TextField yCoordinate;
+
+    @FXML
     private Label lastCommand;
 
     @FXML
     private Label lastHumanName;
+
 
 
     private void init() {
@@ -83,13 +97,15 @@ public class SkeletonMain implements Initializable {
 
     @FXML
     void fun(ActionEvent event) {
+        ImageView imageView = new ImageView();
         ButtonType sorry = new ButtonType("Sorry");
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Why?!");
         alert.getButtonTypes().clear();
         alert.getButtonTypes().add(sorry);
-        Image image = new Image("https://pp.userapi.com/c846122/v846122122/2079a6/DR7KMr5rkv0.jpg",400, 400, true, true);
-        ImageView imageView = new ImageView(image);
+        File file = new File("/Users/ivan/OneDrive - ITMO UNIVERSITY/Прога/6/Lab/src/client/cat.jpg");
+        Image image = new Image(file.toURI().toString(), 400, 400, true, true);
+        imageView.setImage(image);
         alert.setGraphic(imageView);
         alert.showAndWait();
     }
@@ -208,7 +224,6 @@ public class SkeletonMain implements Initializable {
 
     @FXML
     void logOut(ActionEvent event) {
-        SkeletonLogin.setAuth(false);
         Window stageP = nickname.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();

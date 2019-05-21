@@ -4,9 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.util.List;
 import java.util.Vector;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import shared.*;
 
@@ -59,7 +57,6 @@ public class Server {
             ByteBuffer buffer = ByteBuffer.allocate(8192);
             buffer.clear();
             InetSocketAddress clientAddress = (InetSocketAddress) udpChannel.receive(buffer);
-
 
             Command command;
 
