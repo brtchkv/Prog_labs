@@ -61,9 +61,7 @@ public class Server {
             Command command;
 
             try (ByteArrayInputStream bais = new ByteArrayInputStream(buffer.array());
-                 ObjectInputStream ois = new ObjectInputStream(bais);
-                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                 ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+                 ObjectInputStream ois = new ObjectInputStream(bais)) {
 
                 command = (Command) ois.readObject();
 
@@ -72,18 +70,18 @@ public class Server {
                 } else if (command.getCommand().equals("show")){}
                   else {System.out.println("-- Client's input: " + command.getCommand());}
 
-                handler = new CommandHandler();
+                handler = new CommandHandler(command, storage, db, udpChannel,clientAddress);
                 handler.start();
 
-                Response response = new Response(handler.handleCommand(command, storage, db));
-
-                oos.writeObject(response);
-                oos.flush();
-                buffer.clear();
-                buffer.put(baos.toByteArray());
-                buffer.flip();
-
-                udpChannel.send(buffer, clientAddress);
+//                Response response = new Response(handler.handleCommand(command, storage, db));
+//
+//                oos.writeObject(response);
+//                oos.flush();
+//                buffer.clear();
+//                buffer.put(baos.toByteArray());
+//                buffer.flip();
+//
+//                udpChannel.send(buffer, clientAddress);
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();

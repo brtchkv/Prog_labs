@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import shared.Response;
 
@@ -67,6 +66,8 @@ public class SkeletonMain implements Initializable {
     @FXML
     private Label lastHumanName;
 
+    Timer timer;
+
 
 
     private void init() {
@@ -82,7 +83,7 @@ public class SkeletonMain implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         init();
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.schedule(new BackTable(), 0, 3000);
     }
 
@@ -93,6 +94,29 @@ public class SkeletonMain implements Initializable {
         skillName.clear();
         skillInfo.clear();
         commandsList.setValue(null);
+    }
+
+    @FXML
+    void day(ActionEvent event) {
+        timer.cancel();
+        Stage stageP = (Stage) nickname.getScene().getWindow();
+        stageP.close();
+        Stage stage = new Stage();
+        stage.setTitle("Main");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainUIDay.fxml"));
+        Login.loadScene(stage, loader);
+    }
+
+    @FXML
+    void night(ActionEvent event) {
+        timer.cancel();
+        Stage stageP = (Stage) nickname.getScene().getWindow();
+        stageP.close();
+        Stage stage = new Stage();
+        stage.setTitle("Main");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainUINight.fxml"));
+        Login.loadScene(stage, loader);
+
     }
 
     @FXML

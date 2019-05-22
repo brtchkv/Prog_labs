@@ -1,0 +1,18 @@
+.split-pane:horizontal > .split-pane-divider {
+    -fx-background-color: transparent;
+}
+.split-pane:vertical > .split-pane-divider {
+    -fx-background-color: transparent;
+}
+
+#splitpane {
+    -fx-background-color: #ffd0a0;
+}
+
+#pane1 {
+    -fx-background-color: #ffdec4;
+}
+
+#hboxHigh {
+    -fx-background-color: #ddaf94;
+}

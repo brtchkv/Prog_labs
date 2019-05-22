@@ -2,10 +2,14 @@ package server;
 
 import shared.Command;
 import shared.Human;
+import shared.Response;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Vector;
@@ -16,12 +20,45 @@ public class CommandHandler extends Thread {
     private String username = null;
     private String password = null;
     private String mail = null;
+    private Vector<Human> storage;
+    private Command command;
+    private DataBaseConnection db;
+    private DatagramChannel udpChannel;
+    private InetSocketAddress clientAddress;
 
 
     public CommandHandler() { }
 
+    public CommandHandler(Command command, Vector<Human> humans, DataBaseConnection db, DatagramChannel channel, InetSocketAddress clientAddress) {
+        this.command = command;
+        this.storage = humans;
+        this.udpChannel = channel;
+        this.db = db;
+        this.clientAddress = clientAddress;
+    }
+
+
+
     @Override
     public void run() {
+        ByteBuffer buffer = ByteBuffer.allocate(8192);
+        buffer.clear();
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+
+            Response response = new Response(handleCommand(command, storage, db));
+
+            oos.writeObject(response);
+            oos.flush();
+            buffer.clear();
+            buffer.put(baos.toByteArray());
+            buffer.flip();
+
+            udpChannel.send(buffer, clientAddress);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -42,7 +79,7 @@ public class CommandHandler extends Thread {
             password = ((String) credentials).split(" ")[1];
         }
 
-        synchronized (CommandHandler.class) {
+
             String command = com.getCommand();
             Object data = com.getData();
             if (db.executeLogin(username, password) == 0 || command.toLowerCase().equals("connecting") || command.toLowerCase().equals("register")) {
@@ -128,7 +165,7 @@ public class CommandHandler extends Thread {
                         buffer = "Error: undefined command! Type \"help\" for a list of available commands".getBytes();
                 }return buffer;
             }else return "User is not authorized".getBytes();
-        }
+
     }
 
     /**

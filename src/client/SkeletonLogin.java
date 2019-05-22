@@ -69,7 +69,7 @@ public class SkeletonLogin {
                         Window stageP = nick.getScene().getWindow();
                         stageP.hide();
                         Stage stage = new Stage();
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainUI.fxml"));
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainUIDay.fxml"));
                         Login.loadScene(stage, loader);
                     } else {
                         Alert alert = new Alert(Alert.AlertType.WARNING);

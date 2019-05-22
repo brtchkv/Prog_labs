@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 public class MainUI extends Application {
     @Override
     public void start(Stage stage){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainUI.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainUIDay.fxml"));
         Login.loadScene(stage, loader);
         stage.setResizable(false);
     }

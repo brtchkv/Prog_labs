@@ -12,7 +12,6 @@ import java.io.IOException;
 
 public class Login extends Application {
 
-
     @Override
     public void start(Stage stage){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
@@ -35,6 +34,9 @@ public class Login extends Application {
             Platform.exit();
             System.exit(0);
         });
+        if (loader.getLocation().toString().contains("MainUINight.fxml")){
+            stage.getScene().getStylesheets().add("client/dark.css");
+        }
         stage.show();
         stage.setResizable(false);
     }

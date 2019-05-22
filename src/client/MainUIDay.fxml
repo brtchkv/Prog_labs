@@ -39,6 +39,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#showTable" text="Table" />
           </items>
         </Menu>
+            <Menu mnemonicParsing="false" text="Theme">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#night" text="Night" />
+              </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
             <MenuItem mnemonicParsing="false" onAction="#showHelp" text="About" />
@@ -51,7 +56,7 @@
             </Menu>
       </menus>
     </MenuBar>
-      <HBox prefHeight="36.0" prefWidth="810.0" style="-fx-background-color: #ddaf94;">
+      <HBox id="hboxHigh" prefHeight="36.0" prefWidth="810.0" stylesheets="@removeSplit.css">
          <children>
             <Label fx:id="collectionInfo" prefHeight="19.0" prefWidth="683.0" text="Collection Info" wrapText="true">
                <font>
@@ -77,34 +82,31 @@
             </Label>
          </children>
       </HBox>
-    <SplitPane dividerPositions="0.5" focusTraversable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="454.0" prefWidth="810.0" style="-fx-background-color: #ffd0a0#ffd0a0;">
+    <SplitPane id="splitpane" dividerPositions="0.5" focusTraversable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="451.0" prefWidth="799.0" stylesheets="@removeSplit.css">
       <items>
-        <AnchorPane style="-fx-background-color: #ffd0a0;">
+        <AnchorPane id="anchorpane" prefHeight="449.0" prefWidth="392.0">
           <children>
-                  <Label layoutX="152.0" layoutY="13.0" text="Humans">
+                  <Label layoutX="158.0" layoutY="13.0" text="Humans">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Pane layoutX="182.0" layoutY="12.0" prefHeight="200.0" prefWidth="200.0" />
-                  <Pane layoutX="27.0" layoutY="48.0" prefHeight="391.0" prefWidth="322.0" style="-fx-background-color: #ffdec4;" />
+                  <Pane layoutX="194.0" layoutY="12.0" prefHeight="200.0" prefWidth="200.0" />
+                  <Pane id="pane1" layoutX="25.0" layoutY="47.0" prefHeight="380.0" prefWidth="351.0" />
           </children>
-               <padding>
-                  <Insets right="10.0" />
-               </padding>
         </AnchorPane>
-        <AnchorPane prefHeight="504.0" prefWidth="492.0" style="-fx-background-color: #ffd0a0;">
+        <AnchorPane id="anchorPane2" prefHeight="449.0" prefWidth="425.0">
           <children>
-            <Label alignment="CENTER" layoutX="143.0" layoutY="13.0" style="&#10;" text="Desk Control" textAlignment="CENTER" wrapText="false">
+            <Label alignment="CENTER" layoutX="134.0" layoutY="13.0" style="&#10;" text="Desk Control" textAlignment="CENTER" wrapText="false">
                      <font>
                 <Font size="18.0" />
                      </font></Label>
-                  <Label layoutX="162.0" layoutY="48.0" text="Command" wrapText="true">
+                  <Label layoutX="152.0" layoutY="48.0" text="Command" wrapText="true">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="commandsList" layoutX="123.0" layoutY="84.0" prefWidth="150.0" promptText="Action">
+                  <ComboBox fx:id="commandsList" layoutX="115.0" layoutY="84.0" prefWidth="150.0" promptText="Action">
               <items>
               <FXCollections fx:factory="observableArrayList">
                   <String fx:value="Add" />
@@ -115,39 +117,36 @@
               </FXCollections>
           </items>
           </ComboBox>
-                  <Pane layoutX="-2.0" layoutY="121.0" prefHeight="328.0" prefWidth="392.0">
+                  <Pane layoutX="-4.0" layoutY="121.0" prefHeight="328.0" prefWidth="403.0">
                      <children>
-                        <Label layoutX="174.0" layoutY="9.0" text="Human">
+                        <Label layoutX="169.0" layoutY="9.0" text="Human">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label layoutX="79.0" layoutY="45.0" text="General" />
-                        <TextField fx:id="humanName" layoutX="19.0" layoutY="69.0" promptText="Name" />
-                        <TextField fx:id="humanAge" layoutX="19.0" layoutY="108.0" promptText="Age" />
-                        <Label layoutX="287.0" layoutY="45.0" text="Size" />
-                        <TextField fx:id="height" layoutX="218.0" layoutY="69.0" promptText="Height" />
-                        <TextField fx:id="width" layoutX="218.0" layoutY="108.0" promptText="Width" />
-                        <Pane layoutX="4.0" layoutY="147.0" prefHeight="122.0" prefWidth="392.0">
+                        <Label layoutX="71.0" layoutY="45.0" text="General" />
+                        <TextField fx:id="humanName" layoutX="11.0" layoutY="69.0" promptText="Name" />
+                        <TextField fx:id="humanAge" layoutX="11.0" layoutY="108.0" promptText="Age" />
+                        <Label layoutX="283.0" layoutY="45.0" text="Size" />
+                        <TextField fx:id="height" layoutX="214.0" layoutY="69.0" promptText="Height" />
+                        <TextField fx:id="width" layoutX="214.0" layoutY="108.0" promptText="Width" />
+                        <Pane layoutY="147.0" prefHeight="122.0" prefWidth="392.0">
                            <children>
-                              <Label layoutX="85.0" layoutY="9.0" text="Skill" />
-                              <TextField fx:id="skillName" layoutX="14.0" layoutY="34.0" promptText="Name" />
-                              <TextField fx:id="skillInfo" layoutX="14.0" layoutY="76.0" promptText="Info" />
+                              <Label layoutX="83.0" layoutY="9.0" text="Skill" />
+                              <TextField fx:id="skillName" layoutX="12.0" layoutY="34.0" promptText="Name" />
+                              <TextField fx:id="skillInfo" layoutX="12.0" layoutY="76.0" promptText="Info" />
                               <Label layoutX="271.0" layoutY="9.0" text="Location" />
-                              <TextField  fx:id="xCoordinate" layoutX="214.0" layoutY="34.0" promptText="X Coordinate" />
+                              <TextField layoutX="214.0" layoutY="34.0" promptText="X Coordinate" fx:id="xCoordinate" />
                               <TextField fx:id="yCoordinate" layoutX="214.0" layoutY="76.0" promptText="Y Coordinate" />
                            </children>
                         </Pane>
-                         <Button defaultButton="true" layoutX="220.0" layoutY="273.0" mnemonicParsing="false" onAction="#submit" prefHeight="23.0" prefWidth="62.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#5a61af, #51536d),         linear-gradient(#e4fbff 0%,#cee6fb 10%, #a5d3fb 50%, #88c6fb 51%, #d5faff 100%); -fx-text-fill: #242d35; -fx-font-size: 13px; -fx-background-radius: 5,5,4;" text="Submit" textFill="#367c05" />
-                         <Button cancelButton="true" layoutX="132.0" layoutY="274.0" mnemonicParsing="false" onAction="#clear" prefHeight="23.0" prefWidth="52.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#9a9a9a, #909090),         linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%); -fx-text-fill: #242d35; -fx-font-size: 13px; -fx-background-radius: 5,5,4;" text="Clear" textFill="#da1c1c" />
+                         <Button defaultButton="true" layoutX="216.0" layoutY="274.0" mnemonicParsing="false" onAction="#submit" prefHeight="23.0" prefWidth="62.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#5a61af, #51536d),         linear-gradient(#e4fbff 0%,#cee6fb 10%, #a5d3fb 50%, #88c6fb 51%, #d5faff 100%); -fx-text-fill: #242d35; -fx-font-size: 13px; -fx-background-radius: 5,5,4;" text="Submit" textFill="#367c05" />
+                         <Button cancelButton="true" layoutX="127.0" layoutY="274.0" mnemonicParsing="false" onAction="#clear" prefHeight="23.0" prefWidth="52.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#9a9a9a, #909090),         linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%); -fx-text-fill: #242d35; -fx-font-size: 13px; -fx-background-radius: 5,5,4;" text="Clear" textFill="#da1c1c" />
                      </children>
                   </Pane>
           </children>
         </AnchorPane>
       </items>
-         <padding>
-            <Insets left="10.0" right="10.0" />
-         </padding>
          <VBox.margin>
             <Insets />
          </VBox.margin>
