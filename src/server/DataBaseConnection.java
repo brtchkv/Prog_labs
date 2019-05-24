@@ -16,7 +16,6 @@ public class DataBaseConnection {
     private String name = "lab";
     private String pass = "lab1234";
     private Connection connection = null;
-    private CommandHandler command;
 
     {
         try {
@@ -24,7 +23,6 @@ public class DataBaseConnection {
             System.out.println("Installed Driver");
             connection = DriverManager.getConnection(url, name, pass);
             System.out.println("The Connection is successfully established\n");
-            command = new CommandHandler();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Can't connect to the database");
@@ -79,12 +77,15 @@ public class DataBaseConnection {
 
     private void addHuman(Human h, String username) throws SQLException {
         int skillId = h.getDateTime().getNano();
-        PreparedStatement preStatement = connection.prepareStatement("INSERT INTO humans VALUES (?, ?, ?, ?, ?);");
+        PreparedStatement preStatement = connection.prepareStatement("INSERT INTO humans VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
         preStatement.setString(1,h.getName());
         preStatement.setInt(2,h.getAge());
         preStatement.setString(3,username);
         preStatement.setString(4,h.getDateTime().toString());
         preStatement.setInt(5,skillId);
+        preStatement.setInt(6,h.getSize());
+        preStatement.setInt(7, h.getX());
+        preStatement.setInt(8, h.getY());
         preStatement.executeUpdate();
         PreparedStatement statementSkills = connection.prepareStatement("INSERT INTO skills VALUES (?, ?, ?);");
         statementSkills.setInt(1,skillId);

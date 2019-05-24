@@ -8,6 +8,9 @@ public class Human extends God implements Serializable, Comparable<Human> {
 
     private String type = "Human";
     private String owner = "all";
+    private int size = 1;
+    private int x = 0;
+    private int y = 0;
 
     private ArrayList<Skill> skills = new ArrayList<>();
     private ArrayList<Disability> disabilities = new ArrayList<>();
@@ -33,6 +36,30 @@ public class Human extends God implements Serializable, Comparable<Human> {
             System.out.println("---------------------------------");
             System.out.println("Безликий человек успешно создано");
             System.out.println("---------------------------------");}
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public String getOwner() {
@@ -74,9 +101,8 @@ public class Human extends God implements Serializable, Comparable<Human> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Human human = (Human) o;
-        return Objects.equals(type, human.type) &&
-                skills.equals(human.skills) &&
-                disabilities.equals(human.disabilities);
+        return this.getName().equals(human.getName()) && this.getAge() == human.getAge()
+                && this.size == human.getSize() && this.x == human.getX() && this.y == human.getY();
     }
 
     @Override

@@ -67,7 +67,7 @@ public class Server {
 
                 if (command.getCommand().equals("login")){
                     System.out.println("-- Client's input: " + command.getCommand() + " " + ((String)command.getCredentials()).split(" ")[0]);
-                } else if (command.getCommand().equals("show")){}
+                } else if (command.getCommand().equals("show")){ }
                   else {System.out.println("-- Client's input: " + command.getCommand());}
 
                 handler = new CommandHandler(command, storage, db, udpChannel,clientAddress);

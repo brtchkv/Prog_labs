@@ -38,9 +38,7 @@ public class BackTable extends TimerTask {
             toSend = new DatagramPacket(sending, sending.length, Client.getServerAddress(), Client.getPort());
         } catch (IOException e) {
             System.out.println("Can't create a DatagramPacket\n"+ e.getMessage());
-
         }
-
 
         try {
             if (Client.getUdpSocket() != null) {
@@ -84,10 +82,20 @@ public class BackTable extends TimerTask {
         TableColumn<String,Human> column3 = new TableColumn<>("Owner");
         column3.setCellValueFactory(new PropertyValueFactory<>("owner"));
 
+        TableColumn<String,Human> column4 = new TableColumn<>("Size");
+        column4.setCellValueFactory(new PropertyValueFactory<>("size"));
+
+        TableColumn<String,Human> column5 = new TableColumn<>("X");
+        column5.setCellValueFactory(new PropertyValueFactory<>("X"));
+
+        TableColumn<String,Human> column6 = new TableColumn<>("Y");
+        column6.setCellValueFactory(new PropertyValueFactory<>("Y"));
+
 
         tableView.getColumns().add(column1);
         tableView.getColumns().add(column2);
         tableView.getColumns().add(column3);
+        tableView.getColumns().addAll(column4,column5,column6);
 
     }
 }

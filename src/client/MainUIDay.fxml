@@ -9,6 +9,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -127,21 +128,21 @@
                         <Label layoutX="71.0" layoutY="45.0" text="General" />
                         <TextField fx:id="humanName" layoutX="11.0" layoutY="69.0" promptText="Name" />
                         <TextField fx:id="humanAge" layoutX="11.0" layoutY="108.0" promptText="Age" />
-                        <Label layoutX="283.0" layoutY="45.0" text="Size" />
-                        <TextField fx:id="height" layoutX="214.0" layoutY="69.0" promptText="Height" />
-                        <TextField fx:id="width" layoutX="214.0" layoutY="108.0" promptText="Width" />
+                        <Label layoutX="270.0" layoutY="45.0" text="Location" />
+                        <TextField layoutX="214.0" layoutY="69.0" promptText="X Coordinate" fx:id="xCoordinate" />
+                        <TextField fx:id="yCoordinate" layoutX="214.0" layoutY="108.0" promptText="Y Coordinate" />
                         <Pane layoutY="147.0" prefHeight="122.0" prefWidth="392.0">
                            <children>
                               <Label layoutX="83.0" layoutY="9.0" text="Skill" />
                               <TextField fx:id="skillName" layoutX="12.0" layoutY="34.0" promptText="Name" />
                               <TextField fx:id="skillInfo" layoutX="12.0" layoutY="76.0" promptText="Info" />
-                              <Label layoutX="271.0" layoutY="9.0" text="Location" />
-                              <TextField layoutX="214.0" layoutY="34.0" promptText="X Coordinate" fx:id="xCoordinate" />
-                              <TextField fx:id="yCoordinate" layoutX="214.0" layoutY="76.0" promptText="Y Coordinate" />
+                              <Label layoutX="285.0" layoutY="9.0" text="Size" />
+                              <Label fx:id="labelSize" alignment="CENTER" layoutX="249.0" layoutY="81.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="17.0" prefWidth="99.0" text="Picked Size: 0" textAlignment="CENTER" wrapText="true" />
                            </children>
                         </Pane>
                          <Button defaultButton="true" layoutX="216.0" layoutY="274.0" mnemonicParsing="false" onAction="#submit" prefHeight="23.0" prefWidth="62.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#5a61af, #51536d),         linear-gradient(#e4fbff 0%,#cee6fb 10%, #a5d3fb 50%, #88c6fb 51%, #d5faff 100%); -fx-text-fill: #242d35; -fx-font-size: 13px; -fx-background-radius: 5,5,4;" text="Submit" textFill="#367c05" />
                          <Button cancelButton="true" layoutX="127.0" layoutY="274.0" mnemonicParsing="false" onAction="#clear" prefHeight="23.0" prefWidth="52.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#9a9a9a, #909090),         linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%); -fx-text-fill: #242d35; -fx-font-size: 13px; -fx-background-radius: 5,5,4;" text="Clear" textFill="#da1c1c" />
+                        <Slider fx:id="slider" blockIncrement="1.0" layoutX="229.0" layoutY="182.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                      </children>
                   </Pane>
           </children>

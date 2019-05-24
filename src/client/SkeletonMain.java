@@ -1,5 +1,7 @@
 package client;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,12 +45,6 @@ public class SkeletonMain implements Initializable {
     private TextField humanAge;
 
     @FXML
-    private TextField height;
-
-    @FXML
-    private TextField width;
-
-    @FXML
     private TextField skillName;
 
     @FXML
@@ -66,9 +62,17 @@ public class SkeletonMain implements Initializable {
     @FXML
     private Label lastHumanName;
 
+    @FXML
+    private Slider slider;
+
+    @FXML
+    private Label labelSize;
+
     Timer timer;
 
-
+    private int size = 1;
+    private int x = 0;
+    private int y = 0;
 
     private void init() {
         collectionInfo.setAlignment(Pos.CENTER_LEFT);
@@ -85,6 +89,16 @@ public class SkeletonMain implements Initializable {
         init();
         timer = new Timer();
         timer.schedule(new BackTable(), 0, 3000);
+        slider.valueProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                                Number oldValue, Number newValue) {
+
+                labelSize.setText("Picked Size: " + newValue);
+                size = newValue.intValue();
+            }
+        });
     }
 
     @FXML
@@ -94,6 +108,8 @@ public class SkeletonMain implements Initializable {
         skillName.clear();
         skillInfo.clear();
         commandsList.setValue(null);
+        slider.setValue(slider.getMin());
+        labelSize.setText("Picked Size: 0");
     }
 
     @FXML
@@ -170,6 +186,7 @@ public class SkeletonMain implements Initializable {
         boolean command = false;
 
         try {
+
             String gson = "";
             if (humanName.getText() == null || humanAge.getText() == null || humanName.getText().isEmpty() || humanAge.getText().isEmpty() || commandsList.getValue() == null){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -177,22 +194,48 @@ public class SkeletonMain implements Initializable {
                 alert.setContentText("The fields command, name and age can't be void.\nMake sure they're set.");
                 alert.showAndWait();
             } else {
+
+                if ((xCoordinate.getText() == null || xCoordinate.getText().isEmpty()) && (yCoordinate.getText() == null || yCoordinate.getText().isEmpty())){
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Command");
+                    alert.setContentText("You didn't provide any coordinates. Thus the default preset was used!\n(0,0)");
+                    alert.showAndWait();
+                } else if ((xCoordinate.getText() != null && !xCoordinate.getText().isEmpty()) && (yCoordinate.getText() == null || yCoordinate.getText().isEmpty())) {
+                    x = Integer.parseInt(xCoordinate.getText());
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Command");
+                    alert.setContentText("You didn't provide Y coordinates. Thus the default preset was used!\n Y = 0");
+                    alert.showAndWait();
+                } else if ((yCoordinate.getText() != null && !yCoordinate.getText().isEmpty()) && (xCoordinate.getText() == null || xCoordinate.getText().isEmpty())){
+                    y = Integer.parseInt(yCoordinate.getText());
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Command");
+                    alert.setContentText("You didn't provide X coordinates. Thus the default preset was used!\n X = 0");
+                    alert.showAndWait();
+                } else {
+                    x = Integer.parseInt(xCoordinate.getText());
+                    y = Integer.parseInt(yCoordinate.getText());
+                }
+
                 if ((skillName.getText() == null || skillName.getText().isEmpty()) && skillInfo.getText()!= null && !skillInfo.getText().isEmpty()) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Command");
                     alert.setContentText("You can't provide skill info and don't provide skill name\nTry again!");
                     alert.showAndWait();
                 } else if ((skillName.getText() == null || skillName.getText().isEmpty()) && (skillInfo.getText() == null || skillInfo.getText().isEmpty())){
-                    gson = "{\"name\":\"" + humanName.getText() +"\", \"age\":" + humanAge.getText() + "}";
+                    gson = "{\"name\":\"" + humanName.getText() +"\", \"age\":" + humanAge.getText() + ", \"size\":" + size + ", \"x\": " + x + ", \"y\": " + y +"}";
                     command = true;
                 } else if (!(skillName.getText() == null || skillName.getText().isEmpty()) && (skillInfo.getText() == null || skillInfo.getText().isEmpty())){
-                    gson = "{\"name\":\"" + humanName.getText() +"\", \"age\":" + humanAge.getText() + ", \"skill\": {" + "\"name\": \"" + skillName.getText() + "\"}"  +"}";
+                    gson = "{\"name\":\"" + humanName.getText() +"\", \"age\":" + humanAge.getText() + ", \"size\":" + size + ", \"x\": " + x + ", \"y\": "
+                            + y + ", \"skill\": {" + "\"name\": \"" + skillName.getText() + "\"}"  +"}";
                     command = true;
                 } else {
-                    gson = "{\"name\":\"" + humanName.getText() +"\", \"age\":" + humanAge.getText() + ", \"skill\": {" + "\"name\": \"" + skillName.getText() + "\""
+                    gson = "{\"name\":\"" + humanName.getText() +"\", \"age\":" + humanAge.getText() + ", \"size\":" + size + ", \"x\": " + x + ", \"y\": "
+                            + y + ", \"skill\": {" + "\"name\": \"" + skillName.getText() + "\""
                             + "\"info\": \"" + skillInfo.getText() +"\"}"  +"}";
                     command = true;
                 }
+
                 if (command) {
 
                     lastCommand.setText(commandsList.getValue().toString());

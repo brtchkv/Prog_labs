@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.Scanner;
 import java.util.Vector;
-import javafx.application.Application;
 
 import server.DataBaseConnection;
 import shared.*;
@@ -458,8 +457,6 @@ public class Client {
             System.out.println("-- UDP connection to " + args[0] + " host --");
             System.out.println("-- UDP port: " + args[1] + " --");
             sender.testServerConnection();
-            //Application.launch(Login.class, args);
-            //sender.start();
         } catch (Exception e) {
             System.err.println("Oh no, something bad has happened!");
             e.printStackTrace();
