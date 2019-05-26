@@ -162,6 +162,7 @@ public class SkeletonMain implements Initializable {
         ButtonType sorry = new ButtonType(currentResource.getString("sorry"));
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(currentResource.getString("why"));
+        alert.setHeaderText(Login.currentResource.getString("warning"));
         alert.getButtonTypes().clear();
         alert.getButtonTypes().add(sorry);
         File file = new File("/Users/ivan/OneDrive - ITMO UNIVERSITY/Прога/6/Lab/src/client/UI/cat.jpg");
