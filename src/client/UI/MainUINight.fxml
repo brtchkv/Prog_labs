@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="465.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.SkeletonMain">
+<VBox prefHeight="465.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controllers.SkeletonMain">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -28,12 +28,12 @@
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Language">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#language1" text="English" />
-                  <MenuItem mnemonicParsing="false" onAction="#language2" text="Russian" />
-                  <MenuItem mnemonicParsing="false" onAction="#language3" text="Swedish" />
-                  <MenuItem mnemonicParsing="false" onAction="#language4" text="Spanish" />
-              </items>
+                <items>
+                    <MenuItem mnemonicParsing="false" onAction="#language1" text="Русский" />
+                    <MenuItem mnemonicParsing="false" onAction="#language2" text="English (Canada)" />
+                    <MenuItem mnemonicParsing="false" onAction="#language3" text="Česky" />
+                    <MenuItem mnemonicParsing="false" onAction="#language4" text="Polski" />
+                </items>
             </Menu>
         <Menu mnemonicParsing="false" text="Table">
           <items>
@@ -57,7 +57,7 @@
             </Menu>
       </menus>
     </MenuBar>
-      <HBox id="hboxHigh" prefHeight="36.0" prefWidth="810.0" style="-fx-background-color: #173f5f;" stylesheets="@removeSplit.css">
+      <HBox id="hboxHigh" prefHeight="36.0" prefWidth="810.0" style="-fx-background-color: #173f5f;" stylesheets="@day.css">
          <children>
             <Label fx:id="collectionInfo" prefHeight="19.0" prefWidth="683.0" text="Collection Info" wrapText="true">
                <font>

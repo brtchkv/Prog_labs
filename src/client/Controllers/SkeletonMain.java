@@ -1,5 +1,7 @@
-package client;
+package client.Controllers;
 
+import client.BackTable;
+import client.Login;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Timer;
 
@@ -36,7 +39,7 @@ public class SkeletonMain implements Initializable {
     private Label nickname;
 
     @FXML
-    private ComboBox<?> commandsList;
+    private ComboBox<String> commandsList;
 
     @FXML
     private TextField humanName;
@@ -89,13 +92,19 @@ public class SkeletonMain implements Initializable {
         init();
         timer = new Timer();
         timer.schedule(new BackTable(), 0, 3000);
+        commandsList.getItems().addAll(
+                Login.currentResource.getString("add"),
+                Login.currentResource.getString("remove"),
+                Login.currentResource.getString("removeGreater"),
+                Login.currentResource.getString("removeLower"),
+                Login.currentResource.getString("addIfMin"));
         slider.valueProperty().addListener(new ChangeListener<Number>() {
 
             @Override
             public void changed(ObservableValue<? extends Number> observable,
                                 Number oldValue, Number newValue) {
 
-                labelSize.setText("Picked Size: " + newValue);
+                labelSize.setText(String.format("%.2f", newValue));
                 size = newValue.intValue();
             }
         });
@@ -109,7 +118,7 @@ public class SkeletonMain implements Initializable {
         skillInfo.clear();
         commandsList.setValue(null);
         slider.setValue(slider.getMin());
-        labelSize.setText("Picked Size: 0");
+        labelSize.setText("0");
     }
 
     @FXML
@@ -118,8 +127,8 @@ public class SkeletonMain implements Initializable {
         Stage stageP = (Stage) nickname.getScene().getWindow();
         stageP.close();
         Stage stage = new Stage();
-        stage.setTitle("Main");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainUIDay.fxml"));
+        stage.setTitle(Login.currentResource.getString("main"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("client/UI/MainUIDay.fxml"));
         Login.loadScene(stage, loader);
     }
 
@@ -129,8 +138,8 @@ public class SkeletonMain implements Initializable {
         Stage stageP = (Stage) nickname.getScene().getWindow();
         stageP.close();
         Stage stage = new Stage();
-        stage.setTitle("Main");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainUINight.fxml"));
+        stage.setTitle(Login.currentResource.getString("main"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("client/UI/MainUINight.fxml"));
         Login.loadScene(stage, loader);
 
     }
@@ -143,7 +152,7 @@ public class SkeletonMain implements Initializable {
         alert.setTitle("Why?!");
         alert.getButtonTypes().clear();
         alert.getButtonTypes().add(sorry);
-        File file = new File("/Users/ivan/OneDrive - ITMO UNIVERSITY/Прога/6/Lab/src/client/cat.jpg");
+        File file = new File("/Users/ivan/OneDrive - ITMO UNIVERSITY/Прога/6/Lab/src/client/UI/cat.jpg");
         Image image = new Image(file.toURI().toString(), 400, 400, true, true);
         imageView.setImage(image);
         alert.setGraphic(imageView);
@@ -153,8 +162,8 @@ public class SkeletonMain implements Initializable {
     @FXML
     void showHelp(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Help");
-        alert.setContentText("An application for organising your slavery business.\nCreator: Ivan Bratchikov");
+        alert.setTitle(Login.currentResource.getString("help"));
+        alert.setContentText(Login.currentResource.getString("helpText"));
         alert.showAndWait();
     }
 
@@ -190,26 +199,26 @@ public class SkeletonMain implements Initializable {
             String gson = "";
             if (humanName.getText() == null || humanAge.getText() == null || humanName.getText().isEmpty() || humanAge.getText().isEmpty() || commandsList.getValue() == null){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Command");
+                alert.setTitle(Login.currentResource.getString("command"));
                 alert.setContentText("The fields command, name and age can't be void.\nMake sure they're set.");
                 alert.showAndWait();
             } else {
 
                 if ((xCoordinate.getText() == null || xCoordinate.getText().isEmpty()) && (yCoordinate.getText() == null || yCoordinate.getText().isEmpty())){
                     Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Command");
+                    alert.setTitle(Login.currentResource.getString("command"));
                     alert.setContentText("You didn't provide any coordinates. Thus the default preset was used!\n(0,0)");
                     alert.showAndWait();
                 } else if ((xCoordinate.getText() != null && !xCoordinate.getText().isEmpty()) && (yCoordinate.getText() == null || yCoordinate.getText().isEmpty())) {
                     x = Integer.parseInt(xCoordinate.getText());
                     Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Command");
+                    alert.setTitle(Login.currentResource.getString("command"));
                     alert.setContentText("You didn't provide Y coordinates. Thus the default preset was used!\n Y = 0");
                     alert.showAndWait();
                 } else if ((yCoordinate.getText() != null && !yCoordinate.getText().isEmpty()) && (xCoordinate.getText() == null || xCoordinate.getText().isEmpty())){
                     y = Integer.parseInt(yCoordinate.getText());
                     Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Command");
+                    alert.setTitle(Login.currentResource.getString("command"));
                     alert.setContentText("You didn't provide X coordinates. Thus the default preset was used!\n X = 0");
                     alert.showAndWait();
                 } else {
@@ -219,7 +228,7 @@ public class SkeletonMain implements Initializable {
 
                 if ((skillName.getText() == null || skillName.getText().isEmpty()) && skillInfo.getText()!= null && !skillInfo.getText().isEmpty()) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Command");
+                    alert.setTitle(Login.currentResource.getString("command"));
                     alert.setContentText("You can't provide skill info and don't provide skill name\nTry again!");
                     alert.showAndWait();
                 } else if ((skillName.getText() == null || skillName.getText().isEmpty()) && (skillInfo.getText() == null || skillInfo.getText().isEmpty())){
@@ -238,10 +247,10 @@ public class SkeletonMain implements Initializable {
 
                 if (command) {
 
-                    lastCommand.setText(commandsList.getValue().toString());
+                    lastCommand.setText(commandsList.getValue());
                     lastHumanName.setText(humanName.getText());
 
-                    SkeletonLogin.client.udpSocket.send(SkeletonLogin.client.createRequest(commandsList.getValue().toString().replaceAll("\\s+", "_").toLowerCase(), gson, SkeletonLogin.getNickname() + " " + server.DataBaseConnection.encryptString(SkeletonLogin.getPassword())));
+                    SkeletonLogin.client.udpSocket.send(SkeletonLogin.client.createRequest(commandsList.getValue().replaceAll("\\s+", "_").toLowerCase(), gson, SkeletonLogin.getNickname() + " " + server.DataBaseConnection.encryptString(SkeletonLogin.getPassword())));
                     byte[] resp = new byte[8192];
                     DatagramPacket responsePacket = new DatagramPacket(resp, resp.length);
                     SkeletonLogin.client.udpSocket.receive(responsePacket);
@@ -249,9 +258,9 @@ public class SkeletonMain implements Initializable {
                     try (ByteArrayInputStream bais = new ByteArrayInputStream(resp);
                          ObjectInputStream ois = new ObjectInputStream(bais)) {
                         Response response = (Response) ois.readObject();
-                        String output = new String(SkeletonLogin.client.decodeResponse(commandsList.getValue().toString(), response));
+                        String output = new String(SkeletonLogin.client.decodeResponse(commandsList.getValue(), response));
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Command");
+                        alert.setTitle(Login.currentResource.getString("command"));
                         alert.setContentText(output);
                         alert.showAndWait();
                     } catch (Exception e) {
@@ -262,8 +271,8 @@ public class SkeletonMain implements Initializable {
 
         }catch (IOException e){
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Server Connection");
-            alert.setContentText("Disconnected from the server\nTry again later!");
+            alert.setTitle(Login.currentResource.getString("serverConnection"));
+            alert.setContentText(Login.currentResource.getString("disconnected"));
             alert.showAndWait();
         }
 
@@ -271,7 +280,16 @@ public class SkeletonMain implements Initializable {
 
     @FXML
     void language1(ActionEvent event) {
-
+        timer.cancel();
+        Window stageP = nickname.getScene().getWindow();
+        stageP.hide();
+        Stage stage = new Stage();
+        stage.setTitle(Login.currentResource.getString("main"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
+                new Locale("ru", "Ru")));
+        loader.setLocation(getClass().getClassLoader().getResource("client/UI/login.fxml"));
+        Login.loadScene(stage, loader);
     }
 
     @FXML
@@ -291,10 +309,11 @@ public class SkeletonMain implements Initializable {
 
     @FXML
     void logOut(ActionEvent event) {
+        timer.cancel();
         Window stageP = nickname.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("client/UI/login.fxml"));
         Login.loadScene(stage, loader);
     }
 

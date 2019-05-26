@@ -1,5 +1,7 @@
-package client;
+package client.Controllers;
 
+import client.Client;
+import client.Login;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +16,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 public class SkeletonLogin {
@@ -69,29 +73,32 @@ public class SkeletonLogin {
                         Window stageP = nick.getScene().getWindow();
                         stageP.hide();
                         Stage stage = new Stage();
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainUIDay.fxml"));
+                        stage.setTitle(Login.currentResource.getString("main"));
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setResources(Login.currentResource);
+                        loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUIDay.fxml"));
                         Login.loadScene(stage, loader);
                     } else {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Login");
+                        alert.setTitle(Login.currentResource.getString("login"));
                         alert.setContentText(output);
                         alert.showAndWait();
                     }
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Main UI");
+                    alert.setTitle(Login.currentResource.getString("main"));
                     alert.setContentText("Can't load the main UI!\n" + e.getMessage());
                     alert.showAndWait();
                 }
             } catch (IOException e) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Server Connection");
-                alert.setContentText("Disconnected from the server\nTry again later!");
+                alert.setTitle(Login.currentResource.getString("serverConnection"));
+                alert.setContentText(Login.currentResource.getString("disconnected"));
                 alert.showAndWait();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Login");
+            alert.setTitle(Login.currentResource.getString("login"));
             alert.setContentText("Make sure nickname and password fields are filled!");
             alert.showAndWait();
         }
@@ -100,8 +107,8 @@ public class SkeletonLogin {
     @FXML
     void showHelp(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Help");
-        alert.setContentText("An application for organising your slavery business.\nCreator: Ivan Bratchikov");
+        alert.setTitle(Login.currentResource.getString("help"));
+        alert.setContentText(Login.currentResource.getString("helpText"));
         alert.showAndWait();
     }
 
@@ -110,8 +117,62 @@ public class SkeletonLogin {
         Window stageP = nick.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        stage.setTitle("Main");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("register.fxml"));
+        stage.setTitle(Login.currentResource.getString("register"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(Login.currentResource);
+        loader.setLocation(getClass().getClassLoader().getResource("client/UI/register.fxml"));
+        Login.loadScene(stage, loader);
+    }
+
+    @FXML
+    void language1(ActionEvent event) {
+        Window stageP = nick.getScene().getWindow();
+        stageP.hide();
+        Stage stage = new Stage();
+        stage.setTitle(Login.currentResource.getString("login"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
+                new Locale("ru", "Ru")));
+        loader.setLocation(getClass().getClassLoader().getResource("client/UI/login.fxml"));
+        Login.loadScene(stage, loader);
+    }
+
+    @FXML
+    void language2(ActionEvent event) {
+        Window stageP = nick.getScene().getWindow();
+        stageP.hide();
+        Stage stage = new Stage();
+        stage.setTitle(Login.currentResource.getString("login"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
+                new Locale("en", "Ca")));
+        loader.setLocation(getClass().getClassLoader().getResource("client/UI/login.fxml"));
+        Login.loadScene(stage, loader);
+    }
+
+    @FXML
+    void language3(ActionEvent event) {
+        Window stageP = nick.getScene().getWindow();
+        stageP.hide();
+        Stage stage = new Stage();
+        stage.setTitle(Login.currentResource.getString("login"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
+                new Locale("ch", "Ch")));
+        loader.setLocation(getClass().getClassLoader().getResource("client/UI/login.fxml"));
+        Login.loadScene(stage, loader);
+    }
+
+    @FXML
+    void language4(ActionEvent event) {
+        Window stageP = nick.getScene().getWindow();
+        stageP.hide();
+        Stage stage = new Stage();
+        stage.setTitle(Login.currentResource.getString("login"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
+                new Locale("pl", "Pl")));
+        loader.setLocation(getClass().getClassLoader().getResource("client/UI/login.fxml"));
         Login.loadScene(stage, loader);
     }
 
