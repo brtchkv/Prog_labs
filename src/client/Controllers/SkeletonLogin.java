@@ -80,6 +80,7 @@ public class SkeletonLogin {
                         Login.loadScene(stage, loader);
                     } else {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setHeaderText(Login.currentResource.getString("warning"));
                         alert.setTitle(Login.currentResource.getString("login"));
                         alert.setContentText(output);
                         alert.showAndWait();
@@ -87,11 +88,13 @@ public class SkeletonLogin {
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle(Login.currentResource.getString("main"));
-                    alert.setContentText("Can't load the main UI!\n" + e.getMessage());
+                    alert.setHeaderText(Login.currentResource.getString("warning"));
+                    alert.setContentText(Login.currentResource.getString("cantLoadMainUI") + e.getMessage());
                     alert.showAndWait();
                 }
             } catch (IOException e) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setHeaderText(Login.currentResource.getString("warning"));
                 alert.setTitle(Login.currentResource.getString("serverConnection"));
                 alert.setContentText(Login.currentResource.getString("disconnected"));
                 alert.showAndWait();
@@ -99,7 +102,8 @@ public class SkeletonLogin {
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle(Login.currentResource.getString("login"));
-            alert.setContentText("Make sure nickname and password fields are filled!");
+            alert.setHeaderText(Login.currentResource.getString("warning"));
+            alert.setContentText(Login.currentResource.getString("nicknameAndPasswordVoid"));
             alert.showAndWait();
         }
     }

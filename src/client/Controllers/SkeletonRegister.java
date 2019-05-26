@@ -55,12 +55,14 @@ public class SkeletonRegister {
                     String output = new String(SkeletonLogin.client.decodeResponse("register", response));
 
                     Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setHeaderText(Login.currentResource.getString("warning"));
                     alert.setTitle(Login.currentResource.getString("register"));
                     alert.setContentText(output);
                     alert.showAndWait();
 
                 } catch (Exception e) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setHeaderText(Login.currentResource.getString("warning"));
                     alert.setTitle(Login.currentResource.getString("register"));
                     alert.setContentText("Can get the response!\n" + e.getMessage());
                     alert.showAndWait();
@@ -68,14 +70,16 @@ public class SkeletonRegister {
 
             } catch (IOException e) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setHeaderText(Login.currentResource.getString("warning"));
                 alert.setTitle(Login.currentResource.getString("serverConnection"));
-                alert.setContentText("Disconnected from the server.\nTry again later!");
+                alert.setContentText(currentResource.getString("disconnected"));
                 alert.showAndWait();
             }
         }else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText(Login.currentResource.getString("warning"));
             alert.setTitle(Login.currentResource.getString("register"));
-            alert.setContentText("Make sure nickname and email fields are filled!");
+            alert.setContentText(currentResource.getString("nicknameAndEmailVoid"));
             alert.showAndWait();
         }
     }
@@ -99,11 +103,11 @@ public class SkeletonRegister {
     void loginWindow(ActionEvent event) {
         Window stageP = nick.getScene().getWindow();
         stageP.hide();
-        Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("login"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(currentResource);
         loader.setLocation(getClass().getClassLoader().getResource("client/UI/login.fxml"));
+        Stage stage = new Stage();
+        stage.setTitle(Login.currentResource.getString("login"));
         loadScene(stage, loader);
     }
 

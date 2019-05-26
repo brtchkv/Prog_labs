@@ -9,7 +9,7 @@ public class MyResources_ch extends ListResourceBundle {
             return new Object[][]{
                     {"register", "Registrace"},
                     {"login", "P\u0159ihl\u00E1sit se"},
-                    {"clear", "Pr\u016Fhledn\u00E1"},
+                    {"clear", "Pr\u016Fhen\u00E1"},
                     {"submit", "P\u0159edlo\u017Eit"},
                     {"nickname", "P\u0159ezd\u00EDvka"},
                     {"email", "Emailem"},
@@ -20,7 +20,27 @@ public class MyResources_ch extends ListResourceBundle {
                     {"disconnected", "Odpojen\u00ED od serveru. Zkuste to pozd\u011Bji znovu!"},
                     {"password", "Heslo"},
                     {"language", "Jazyk"},
+                    {"collectionInfo", "Kolekce typu vektor. Obsahuje objekty lidsk\u00E9ho typu."},
                     {"help", "Pomoc"},
+                    {"message","Zpr\u00E1va"},
+                    {"warning", "Varov\u00E1n\u00ED"},
+                    {"sheerVoid", "P\u0159\u00EDkaz pole, jm\u00E9no a v\u011Bk nemohou b\u00FDt neplatn\u00E9.\n" +
+                            "Ujist\u011Bte se, \u017Ee jsou nastaveny."},
+                    {"coordinatesVoid", "Nezadali jste \u017Eádn\u00E9 sou\u0159adnice. Proto bylo pou\u017Eito v\u00FDchoz\u00ED nastaven\u00ED!\n" +
+                            "X = 0, Y = 0."},
+                    {"yMissing", "Nezadali jste sou\u0159adnice Y. Proto bylo pou\u017Eito v\u00FDchoz\u00ED nastaven\u00ED!\n" +
+                            "Y = 0."},
+                    {"xMissing", "Nezadali jste sou\u0159adnice X. Proto bylo pou\u017Eito v\u00FDchoz\u00ED nastaven\u00ED!\n" +
+                            "X = 0."},
+                    {"skillNameMissing", "Nem\u016F\u017Eete poskytnout informace o dovednostech a neposkytovat jm\u00E9no dovednosti\n" +
+                            "Zkus to znovu!"},
+                    {"nicknameAndEmailVoid", "Zkontrolujte, zda jsou vypln\u011Bna pole p\u0159ezd\u00EDvka a e-mail!"},
+                    {"nicknameAndPasswordVoid", "Zkontrolujte, zda jsou vypln\u011Bna pole p\u0159ezd\u00EDvky a hesla!\n"},
+                    {"cantLoadMainUI", "Nelze na\u010D\u00EDst hlavn\u00ED u\u017Eivatelsk\u00E9 rozhran\u00ED!\n"},
+                    {"objects", "Objekty"},
+                    {"sorry", "Promi\u0148te"},
+                    {"why", "Pro\u010D?!"},
+                    {"noResponse", "M\u016F\u017Ee dostat odpov\u011Bď!"},
                     {"button", "Tla\u010D\u00EDtko"},
                     {"about", "Asi"},
                     {"table", "Tabulka"},

@@ -26,14 +26,6 @@
                 <MenuItem mnemonicParsing="false" onAction="#fun" text="%dont" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="%language">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#language1" text="Русский" />
-                  <MenuItem mnemonicParsing="false" onAction="#language2" text="English (Canada)" />
-                  <MenuItem mnemonicParsing="false" onAction="#language3" text="Česky" />
-                  <MenuItem mnemonicParsing="false" onAction="#language4" text="Polski" />
-              </items>
-            </Menu>
         <Menu mnemonicParsing="false" text="%table">
           <items>
                   <MenuItem mnemonicParsing="false" onAction="#showTable" text="%table" />
@@ -42,6 +34,14 @@
             <Menu mnemonicParsing="false" text="%theme">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#night" text="Night" />
+              </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="%language">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#language1" text="Русский" />
+                  <MenuItem mnemonicParsing="false" onAction="#language2" text="English (Canada)" />
+                  <MenuItem mnemonicParsing="false" onAction="#language3" text="Česky" />
+                  <MenuItem mnemonicParsing="false" onAction="#language4" text="Polski" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="%help">
@@ -69,7 +69,7 @@
                   <Insets bottom="5.0" top="5.0" />
                </HBox.margin>
             </Label>
-            <Label fx:id="nickname" prefHeight="19.0" prefWidth="168.0" text="Nickname" textAlignment="RIGHT" wrapText="true">
+            <Label fx:id="nickname" alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="168.0" text="Nickname" textAlignment="RIGHT" wrapText="true">
                <font>
                   <Font size="15.0" />
                </font>
@@ -86,7 +86,7 @@
       <items>
         <AnchorPane id="anchorpane" prefHeight="449.0" prefWidth="392.0">
           <children>
-                  <Label layoutX="158.0" layoutY="13.0" text="%humans">
+                  <Label alignment="CENTER" layoutX="134.0" layoutY="13.0" prefHeight="23.0" prefWidth="118.0" text="%humans">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -97,16 +97,16 @@
         </AnchorPane>
         <AnchorPane id="anchorPane2" prefHeight="449.0" prefWidth="425.0">
           <children>
-            <Label alignment="CENTER" layoutX="120.0" layoutY="13.0" style="&#10;" text="%desk" textAlignment="CENTER" wrapText="false">
+            <Label alignment="CENTER" layoutX="79.0" layoutY="13.0" prefHeight="23.0" prefWidth="232.0" style="&#10;" text="%desk" textAlignment="CENTER" wrapText="false">
                      <font>
                 <Font size="18.0" />
                      </font></Label>
-                  <Label layoutX="147.0" layoutY="48.0" text="%command" wrapText="true">
+                  <Label alignment="CENTER" layoutX="119.0" layoutY="48.0" prefHeight="19.0" prefWidth="150.0" text="%command" wrapText="true">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="commandsList" layoutX="115.0" layoutY="84.0" prefWidth="150.0" promptText="%action">
+                  <ComboBox fx:id="commandsList" layoutX="119.0" layoutY="84.0" prefWidth="150.0" promptText="%action">
               <items>
               <FXCollections fx:factory="observableArrayList">
 
@@ -115,29 +115,29 @@
           </ComboBox>
                   <Pane layoutX="-4.0" layoutY="121.0" prefHeight="328.0" prefWidth="403.0">
                      <children>
-                        <Label layoutX="165.0" layoutY="9.0" text="%human">
+                        <Label alignment="CENTER" layoutX="139.0" layoutY="5.0" prefHeight="19.0" prefWidth="118.0" text="%human">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label layoutX="71.0" layoutY="45.0" text="%general" />
+                        <Label alignment="CENTER" layoutX="19.0" layoutY="45.0" prefHeight="17.0" prefWidth="150.0" text="%general" />
                         <TextField fx:id="humanName" layoutX="11.0" layoutY="69.0" promptText="%name" />
                         <TextField fx:id="humanAge" layoutX="11.0" layoutY="108.0" promptText="%age" />
-                        <Label layoutX="270.0" layoutY="45.0" text="\%location" />
+                        <Label alignment="CENTER" layoutX="223.0" layoutY="45.0" prefHeight="17.0" prefWidth="150.0" text="%location" />
                         <TextField layoutX="214.0" layoutY="69.0" promptText="%xCoordinate" fx:id="xCoordinate" />
                         <TextField fx:id="yCoordinate" layoutX="214.0" layoutY="108.0" promptText="%yCoordinate" />
                         <Pane layoutY="147.0" prefHeight="122.0" prefWidth="392.0">
                            <children>
-                              <Label layoutX="83.0" layoutY="9.0" text="\%skill" />
+                              <Label alignment="CENTER" layoutX="20.0" layoutY="9.0" prefHeight="17.0" prefWidth="150.0" text="%skill" />
                               <TextField fx:id="skillName" layoutX="12.0" layoutY="34.0" promptText="%name" />
                               <TextField fx:id="skillInfo" layoutX="12.0" layoutY="76.0" promptText="%info" />
-                              <Label layoutX="285.0" layoutY="9.0" text="\%size" />
-                              <Label alignment="CENTER" layoutX="244.0" layoutY="81.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="17.0" prefWidth="81.0" text="%pickedSize" textAlignment="CENTER" wrapText="true" />
-                              <Label fx:id="labelSize" layoutX="324.0" layoutY="81.0" text="Num" />
+                              <Label alignment="CENTER" layoutX="240.0" layoutY="9.0" prefHeight="17.0" prefWidth="118.0" text="%size" textAlignment="CENTER" />
+                              <Label alignment="CENTER_RIGHT" layoutX="245.0" layoutY="81.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="17.0" prefWidth="81.0" text="%pickedSize" textAlignment="CENTER" wrapText="true" />
+                              <Label fx:id="labelSize" layoutX="327.0" layoutY="81.0" text="0" />
                            </children>
                         </Pane>
-                         <Button defaultButton="true" layoutX="216.0" layoutY="274.0" mnemonicParsing="false" onAction="#submit" prefHeight="23.0" prefWidth="72.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#5a61af, #51536d),         linear-gradient(#e4fbff 0%,#cee6fb 10%, #a5d3fb 50%, #88c6fb 51%, #d5faff 100%); -fx-text-fill: #242d35; -fx-font-size: 12px; -fx-background-radius: 5,5,4;" text="%submit" textFill="#367c05" />
-                         <Button cancelButton="true" layoutX="107.0" layoutY="274.0" mnemonicParsing="false" onAction="#clear" prefHeight="23.0" prefWidth="72.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#9a9a9a, #909090),         linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%); -fx-text-fill: #242d35; -fx-font-size: 12px; -fx-background-radius: 5,5,4;" text="%clear" textFill="#da1c1c" />
+                         <Button alignment="CENTER" defaultButton="true" layoutX="216.0" layoutY="274.0" mnemonicParsing="false" onAction="#submit" prefHeight="23.0" prefWidth="72.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#5a61af, #51536d),         linear-gradient(#e4fbff 0%,#cee6fb 10%, #a5d3fb 50%, #88c6fb 51%, #d5faff 100%); -fx-text-fill: #242d35; -fx-font-size: 12px; -fx-background-radius: 5,5,4;" text="%submit" textFill="#367c05" />
+                         <Button alignment="CENTER" cancelButton="true" layoutX="107.0" layoutY="274.0" mnemonicParsing="false" onAction="#clear" prefHeight="23.0" prefWidth="72.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#9a9a9a, #909090),         linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%); -fx-text-fill: #242d35; -fx-font-size: 12px; -fx-background-radius: 5,5,4;" text="%clear" textFill="#da1c1c" />
                         <Slider fx:id="slider" blockIncrement="1.0" layoutX="229.0" layoutY="182.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                      </children>
                   </Pane>
@@ -150,7 +150,7 @@
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" style="-fx-background-color: c1a4b1;" VBox.vgrow="NEVER">
       <children>
-        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" prefHeight="17.0" prefWidth="146.0" text="%lastCommand" HBox.hgrow="ALWAYS">
+        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" prefHeight="17.0" prefWidth="164.0" text="%lastCommand" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -158,7 +158,7 @@
                   <Insets left="5.0" />
                </padding>
         </Label>
-            <Label fx:id="lastCommand" alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="231.0" text="%command" wrapText="true">
+            <Label fx:id="lastCommand" alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="212.0" text="%command" wrapText="true">
                <font>
                   <Font size="11.0" />
                </font>
@@ -166,8 +166,8 @@
                   <Insets left="5.0" />
                </padding>
             </Label>
-            <Label prefHeight="17.0" prefWidth="145.0" text="%lastHuman" />
-            <Label fx:id="lastHumanName" alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="261.0" text="%name">
+            <Label prefHeight="17.0" prefWidth="155.0" text="%lastHuman" />
+            <Label fx:id="lastHumanName" alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="251.0" text="%name">
                <font>
                   <Font size="11.0" />
                </font>

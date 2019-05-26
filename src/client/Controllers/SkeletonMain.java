@@ -30,8 +30,14 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Timer;
 
+import static client.Login.currentResource;
+import static client.Login.loadScene;
+
 
 public class SkeletonMain implements Initializable {
+
+    public static boolean dark = false;
+
     @FXML
     private Label collectionInfo;
 
@@ -80,10 +86,10 @@ public class SkeletonMain implements Initializable {
     private void init() {
         collectionInfo.setAlignment(Pos.CENTER_LEFT);
         nickname.setAlignment(Pos.CENTER_RIGHT);
-        lastCommand.setAlignment(Pos.CENTER_LEFT);
-        lastHumanName.setAlignment(Pos.CENTER_LEFT);
+        lastCommand.setAlignment(Pos.CENTER_RIGHT);
+        lastHumanName.setAlignment(Pos.CENTER_RIGHT);
         nickname.setText(SkeletonLogin.getNickname());
-        collectionInfo.setText("Collection of Vector type. Contains objects of human type.");
+        collectionInfo.setText(currentResource.getString("collectionInfo"));
     }
 
 
@@ -123,33 +129,39 @@ public class SkeletonMain implements Initializable {
 
     @FXML
     void day(ActionEvent event) {
+        dark = false;
         timer.cancel();
         Stage stageP = (Stage) nickname.getScene().getWindow();
         stageP.close();
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("main"));
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("client/UI/MainUIDay.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(Login.currentResource);
+        loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUIDay.fxml"));
         Login.loadScene(stage, loader);
+        dark = false;
     }
 
     @FXML
     void night(ActionEvent event) {
+        dark = true;
         timer.cancel();
         Stage stageP = (Stage) nickname.getScene().getWindow();
         stageP.close();
         Stage stage = new Stage();
         stage.setTitle(Login.currentResource.getString("main"));
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("client/UI/MainUINight.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(Login.currentResource);
+        loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUINight.fxml"));
         Login.loadScene(stage, loader);
-
+        dark = true;
     }
 
     @FXML
     void fun(ActionEvent event) {
         ImageView imageView = new ImageView();
-        ButtonType sorry = new ButtonType("Sorry");
+        ButtonType sorry = new ButtonType(currentResource.getString("sorry"));
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Why?!");
+        alert.setTitle(currentResource.getString("why"));
         alert.getButtonTypes().clear();
         alert.getButtonTypes().add(sorry);
         File file = new File("/Users/ivan/OneDrive - ITMO UNIVERSITY/Прога/6/Lab/src/client/UI/cat.jpg");
@@ -174,9 +186,9 @@ public class SkeletonMain implements Initializable {
             vbox = new VBox(BackTable.tableView);
         } else {
             TableView tb = new TableView();
-            TableColumn firstNameCol = new TableColumn("Name");
-            TableColumn age = new TableColumn("Age");
-            TableColumn u = new TableColumn("Username");
+            TableColumn firstNameCol = new TableColumn(currentResource.getString("login"));
+            TableColumn age = new TableColumn(currentResource.getString("age"));
+            TableColumn u = new TableColumn(currentResource.getString("username"));
             tb.getColumns().addAll(firstNameCol, age, u);
             vbox = new VBox(tb);
         }
@@ -184,7 +196,7 @@ public class SkeletonMain implements Initializable {
         vbox.setSpacing(5);
         Scene scene = new Scene(vbox);
         Stage stage = new Stage();
-        stage.setTitle("Objects");
+        stage.setTitle(currentResource.getString("objects"));
         stage.setScene(scene);
         stage.show();
     }
@@ -200,26 +212,30 @@ public class SkeletonMain implements Initializable {
             if (humanName.getText() == null || humanAge.getText() == null || humanName.getText().isEmpty() || humanAge.getText().isEmpty() || commandsList.getValue() == null){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle(Login.currentResource.getString("command"));
-                alert.setContentText("The fields command, name and age can't be void.\nMake sure they're set.");
+                alert.setHeaderText(Login.currentResource.getString("warning"));
+                alert.setContentText(currentResource.getString("sheerVoid"));
                 alert.showAndWait();
             } else {
 
                 if ((xCoordinate.getText() == null || xCoordinate.getText().isEmpty()) && (yCoordinate.getText() == null || yCoordinate.getText().isEmpty())){
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle(Login.currentResource.getString("command"));
-                    alert.setContentText("You didn't provide any coordinates. Thus the default preset was used!\n(0,0)");
+                    alert.setHeaderText(Login.currentResource.getString("warning"));
+                    alert.setContentText(currentResource.getString("coordinatesVoid"));
                     alert.showAndWait();
                 } else if ((xCoordinate.getText() != null && !xCoordinate.getText().isEmpty()) && (yCoordinate.getText() == null || yCoordinate.getText().isEmpty())) {
                     x = Integer.parseInt(xCoordinate.getText());
                     Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setHeaderText(Login.currentResource.getString("warning"));
                     alert.setTitle(Login.currentResource.getString("command"));
-                    alert.setContentText("You didn't provide Y coordinates. Thus the default preset was used!\n Y = 0");
+                    alert.setContentText(currentResource.getString("yMissing"));
                     alert.showAndWait();
                 } else if ((yCoordinate.getText() != null && !yCoordinate.getText().isEmpty()) && (xCoordinate.getText() == null || xCoordinate.getText().isEmpty())){
                     y = Integer.parseInt(yCoordinate.getText());
                     Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setHeaderText(Login.currentResource.getString("warning"));
                     alert.setTitle(Login.currentResource.getString("command"));
-                    alert.setContentText("You didn't provide X coordinates. Thus the default preset was used!\n X = 0");
+                    alert.setContentText(currentResource.getString("xMissing"));
                     alert.showAndWait();
                 } else {
                     x = Integer.parseInt(xCoordinate.getText());
@@ -228,8 +244,9 @@ public class SkeletonMain implements Initializable {
 
                 if ((skillName.getText() == null || skillName.getText().isEmpty()) && skillInfo.getText()!= null && !skillInfo.getText().isEmpty()) {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setHeaderText(Login.currentResource.getString("warning"));
                     alert.setTitle(Login.currentResource.getString("command"));
-                    alert.setContentText("You can't provide skill info and don't provide skill name\nTry again!");
+                    alert.setContentText(currentResource.getString("skillNameMissing"));
                     alert.showAndWait();
                 } else if ((skillName.getText() == null || skillName.getText().isEmpty()) && (skillInfo.getText() == null || skillInfo.getText().isEmpty())){
                     gson = "{\"name\":\"" + humanName.getText() +"\", \"age\":" + humanAge.getText() + ", \"size\":" + size + ", \"x\": " + x + ", \"y\": " + y +"}";
@@ -273,6 +290,7 @@ public class SkeletonMain implements Initializable {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle(Login.currentResource.getString("serverConnection"));
             alert.setContentText(Login.currentResource.getString("disconnected"));
+            alert.setHeaderText(Login.currentResource.getString("warning"));
             alert.showAndWait();
         }
 
@@ -288,33 +306,81 @@ public class SkeletonMain implements Initializable {
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("ru", "Ru")));
-        loader.setLocation(getClass().getClassLoader().getResource("client/UI/login.fxml"));
+        if (dark) {
+            loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUINight.fxml"));
+        } else {
+            loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUIDay.fxml"));
+        }
         Login.loadScene(stage, loader);
     }
 
     @FXML
     void language2(ActionEvent event) {
-
-    }
-
-    @FXML
-    void language3(ActionEvent event) {
-
-    }
-
-    @FXML
-    void language4(ActionEvent event) {
-
-    }
-
-    @FXML
-    void logOut(ActionEvent event) {
         timer.cancel();
         Window stageP = nickname.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("client/UI/login.fxml"));
+        stage.setTitle(Login.currentResource.getString("main"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
+                new Locale("en", "Ca")));
+        if (dark) {
+            loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUINight.fxml"));
+        } else {
+            loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUIDay.fxml"));
+        }
         Login.loadScene(stage, loader);
+    }
+
+    @FXML
+    void language3(ActionEvent event) {
+        timer.cancel();
+        Window stageP = nickname.getScene().getWindow();
+        stageP.hide();
+        Stage stage = new Stage();
+        stage.setTitle(Login.currentResource.getString("main"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
+                new Locale("ch", "Ch")));
+        if (dark) {
+            loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUINight.fxml"));
+        } else {
+            loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUIDay.fxml"));
+        }
+        Login.loadScene(stage, loader);
+    }
+
+    @FXML
+    void language4(ActionEvent event) {
+        timer.cancel();
+        Window stageP = nickname.getScene().getWindow();
+        stageP.hide();
+        Stage stage = new Stage();
+        stage.setTitle(Login.currentResource.getString("main"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
+                new Locale("pl", "Pl")));
+        if (dark) {
+            loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUINight.fxml"));
+        } else {
+            loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUIDay.fxml"));
+        }
+        Login.loadScene(stage, loader);
+    }
+
+    @FXML
+    void logOut(ActionEvent event) {
+        dark = false;
+        timer.cancel();
+        Window stageP = nickname.getScene().getWindow();
+        stageP.hide();
+        Stage stage = new Stage();
+        stage.setTitle(Login.currentResource.getString("login"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setResources(currentResource);
+        loader.setLocation(getClass().getClassLoader().getResource("client/UI/login.fxml"));
+        loadScene(stage, loader);
+        dark = false;
     }
 
 }
