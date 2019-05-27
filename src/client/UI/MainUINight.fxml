@@ -133,7 +133,7 @@
                               <TextField fx:id="skillName" layoutX="12.0" layoutY="34.0" promptText="%name" />
                               <TextField fx:id="skillInfo" layoutX="12.0" layoutY="76.0" promptText="%info" />
                               <Label alignment="CENTER" layoutX="247.0" layoutY="9.0" prefHeight="17.0" prefWidth="101.0" text="%size" />
-                              <Slider fx:id="slider" blockIncrement="1.0" layoutX="228.0" layoutY="35.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                              <Slider fx:id="slider" blockIncrement="1.0" layoutX="228.0" layoutY="35.0" majorTickUnit="1.0" max="3.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                               <Label alignment="CENTER_RIGHT" layoutX="242.0" layoutY="81.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="17.0" prefWidth="81.0" text="%pickedSize" textAlignment="CENTER" />
                               <Label fx:id="labelSize" layoutX="327.0" layoutY="81.0" text="0" />
                            </children>

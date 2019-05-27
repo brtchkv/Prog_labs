@@ -4,6 +4,8 @@ import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import shared.*;
@@ -15,6 +17,8 @@ public class Server {
     private Vector<Human> storage;
     private String filename;
     private DataBaseConnection db;
+    private Set<SocketAddress> users = new HashSet<>();
+    private SocketAddress saddr;
 
 
     public Server(int port) throws IOException {
@@ -56,7 +60,9 @@ public class Server {
         while (true) {
             ByteBuffer buffer = ByteBuffer.allocate(8192);
             buffer.clear();
-            InetSocketAddress clientAddress = (InetSocketAddress) udpChannel.receive(buffer);
+            saddr = udpChannel.receive(buffer);
+            users.add(saddr);
+            InetSocketAddress clientAddress = (InetSocketAddress) saddr;
 
             Command command;
 
@@ -70,18 +76,8 @@ public class Server {
                 } else if (command.getCommand().equals("show")){ }
                   else {System.out.println("-- Client's input: " + command.getCommand());}
 
-                handler = new CommandHandler(command, storage, db, udpChannel,clientAddress);
+                handler = new CommandHandler(command, storage, db, udpChannel, clientAddress);
                 handler.start();
-
-//                Response response = new Response(handler.handleCommand(command, storage, db));
-//
-//                oos.writeObject(response);
-//                oos.flush();
-//                buffer.clear();
-//                buffer.put(baos.toByteArray());
-//                buffer.flip();
-//
-//                udpChannel.send(buffer, clientAddress);
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -95,6 +91,7 @@ public class Server {
         System.out.println("\tjava -jar Server.jar <port> <path to backup file>");
         System.exit(1);
     }
+
 
     public static void main(String[] args) throws Exception {
         int input_port = -1;

@@ -42,13 +42,18 @@ public class DataBaseConnection {
                 int age = result.getInt("age");
                 int skillId = result.getInt("skill_id");
                 String date = result.getString("creation_date");
+                int size = result.getInt("size");
+                int x = result.getInt("x");
+                int y = result.getInt("y");
                 if (date != null) {
                     time = OffsetDateTime.parse(result.getString("creation_date").replace(" ", "T"));
                 }
                 Human h = new Human(name, age);
                 h.setDateTime(time);
                 h.setOwner(username);
-
+                h.setSize(size);
+                h.setX(x);
+                h.setY(y);
                 getSkills = connection.prepareStatement("SELECT * FROM \"skills\" WHERE id=?");
                 getSkills.setInt(1,skillId);
                 ResultSet resSkill = getSkills.executeQuery();
