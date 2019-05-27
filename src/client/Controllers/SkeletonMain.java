@@ -10,12 +10,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import shared.Response;
@@ -77,6 +81,11 @@ public class SkeletonMain implements Initializable {
     @FXML
     private Label labelSize;
 
+    @FXML
+    private Canvas canvas;
+
+    public GraphicsContext gc;
+
     Timer timer;
 
     private int size = 1;
@@ -125,6 +134,7 @@ public class SkeletonMain implements Initializable {
         commandsList.setValue(null);
         slider.setValue(slider.getMin());
         labelSize.setText("0");
+        drawHuman();
     }
 
     @FXML
@@ -382,6 +392,48 @@ public class SkeletonMain implements Initializable {
         loader.setLocation(getClass().getClassLoader().getResource("client/UI/login.fxml"));
         loadScene(stage, loader);
         dark = false;
+    }
+
+    public void drawHuman(){
+
+        gc = canvas.getGraphicsContext2D();
+        gc.beginPath();
+        gc.save();
+        gc.scale(0.3,0.3);
+        gc.strokeArc(15, 100, 20, 40, 80, 280, ArcType.OPEN); // обводка левого уха
+        gc.strokeArc(165, 100, 20, 42, 80, 360, ArcType.OPEN); // обводка правого уха
+        gc.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+        gc.fillOval(25,50,150,150);    // For face
+        gc.fillOval(15, 100,20, 40 );  // заливка левого уха
+        gc.fillOval(165, 100,20, 42 ); // заливка правого уха
+        gc.strokeOval(25,50,150,150);  // обводка лица
+        gc.setFill(Color.BLACK);
+        gc.fillOval(55,95,15,25);      // Left Eye
+        gc.fillOval(125,95,15,25);     // Right Eye
+        gc.setFill(Color.SADDLEBROWN);
+        gc.strokeOval(0, 40, 195, 62); // обводка полей шл€пы
+        gc.fillOval(0, 40, 195, 62);   // пол€ шл€пы
+        gc.setFill(Color.BLACK);
+        gc.strokeArc(68, 50, 60, 30, 180, 180, ArcType.OPEN); // обводка выступа шл€пы
+        gc.strokeArc(68, 15, 60, 100, 0, 180, ArcType.OPEN); // выступ шл€пы
+        gc.setFill(Color.SADDLEBROWN);
+        gc.fillArc(68, 15, 60, 100, 0, 180, ArcType.OPEN); // выступ шл€пы
+        gc.setFill(Color.BLACK);
+        double x[] = {100,90,100,100};
+        double y[] = {118,137,137,118};
+        gc.fillPolygon(x, y, 4);            // Nose
+        gc.arc(100,154,36,22,0,-180);  // нЄбо рта
+
+//        gc.strokeLine(133,148,144,159);           // Smile arc2
+
+        gc.setFill(Color.web("#e35d6a"));           // цвет нЄба
+        gc.fill();                                  // заливка рта
+        gc.setFill(Color.WHITE);
+        gc.fillRect(64,154,73,8);     // зубы
+        gc.strokeArc(62.5,131,75,45,0,-180,ArcType.ROUND); // обводка рта
+        gc.scale(1,1);
+        gc.closePath();
+        gc.restore();
     }
 
 }
