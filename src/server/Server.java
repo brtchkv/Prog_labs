@@ -18,7 +18,6 @@ public class Server {
     private String filename;
     private DataBaseConnection db;
     private Set<SocketAddress> users = new HashSet<>();
-    private SocketAddress saddr;
 
 
     public Server(int port) throws IOException {
@@ -58,6 +57,7 @@ public class Server {
         CommandHandler handler;
 
         while (true) {
+            SocketAddress saddr;
             ByteBuffer buffer = ByteBuffer.allocate(8192);
             buffer.clear();
             saddr = udpChannel.receive(buffer);
@@ -76,7 +76,7 @@ public class Server {
                 } else if (command.getCommand().equals("show")){ }
                   else {System.out.println("-- Client's input: " + command.getCommand());}
 
-                handler = new CommandHandler(command, storage, db, udpChannel, clientAddress);
+                handler = new CommandHandler(command, storage, db, udpChannel, clientAddress, users);
                 handler.start();
 
             } catch (IOException | ClassNotFoundException e) {

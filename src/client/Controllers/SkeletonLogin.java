@@ -70,6 +70,7 @@ public class SkeletonLogin {
                     Response response = (Response) ois.readObject();
                     String output = new String(client.decodeResponse("login", response));
                     if (output.equals("~~~~~ Successfully logged in! ~~~~~~")) {
+                        Login.customColor = Color.valueOf(server.DataBaseConnection.encryptString(password + nickname).substring(0,6));
                         client.setUsername(nickname);
                         Window stageP = nick.getScene().getWindow();
                         stageP.hide();

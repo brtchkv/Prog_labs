@@ -32,7 +32,7 @@ public class MyResources_ru extends ListResourceBundle {
                     {"why", "За что?!"},
                     {"noResponse", "Не могу получить ответ!\n"},
                     {"serverConnection", "Связь Cо Cервером"},
-                    {"helpText", "Приложения для организации работорговли.\nСоздатель: Иван Братчиков"},
+                    {"helpText", "Приложение для организации работорговли.\nСоздатель: Иван Братчиков"},
                     {"nickname", "Имя Пользователя"},
                     {"email", "Почта"},
                     {"collectionInfo", "Коллекция Векторного типа. Содержит объекты типа Человек."},
@@ -51,9 +51,9 @@ public class MyResources_ru extends ListResourceBundle {
                     {"command", "Команда"},
                     {"add","Добавить"},
                     {"remove", "Удалить"},
-                    {"removeGreater", "Удалить Больше"},
-                    {"removeLower", "Удалить Меньше"},
-                    {"addIfMin", "Добавить Если Минимальный"},
+                    {"remove_greater", "Удалить Больше"},
+                    {"remove_lower", "Удалить Меньше"},
+                    {"add_if_min", "Добавить Если Минимальный"},
                     {"human", "Человек"},
                     {"general", "Общее"},
                     {"location", "Местоположение"},
@@ -62,11 +62,13 @@ public class MyResources_ru extends ListResourceBundle {
                     {"pickedSize", "Размер: "},
                     {"name", "Имя"},
                     {"age", "Возраст"},
-                    {"xCoordinate", "X Координата"},
-                    {"yCoordinate", "Y Координата"},
+                    {"xCoordinate", "X Координата = 0"},
+                    {"yCoordinate", "Y Координата = 0"},
                     {"lastCommand", "Последняя Команда:"},
                     {"lastHuman", "Последний Человек:"},
-                    {"dont", "Не нажимать!"}
+                    {"dont", "Не нажимать!"},
+                    {"notANumber", "Одно из введенных значений, не является числом!"},
+                    {"date", "Дата"}
             };
         }
 }

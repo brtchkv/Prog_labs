@@ -8,10 +8,12 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 public class CommandHandler extends Thread {
@@ -25,16 +27,20 @@ public class CommandHandler extends Thread {
     private DataBaseConnection db;
     private DatagramChannel udpChannel;
     private InetSocketAddress clientAddress;
+    private Set<SocketAddress> users;
+    private Command altered;
+    private boolean change = false;
 
 
     public CommandHandler() { }
 
-    public CommandHandler(Command command, Vector<Human> humans, DataBaseConnection db, DatagramChannel channel, InetSocketAddress clientAddress) {
+    public CommandHandler(Command command, Vector<Human> humans, DataBaseConnection db, DatagramChannel channel, InetSocketAddress clientAddress,  Set<SocketAddress> users) {
         this.command = command;
         this.storage = humans;
         this.udpChannel = channel;
         this.db = db;
         this.clientAddress = clientAddress;
+        this.users = users;
     }
 
 
@@ -55,6 +61,27 @@ public class CommandHandler extends Thread {
             buffer.flip();
 
             udpChannel.send(buffer, clientAddress);
+
+
+            if (change) {
+                ByteBuffer buffer2 = ByteBuffer.allocate(8192);
+                buffer2.clear();
+
+                try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                     ObjectOutputStream oos2 = new ObjectOutputStream(outputStream)){
+                    oos2.writeObject(altered);
+                    oos2.flush();
+                    oos2.flush();
+                    buffer2.clear();
+                    buffer2.put(outputStream.toByteArray());
+                    buffer2.flip();
+                    for (SocketAddress address : users)
+                        udpChannel.send(buffer2,address);
+                    change = false;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,7 +118,13 @@ public class CommandHandler extends Thread {
                         break;
                     case "add":
                         if (data != null) {
-                            buffer = add(storage, (Human) data, db, username);
+                            Human human = (Human) data;
+                            buffer = add(storage, human, db, username);
+                            if (buffer.toString().contains("successfully")) {
+                                change = true;
+                                altered = new Command("alteredObject", null, human.getOwner());
+                                altered.setData(data);
+                            }
                         } else {
                             buffer = help();
                         }

@@ -53,9 +53,9 @@ public class MyResources_ch extends ListResourceBundle {
                     {"command", "P\u0159\u00EDkaz"},
                     {"add","P\u0159idat"},
                     {"remove", "Odstranit"},
-                    {"removeGreater", "Odstranit V\u011Bt\u0161\u00ED"},
-                    {"removeLower", "Odstranit Doln\u00ED"},
-                    {"addIfMin", "P\u0159idat Pokud Min"},
+                    {"remove_greater", "Odstranit V\u011Bt\u0161\u00ED"},
+                    {"remove_lower", "Odstranit Doln\u00ED"},
+                    {"add_if_min", "P\u0159idat Pokud Min"},
                     {"human", "\u010Clov\u011Bk"},
                     {"general", "V\u0161eobecn\u00E9"},
                     {"location", "Um\u00EDst\u011Bn\u00ED"},
@@ -64,11 +64,13 @@ public class MyResources_ch extends ListResourceBundle {
                     {"pickedSize", "Velikost: "},
                     {"name", "N\u00E1zev"},
                     {"age", "St\u00E1\u0159\u00ED"},
-                    {"xCoordinate", "X Sou\u0159adnice"},
-                    {"yCoordinate", "Y Sou\u0159adnice"},
+                    {"xCoordinate", "X Sou\u0159adnice = 0"},
+                    {"yCoordinate", "Y Sou\u0159adnice = 0"},
                     {"lastCommand", "Posledn\u00ED P\u0159\u00EDkaz:"},
                     {"lastHuman", "Posledn\u00ED \u010Clov\u011Bk:"},
-                    {"dont", "Netla\u010D to!"}
+                    {"dont", "Netla\u010D to!"},
+                    {"notANumber", "Zadan\u00E9  pole nen\u00ED \u010D\u00EDslo!"},
+                    {"date", "Datum"}
             };
         }
 }

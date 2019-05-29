@@ -47,9 +47,9 @@ public class MyResources_en extends ListResourceBundle {
                 {"command", "Command"},
                 {"add","Add"},
                 {"remove", "Remove"},
-                {"removeGreater", "Remove Greater"},
-                {"removeLower", "Remove Lower"},
-                {"addIfMin", "Add If Min"},
+                {"remove_greater", "Remove Greater"},
+                {"remove_lower", "Remove Lower"},
+                {"add_if_min", "Add If Min"},
                 {"human", "Human"},
                 {"general", "General"},
                 {"location", "Location"},
@@ -58,12 +58,14 @@ public class MyResources_en extends ListResourceBundle {
                 {"pickedSize", "Picked Size: "},
                 {"name", "Name"},
                 {"age", "Age"},
-                {"xCoordinate", "X Coordinate"},
-                {"yCoordinate", "Y Coordinate"},
+                {"xCoordinate", "X Coordinate = 0"},
+                {"yCoordinate", "Y Coordinate = 0"},
                 {"info", "Info"},
                 {"lastCommand", "Last Command:"},
                 {"lastHuman", "Last Human:"},
-                {"dont", "Don't press it!"}
+                {"dont", "Don't press it!"},
+                {"notANumber", "Entered field is not a number!"},
+                {"date", "Date"}
         };
     }
 }

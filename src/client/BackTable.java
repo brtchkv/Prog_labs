@@ -15,9 +15,11 @@ import java.util.TimerTask;
 import java.util.Vector;
 
 public class BackTable extends TimerTask {
+    public static Vector<Human> storageOld = new Vector<>();
     public static Vector<Human> storage;
     public static TableView tableView;
-    private GraphicsContext gc;
+    private static GraphicsContext gc;
+    public static boolean newUselessWindow = false;
 
     public BackTable(GraphicsContext gc){
         tableView = new TableView();
@@ -25,52 +27,60 @@ public class BackTable extends TimerTask {
         this.gc = gc;
     }
 
-
     public void run(){
-        DatagramPacket toSend = null;
+            DatagramPacket toSend;
+            byte[] sending;
+            Command c = new Command("show", null, SkeletonLogin.getNickname() + " " + server.DataBaseConnection.encryptString(SkeletonLogin.getPassword()));
 
-        byte[] sending;
-        Command c = new Command("show", null, SkeletonLogin.getNickname() + " " + server.DataBaseConnection.encryptString(SkeletonLogin.getPassword()));
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                 ObjectOutputStream oos = new ObjectOutputStream(outputStream)) {
+                oos.writeObject(c);
+                oos.flush();
+                sending = outputStream.toByteArray();
+                toSend = new DatagramPacket(sending, sending.length, Client.getServerAddress(), Client.getPort());
+                Client.getUdpSocket().send(toSend);
+            } catch (IOException e) {
+                System.out.println("Can't create a DatagramPacket\n" + e.getMessage());
+            }
 
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-             ObjectOutputStream oos = new ObjectOutputStream(outputStream)){
-            oos.writeObject(c);
-            oos.flush();
-            sending = outputStream.toByteArray();
-            toSend = new DatagramPacket(sending, sending.length, Client.getServerAddress(), Client.getPort());
-        } catch (IOException e) {
-            System.out.println("Can't create a DatagramPacket\n"+ e.getMessage());
-        }
-
-        try {
-            if (Client.getUdpSocket() != null) {
-                byte[] buf = new byte[8192];
-                DatagramPacket collectionResponse = new DatagramPacket(buf, buf.length);
-                if (Client.isAuth()) {
-                    if (toSend != null) {
-                        Client.getUdpSocket().send(toSend);
+            try {
+                if (Client.getUdpSocket() != null) {
+                    byte[] buf = new byte[8192];
+                    DatagramPacket collectionResponse = new DatagramPacket(buf, buf.length);
+                    if (Client.isAuth()) {
                         Client.getUdpSocket().receive(collectionResponse);
                         try (ByteArrayInputStream bais = new ByteArrayInputStream(buf);
                              ObjectInputStream ois = new ObjectInputStream(bais)) {
                             Response response = (Response) ois.readObject();
-                            ByteArrayInputStream bs = new ByteArrayInputStream((byte[])response.getResponse());
+                            ByteArrayInputStream bs = new ByteArrayInputStream((byte[]) response.getResponse());
                             ObjectInputStream os = new ObjectInputStream(bs);
-                            tableView.getItems().clear();
                             storage = (Vector<Human>) os.readObject();
-                            gc.clearRect(0, 0, 351, 380);
-                            storage.stream().forEach(x -> tableView.getItems().add(x));
-                            storage.stream().forEach(x -> drawHuman(x));
-                            tableView.refresh();
-                        }catch (Exception e){
+                            if (!storage.equals(storageOld) && !newUselessWindow) {
+                                tableView.getItems().clear();
+                                gc.clearRect(0, 0, 351, 434);
+                                storage.stream().forEach(x -> tableView.getItems().add(x));
+                                storage.stream().forEach(x -> drawHuman(x));
+                                storage.stream().forEach(x -> {
+                                    if (!storageOld.stream().anyMatch(y -> y.equals(x))){
+                                        System.out.println("Новый элемент " + x.toString());
+                                    }
+                                });
+                                tableView.refresh();
+                                storageOld = storage;
+                            } else if (!storage.equals(storageOld)) {
+                                newUselessWindow = false;
+                                storage.stream().forEach(x -> tableView.getItems().add(x));
+                                storage.stream().forEach(x -> drawHuman(x));
+                                tableView.refresh();
+                                storageOld = storage;
+                            }
+                        } catch (Exception e) {
                             System.out.println("Can't refresh the table!" + e.getMessage());
                         }
                     }
                 }
-            }
 
-        }catch (Exception e) {
-            //System.out.println("Can't update the table!" + e.getMessage());
-        }
+            } catch (Exception e) { }
 
     }
 
@@ -94,15 +104,18 @@ public class BackTable extends TimerTask {
         TableColumn<String,Human> column6 = new TableColumn<>("Y");
         column6.setCellValueFactory(new PropertyValueFactory<>("Y"));
 
+        TableColumn<String,Human> column7 = new TableColumn<>("Creation Date");
+        column7.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
+
 
         tableView.getColumns().add(column1);
         tableView.getColumns().add(column2);
         tableView.getColumns().add(column3);
-        tableView.getColumns().addAll(column4,column5,column6);
+        tableView.getColumns().addAll(column4,column5,column6, column7);
 
     }
 
-    public void drawHuman(Human human){
+    public static void drawHuman(Human human){
 
         int xC = human.getX();
         int yC = human.getY();
@@ -112,7 +125,7 @@ public class BackTable extends TimerTask {
         gc.scale(0.4 * human.getSize(),0.4 * human.getSize());
         gc.strokeArc(20 + xC, 85 + yC, 20, 40, 70, 280, ArcType.OPEN); // обводка левого уха
         gc.strokeArc(170 + xC, 85 + yC, 20, 42, 80, 360, ArcType.OPEN); // обводка правого уха
-        gc.setFill(Login.customnColor);
+        gc.setFill(Login.customColor);
         gc.fillOval(30 + xC,35 + yC,150,150);    // For face
         gc.fillOval(20 + xC, 85 + yC,20, 40 );   // заливка левого уха
         gc.fillOval(170 + xC, 85 + yC,20, 42 );  // заливка правого уха
@@ -131,7 +144,7 @@ public class BackTable extends TimerTask {
         gc.setFill(Color.BLACK);
         double x[] = {104 + (double) xC,94 + (double) xC,104 + (double) xC,104 + (double) xC};
         double y[] = {105 + (double) yC,124 + (double) yC,124 + (double) yC,105 + (double) yC};
-        gc.fillPolygon(x , y, 4);            // Nose
+        gc.fillPolygon(x , y, 4);           // Nose
         gc.arc(105 + xC,139 + yC,37,22,0,-180);  // нёбо рта
 
 //        gc.strokeLine(133,148,144,159);           // Smile arc2
@@ -145,4 +158,10 @@ public class BackTable extends TimerTask {
         gc.closePath();
 
     }
+
+    public static void cleanCanvas(){
+        gc.clearRect(0, 0, 351, 434);
+        storageOld.stream().forEach(x -> drawHuman(x));
+    }
+
 }

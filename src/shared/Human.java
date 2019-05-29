@@ -107,7 +107,7 @@ public class Human extends God implements Serializable, Comparable<Human> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), type, skills, disabilities);
+        return Objects.hash(super.hashCode(), owner, x, y, size);
     }
 
     @Override

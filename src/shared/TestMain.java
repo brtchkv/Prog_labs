@@ -1,49 +1,50 @@
 package shared;
 
+import javafx.animation.ScaleTransition;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class TestMain extends Application {
 
-    Canvas canvas = new Canvas(1000, 800);
-    GraphicsContext gc = canvas.getGraphicsContext2D();
-    Color customnColor;
+    Rectangle rect = new Rectangle(100,100);
+
+    @Override
+    public void start(Stage primaryStage) {
+        rect.setFill(Color.BLUE);
+
+        rect.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent t) {
+                rect.setFill(Color.RED);
+            }
+        });
+
+
+        StackPane root = new StackPane();
+        root.getChildren().add(rect);
+
+        Scene scene = new Scene(root, 300, 250);
+
+        primaryStage.setTitle("Hello World!");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    @Override
-    public void start(Stage stage) {
-        initUI(stage);
-    }
-
-    private void initUI(Stage stage) {
-
-        Pane root = new Pane();
-
-        Human h = new Human("Alice", 12);
-        h.setSize(1);
-        h.setY(10);
-        h.setX(200);
-
-        Human h2 = new Human("Alice", 12);
-        h2.setSize(4);
-        h2.setY(100);
-        h2.setX(500);
-
-        Scene scene = new Scene(root);
-        root.getChildren().add(canvas);
-        stage.setTitle("Face");
-        stage.setScene(scene);
-        stage.show();
-
     }
 
 }

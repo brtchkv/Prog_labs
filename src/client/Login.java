@@ -15,7 +15,7 @@ public class Login extends Application {
 
     public static ResourceBundle currentResource = ResourceBundle.getBundle("client.Localisation.MyResources",
             new Locale("en", "En"));
-    public static Color customnColor = Color.color(Math.random(), Math.random(), Math.random());
+    public static Color customColor = Color.color(Math.random(), Math.random(), Math.random());
 
     @Override
     public void start(Stage stage){

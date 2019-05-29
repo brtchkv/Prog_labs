@@ -42,7 +42,7 @@ public class MyResources_pl extends ListResourceBundle{
                     {"objects", "Obiekty"},
                     {"sorry", "Przepraszam"},
                     {"why", "Czemu?!"},
-                    {"noResponse", "Mo\u017Ce uzyska\u0107 odpowied\\u017C!\n"},
+                    {"noResponse", "Mo\u017Ce uzyska\u0107 odpowied\u017C!\n"},
                     {"about", "Dooko\u0142a"},
                     {"table", "Tabela"},
                     {"theme", "Motyw"},
@@ -54,9 +54,9 @@ public class MyResources_pl extends ListResourceBundle{
                     {"command", "Dow\u00F3dztwo"},
                     {"add","Dodaj"},
                     {"remove", "Usun\u0105\u0107"},
-                    {"removeGreater", "Usu\u0144 Greater"},
-                    {"removeLower", "Usu\u0144 Lower"},
-                    {"addIfMin", "Dodaj Je\u015Bli Min"},
+                    {"remove_greater", "Usu\u0144 Greater"},
+                    {"remove_lower", "Usu\u0144 Lower"},
+                    {"add_if_min", "Dodaj Je\u015Bli Min"},
                     {"human", "Cz\u0142owiek"},
                     {"general", "Genera\u0142"},
                     {"location", "Lokalizacja"},
@@ -65,11 +65,13 @@ public class MyResources_pl extends ListResourceBundle{
                     {"pickedSize", "Rozmiar: "},
                     {"name", "Imi\u0119"},
                     {"age", "Wiek"},
-                    {"xCoordinate", "X Wsp\u00F3\u0142rz\u0119dna"},
-                    {"yCoordinate", "Y Wsp\u00F3\u0142rz\u0119dne"},
+                    {"xCoordinate", "X Wsp\u00F3\u0142rz\u0119dna = 0"},
+                    {"yCoordinate", "Y Wsp\u00F3\u0142rz\u0119dne = 0"},
                     {"lastCommand", "Ostatnie Polecenie:"},
                     {"lastHuman", "Ostatni Cz\u0142owiek:"},
-                    {"dont", "Nie naciskaj tego!"}
+                    {"dont", "Nie naciskaj tego!"},
+                    {"notANumber", "Zadan\u00E9  pole nen\u00ED \u010D\u00EDslo!"},
+                    {"date", "Data"}
             };
         }
 }
