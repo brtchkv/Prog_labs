@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="379.0" prefWidth="396.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controllers.SkeletonEdit">
+   <children>
+      <Button alignment="CENTER" defaultButton="true" layoutX="217.0" layoutY="339.0" mnemonicParsing="false" onAction="#submit" prefHeight="23.0" prefWidth="72.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#5a61af, #51536d),         linear-gradient(#e4fbff 0%,#cee6fb 10%, #a5d3fb 50%, #88c6fb 51%, #d5faff 100%); -fx-text-fill: #242d35; -fx-font-size: 12px; -fx-background-radius: 5,5,4;" text="%submit" textFill="#367c05" />
+      <Button alignment="CENTER" cancelButton="true" layoutX="109.0" layoutY="339.0" mnemonicParsing="false" onAction="#clear" prefHeight="23.0" prefWidth="72.0" style="-fx-background-color: rgba(0,0,0,0.08),         linear-gradient(#9a9a9a, #909090),         linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%); -fx-text-fill: #242d35; -fx-font-size: 12px; -fx-background-radius: 5,5,4;" text="%clear" textFill="#da1c1c" />
+      <Label layoutX="169.0" layoutY="12.0" text="Human">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TableView layoutX="20.0" layoutY="47.0" prefHeight="61.0" prefWidth="358.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="C1" />
+          <TableColumn prefWidth="75.0" text="C2" />
+        </columns>
+      </TableView>
+      <Label alignment="CENTER" layoutX="21.0" layoutY="128.0" prefHeight="17.0" prefWidth="150.0" text="%general" />
+      <TextField fx:id="humanName" layoutX="13.0" layoutY="152.0" promptText="%name" />
+      <TextField fx:id="humanAge" layoutX="13.0" layoutY="191.0" promptText="%age" />
+      <Label alignment="CENTER" layoutX="225.0" layoutY="128.0" prefHeight="17.0" prefWidth="150.0" text="%location" />
+      <TextField layoutX="216.0" layoutY="152.0" promptText="%xCoordinate" fx:id="xCoordinate" />
+      <TextField fx:id="yCoordinate" layoutX="216.0" layoutY="191.0" promptText="%yCoordinate" />
+      <Pane layoutX="2.0" layoutY="216.0" prefHeight="122.0" prefWidth="392.0">
+         <children>
+            <Label alignment="CENTER" layoutX="20.0" layoutY="9.0" prefHeight="17.0" prefWidth="150.0" text="%skill" />
+            <TextField fx:id="skillName" layoutX="12.0" layoutY="34.0" promptText="%name" />
+            <TextField fx:id="skillInfo" layoutX="12.0" layoutY="76.0" promptText="%info" />
+            <Label alignment="CENTER" layoutX="240.0" layoutY="9.0" prefHeight="17.0" prefWidth="118.0" text="%size" textAlignment="CENTER" />
+            <Label alignment="CENTER_RIGHT" layoutX="245.0" layoutY="81.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="17.0" prefWidth="81.0" text="%pickedSize" textAlignment="CENTER" wrapText="true" />
+            <Label fx:id="labelSize" layoutX="327.0" layoutY="81.0" text="0" />
+         </children>
+      </Pane>
+      <Slider fx:id="slider" blockIncrement="1.0" layoutX="231.0" layoutY="250.0" majorTickUnit="1.0" max="3.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+   </children>
+</Pane>

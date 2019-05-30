@@ -68,7 +68,9 @@ public class MyResources_ru extends ListResourceBundle {
                     {"lastHuman", "Последний Человек:"},
                     {"dont", "Не нажимать!"},
                     {"notANumber", "Одно из введенных значений, не является числом!"},
-                    {"date", "Дата"}
+                    {"date", "Дата"},
+                    {"update", "Обновить"},
+                    {"notSelectHuman", "Вы не выделили человека для обновления!"}
             };
         }
 }

@@ -65,7 +65,9 @@ public class MyResources_en extends ListResourceBundle {
                 {"lastHuman", "Last Human:"},
                 {"dont", "Don't press it!"},
                 {"notANumber", "Entered field is not a number!"},
-                {"date", "Date"}
+                {"date", "Date"},
+                {"update", "Update"},
+                {"notSelectHuman", "You didn't select a human to modify!"}
         };
     }
 }

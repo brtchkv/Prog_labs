@@ -28,8 +28,6 @@ public class CommandHandler extends Thread {
     private DatagramChannel udpChannel;
     private InetSocketAddress clientAddress;
     private Set<SocketAddress> users;
-    private Command altered;
-    private boolean change = false;
 
 
     public CommandHandler() { }
@@ -61,27 +59,6 @@ public class CommandHandler extends Thread {
             buffer.flip();
 
             udpChannel.send(buffer, clientAddress);
-
-
-            if (change) {
-                ByteBuffer buffer2 = ByteBuffer.allocate(8192);
-                buffer2.clear();
-
-                try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                     ObjectOutputStream oos2 = new ObjectOutputStream(outputStream)){
-                    oos2.writeObject(altered);
-                    oos2.flush();
-                    oos2.flush();
-                    buffer2.clear();
-                    buffer2.put(outputStream.toByteArray());
-                    buffer2.flip();
-                    for (SocketAddress address : users)
-                        udpChannel.send(buffer2,address);
-                    change = false;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -118,13 +95,7 @@ public class CommandHandler extends Thread {
                         break;
                     case "add":
                         if (data != null) {
-                            Human human = (Human) data;
-                            buffer = add(storage, human, db, username);
-                            if (buffer.toString().contains("successfully")) {
-                                change = true;
-                                altered = new Command("alteredObject", null, human.getOwner());
-                                altered.setData(data);
-                            }
+                            buffer = add(storage, (Human) data, db, username);
                         } else {
                             buffer = help();
                         }
@@ -153,6 +124,13 @@ public class CommandHandler extends Thread {
                     case "remove_lower":
                         if (data != null) {
                             buffer = remove_lower(storage, (Human) data, db, username);
+                        } else {
+                            buffer = help();
+                        }
+                        break;
+                    case "update":
+                        if (data != null) {
+                            buffer = update(storage, (Human) data, db, username);
                         } else {
                             buffer = help();
                         }
@@ -307,7 +285,7 @@ public class CommandHandler extends Thread {
      */
     public byte[] remove(Vector<Human> storage, Human human, DataBaseConnection db, String username) {
         if (storage.removeIf(x -> (x.equals(human) && (username.equals(x.getOwner()) || x.getOwner().equals("all"))))) {
-            db.removePerson(username, human);
+            db.removePerson(human, username);
             System.out.println("A human " + human.toString() + " has been deleted");
             return ("A human " + human.toString() + " has been deleted :(").getBytes();
         } else {
@@ -326,7 +304,7 @@ public class CommandHandler extends Thread {
                     .filter(x -> (username.equals(x.getOwner()) || x.getOwner().equals("all")))
                     .filter(x -> x.compareTo(endObject) < 0)
                     .forEach(x -> {
-                        db.removePerson(username, x);
+                        db.removePerson(x, username);
                     });
             storage.removeIf(item -> item.compareTo(endObject) < 0 && (username.equals(item.getOwner()) || item.getOwner().equals("all")));
         }
@@ -346,7 +324,7 @@ public class CommandHandler extends Thread {
                     .filter(x -> (username.equals(x.getOwner()) || x.getOwner().equals("all")))
                     .filter(x -> x.compareTo(startObject) > 0)
                     .forEach(x -> {
-                        db.removePerson(username, x);
+                        db.removePerson(x, username);
                     });
             storage.removeIf(item -> item.compareTo(startObject) > 0 && (username.equals(item.getOwner()) || item.getOwner().equals("all")));
         }
@@ -355,13 +333,29 @@ public class CommandHandler extends Thread {
         return ("Deleted " + (start - end) + " objects. :(").getBytes();
     }
 
+    public byte[] update(Vector<Human> storage, Human human, DataBaseConnection db, String username){
+            Human humanOld;
+            if (storage.stream().anyMatch(h -> (h.getId() == human.getId() && h.getOwner().equals(username)))){
+                humanOld = storage.stream()
+                        .filter(h -> (h.getId() == human.getId() && h.getOwner().equals(username)))
+                        .findFirst()
+                        .get();
+                storage.remove(humanOld);
+                storage.add(human);
+                db.updateHuman(human);
+                return ("Human " + human.toString() + "has been updated.").getBytes();
+            }else {
+                return ("Human " + human.toString() + "belongs to other user.\nCan't update!").getBytes();
+            }
+    }
+
 
     /**
      * <p>Выводит информацию о всех доступных командах</p>
      */
     public byte[] help() {
-        String jsonExample = "\r\n{\r\n   \"name\": \"Elizabeth\",\r\n   \"age\": \"16\",\r\n   \"skill\": {\r\n      \"name\": \"\u041F\u0440\u044B\u0433\u0430\u0442\u044C\",\n" +
-                "      \"info\": \"Спорт\"\n\r   }\r\n}\r\n";
+        String jsonExample = "\r\n{\r\n   \"name\": \"Elizabeth\",\r\n   \"age\": \"16\",\r\n   \"skill\": {\r\n      \"name\": \"Jump\",\n" +
+                "      \"info\": \"Sport\"\n\r   }\r\n}\r\n";
 
         return ("Example of JSON Human declaration:" + jsonExample +
                 "\nAvailable commands: \n" +

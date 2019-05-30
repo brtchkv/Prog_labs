@@ -37,6 +37,7 @@ public class DataBaseConnection {
             PreparedStatement getSkills;
             ResultSet result = preStatement.executeQuery();
             while (result.next()) {
+                int id = result.getInt("id");
                 String username = result.getString("username");
                 String name = result.getString("name");
                 int age = result.getInt("age");
@@ -49,6 +50,7 @@ public class DataBaseConnection {
                     time = OffsetDateTime.parse(result.getString("creation_date").replace(" ", "T"));
                 }
                 Human h = new Human(name, age);
+                h.setId(id);
                 h.setDateTime(time);
                 h.setOwner(username);
                 h.setSize(size);
@@ -81,19 +83,21 @@ public class DataBaseConnection {
     }
 
     private void addHuman(Human h, String username) throws SQLException {
-        int skillId = h.getDateTime().getNano();
-        PreparedStatement preStatement = connection.prepareStatement("INSERT INTO humans VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
-        preStatement.setString(1,h.getName());
-        preStatement.setInt(2,h.getAge());
-        preStatement.setString(3,username);
-        preStatement.setString(4,h.getDateTime().toString());
-        preStatement.setInt(5,skillId);
-        preStatement.setInt(6,h.getSize());
+
+        PreparedStatement preStatement = connection.prepareStatement("INSERT INTO humans VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
+        preStatement.setString(1, h.getName());
+        preStatement.setInt(2, h.getAge());
+        preStatement.setString(3, username);
+        preStatement.setString(4, h.getDateTime().toString());
+        preStatement.setInt(5, h.getId());
+        preStatement.setInt(6, h.getSize());
         preStatement.setInt(7, h.getX());
         preStatement.setInt(8, h.getY());
+        preStatement.setInt(9, h.getId());
         preStatement.executeUpdate();
+
         PreparedStatement statementSkills = connection.prepareStatement("INSERT INTO skills VALUES (?, ?, ?);");
-        statementSkills.setInt(1,skillId);
+        statementSkills.setInt(1,h.getId());
         Iterator<Skill> iterator = h.getSkills().iterator();
         if (iterator.hasNext()) {
             Skill skill = iterator.next();
@@ -149,8 +153,9 @@ public class DataBaseConnection {
     }
 
 
-    public boolean removePerson(String username, Human human) {
+    public boolean removePerson(Human human, String username) {
         try {
+
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT skill_id FROM humans WHERE name=? AND username=? AND age=?;");
             preparedStatement.setString(1, human.getName());
             preparedStatement.setString(2,username);
@@ -174,6 +179,22 @@ public class DataBaseConnection {
         }
     }
 
+    public void updateHuman(Human h){
+        try{
+            PreparedStatement preStatement = connection.prepareStatement("UPDATE humans SET name=?, age=?, size=?, x=?, y=? WHERE id=? AND username=?;");
+            preStatement.setString(1,h.getName());
+            preStatement.setInt(2,h.getAge());
+            preStatement.setInt(3,h.getSize());
+            preStatement.setInt(4, h.getX());
+            preStatement.setInt(5, h.getY());
+            preStatement.setInt(6, h.getId());
+            preStatement.setString(7, h.getOwner());
+            preStatement.executeUpdate();
+        }catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error whilst updating " + h.toString() + " human.");
+        }
+    }
 
     public int executeRegister(String login, String mail, String pass) {
         try {
@@ -218,6 +239,8 @@ public class DataBaseConnection {
             return null;
         }
     }
+
+
 
     public static String encryptString(String input)
     {

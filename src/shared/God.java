@@ -3,12 +3,22 @@ package shared;
 import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class God implements Serializable {
     private String name;
     private int age;
     private String type;
     private OffsetDateTime dateTime = OffsetDateTime.now(); // Current date time with an offset
+    private int id = dateTime.getNano();
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public void setDateTime(OffsetDateTime dateTime) {
         this.dateTime = dateTime;
@@ -35,10 +45,6 @@ public abstract class God implements Serializable {
 
     public String getName(){
         return this.name;
-    }
-
-    public String getType(){
-        return this.type;
     }
 
     public OffsetDateTime getDateTime() {

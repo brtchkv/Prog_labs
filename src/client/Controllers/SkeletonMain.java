@@ -57,9 +57,6 @@ public class SkeletonMain implements Initializable {
     private TextField humanName;
 
     @FXML
-    private DatePicker date;
-
-    @FXML
     private TextField humanAge;
 
     @FXML
@@ -120,26 +117,29 @@ public class SkeletonMain implements Initializable {
                 Login.currentResource.getString("remove"),
                 Login.currentResource.getString("remove_greater"),
                 Login.currentResource.getString("remove_lower"),
-                Login.currentResource.getString("add_if_min"));
+                Login.currentResource.getString("add_if_min"),
+                Login.currentResource.getString("update"));
         labelSize.setText("1.00");
         slider.valueProperty().addListener((observable, oldValue, newValue) -> {
             labelSize.setText(String.format("%.2f", newValue));
             size = newValue.intValue();
         });
-        date.setPromptText(LocalDate.now().toString());
     }
 
 
     @FXML
     void getHuman(MouseEvent event) {
         BackTable.cleanCanvas();
-        BackTable.storage.forEach(x -> {
-            if((Math.abs(x.getY() - ((int) event.getY())) < 30*0.7*x.getSize()) && Math.abs( x.getX() - ((int) event.getX())) < 30*0.7*x.getSize()){
-                selected = x;
-                humanName.setText(x.getName());
-                humanAge.setText(String.valueOf(x.getAge()));
-                if (x.getSkills().iterator().hasNext()) {
-                    Skill skill = x.getSkills().iterator().next();
+        BackTable.storage.forEach(h -> {
+            if((Math.abs(h.getY() - ((int) event.getY())) < 30*0.6*h.getSize()) && Math.abs( h.getX() - ((int) event.getX())) < 30*0.6*h.getSize()){
+                selected = h;
+                humanName.setText(h.getName());
+                humanAge.setText(String.valueOf(h.getAge()));
+                xCoordinate.setText(String.valueOf(h.getX()));
+                yCoordinate.setText(String.valueOf(h.getY()));
+                slider.setValue(h.getSize());
+                if (h.getSkills().iterator().hasNext()) {
+                    Skill skill = h.getSkills().iterator().next();
                     if (!skill.getName().toLowerCase().equals("null")) {
                         skillName.setText(skill.getName());
                         if (!skill.getAction().toLowerCase().equals("null")) {
@@ -149,8 +149,8 @@ public class SkeletonMain implements Initializable {
                 } else {skillInfo.clear();skillName.clear();}
                 gc.beginPath();
                 gc.save();
-                gc.scale(0.4 * x.getSize(),0.4 * x.getSize());
-                gc.strokeRect(x.getX(), x.getY(), 200, 200);
+                gc.scale(0.4 * h.getSize(),0.4 * h.getSize());
+                gc.strokeRect(h.getX(), h.getY(), 200, 200);
                 gc.restore();
                 gc.closePath();
             }
@@ -169,7 +169,7 @@ public class SkeletonMain implements Initializable {
         xCoordinate.clear();
         yCoordinate.clear();
         BackTable.cleanCanvas();
-        date.setValue(null);
+        selected = null;
     }
 
     @FXML
@@ -258,7 +258,6 @@ public class SkeletonMain implements Initializable {
         boolean numberRight = true;
 
         try {
-
             String gson = "";
             if (humanName.getText() == null || humanAge.getText() == null || humanName.getText().isEmpty() || humanAge.getText().isEmpty() || commandsList.getValue() == null){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -293,16 +292,16 @@ public class SkeletonMain implements Initializable {
                     alert.setContentText(currentResource.getString("skillNameMissing"));
                     alert.showAndWait();
                 } else if ((skillName.getText() == null || skillName.getText().isEmpty()) && (skillInfo.getText() == null || skillInfo.getText().isEmpty())){
-                    gson = "{\"name\":\"" + humanName.getText() +"\", \"age\":" + humanAge.getText() + ", \"size\":" + size + ", \"x\": " + x + ", \"y\": " + y +"}";
+                    gson = "{\"name\":\"" + humanName.getText() +"\", \"age\":" + humanAge.getText() + ", \"size\":" + size + ", \"x\": " + x + ", \"y\": " + y + "%s"+ "}";
                     command = true;
                 } else if (!(skillName.getText() == null || skillName.getText().isEmpty()) && (skillInfo.getText() == null || skillInfo.getText().isEmpty())){
                     gson = "{\"name\":\"" + humanName.getText() +"\", \"age\":" + humanAge.getText() + ", \"size\":" + size + ", \"x\": " + x + ", \"y\": "
-                            + y + ", \"skill\": {" + "\"name\": \"" + skillName.getText() + "\"}" + "}";
+                            + y + ", \"skill\": {" + "\"name\": \"" + skillName.getText() + "\"}" + "%s" +"}";
                     command = true;
                 } else {
                     gson = "{\"name\":\"" + humanName.getText() + "\", \"age\":" + humanAge.getText() + ", \"size\":" + size + ", \"x\": " + x + ", \"y\": "
                             + y + ", \"skill\": {" + "\"name\": \"" + skillName.getText() + "\","
-                            + "\"info\": \"" + skillInfo.getText() + "\"}"  + "}";
+                            + "\"info\": \"" + skillInfo.getText() + "\"}"  + "%s"+ "}";
                     command = true;
                 }
 
@@ -320,6 +319,22 @@ public class SkeletonMain implements Initializable {
                         if (commandTemp.equals(currentResource.getString(key))){
                             commandInEnglish = key;
                         }
+                    }
+
+                    if (commandInEnglish.equals("update") || commandInEnglish.equals("remove")){
+                        if (selected != null){
+                            String prepareId = ", \"id\": \"" + selected.getId() + "\"";
+                            gson = String.format(gson, prepareId);
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.WARNING);
+                            alert.setTitle(Login.currentResource.getString("command"));
+                            alert.setHeaderText(Login.currentResource.getString("warning"));
+                            alert.setContentText(currentResource.getString("notSelectHuman"));
+                            alert.showAndWait();
+                            throw new Exception();
+                        }
+                    } else {
+                        gson = String.format(gson, "");
                     }
 
                     SkeletonLogin.client.udpSocket.send(SkeletonLogin.client.createRequest(commandInEnglish, gson, SkeletonLogin.getNickname() + " " + server.DataBaseConnection.encryptString(SkeletonLogin.getPassword())));
@@ -347,7 +362,7 @@ public class SkeletonMain implements Initializable {
             alert.setContentText(Login.currentResource.getString("disconnected"));
             alert.setHeaderText(Login.currentResource.getString("warning"));
             alert.showAndWait();
-        }
+        } catch (Exception e){}
 
     }
 

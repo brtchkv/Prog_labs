@@ -102,7 +102,7 @@ public class Human extends God implements Serializable, Comparable<Human> {
         if (o == null || getClass() != o.getClass()) return false;
         Human human = (Human) o;
         return this.getName().equals(human.getName()) && this.getAge() == human.getAge()
-                && this.size == human.getSize() && this.x == human.getX() && this.y == human.getY();
+                && this.size == human.getSize() && this.x == human.getX() && this.y == human.getY() && this.getId() == human.getId();
     }
 
     @Override

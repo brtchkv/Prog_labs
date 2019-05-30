@@ -3,5 +3,5 @@ Class-Path: /Users/ivan/OneDrive\ -\ ITMO\ UNIVERSITY/Прога/6/Lab
  /gson-2.8.2.jar, /Users/ivan/OneDrive\ -\ ITMO\ UNIVERSITY/Прога
  /6/Lab/javax.mail.jar, /Users/ivan/OneDrive\ -\ ITMO\ UNIVERSITY/Пр
  ога/6/Lab/postgresql-42.2.5.jar
-Main-Class: server.Server
+Main-Class: client.Login
 

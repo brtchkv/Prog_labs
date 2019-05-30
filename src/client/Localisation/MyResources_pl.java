@@ -71,7 +71,9 @@ public class MyResources_pl extends ListResourceBundle{
                     {"lastHuman", "Ostatni Cz\u0142owiek:"},
                     {"dont", "Nie naciskaj tego!"},
                     {"notANumber", "Zadan\u00E9  pole nen\u00ED \u010D\u00EDslo!"},
-                    {"date", "Data"}
+                    {"date", "Data"},
+                    {"update", "Aktualizacja"},
+                    {"notSelectHuman", "Zadan\u00E9  pole nen\u00ED \u010D\u00EDslo!"}
             };
         }
 }

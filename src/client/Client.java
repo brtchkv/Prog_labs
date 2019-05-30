@@ -381,7 +381,7 @@ public class Client {
 
         if (command.equals("add") || command.equals("add_if_min")
                 || command.equals("remove") || command.equals("remove_greater")
-                || command.equals("remove_lower")) {
+                || command.equals("remove_lower") || command.equals("update")) {
             try {
                 c.setData(Console.parseHumanFromJson(data, this.username));
             } catch (Exception e) {

@@ -1,16 +1,27 @@
 package client;
 
 import client.Controllers.SkeletonLogin;
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.util.Duration;
 import shared.*;
 
 import java.io.*;
 import java.net.DatagramPacket;
+import java.util.Optional;
 import java.util.TimerTask;
 import java.util.Vector;
 
@@ -57,12 +68,33 @@ public class BackTable extends TimerTask {
                             storage = (Vector<Human>) os.readObject();
                             if (!storage.equals(storageOld) && !newUselessWindow) {
                                 tableView.getItems().clear();
-                                gc.clearRect(0, 0, 351, 434);
+                                storageOld.stream().forEach(x -> {
+                                    if (!storage.stream().anyMatch(y -> y.getId() == x.getId())){
+                                        try {
+                                            drawSleepyHuman(x, x.getX(), x.getY());
+                                            Thread.sleep(500);
+                                            cleanCanvasDrawExcept(x);
+                                        } catch (InterruptedException e) { }
+                                    }
+
+                                });
+                                //gc.clearRect(0, 0, 351, 434);
                                 storage.stream().forEach(x -> tableView.getItems().add(x));
-                                storage.stream().forEach(x -> drawHuman(x));
+                                //storage.stream().forEach(x -> drawHuman(x, x.getX(), x.getY()));
                                 storage.stream().forEach(x -> {
-                                    if (!storageOld.stream().anyMatch(y -> y.equals(x))){
-                                        System.out.println("Ќовый элемент " + x.toString());
+                                    if (storageOld.stream().anyMatch(y -> y.getId() == x.getId())){
+                                        try {
+                                            Human human = storageOld.stream().filter(y -> y.getId() == x.getId()).findFirst().get();
+                                            if (human.getX() != x.getX() || human.getY() != x.getY()) {
+                                                moveHuman(x, human.getX(), human.getY(), x.getX(), x.getY());
+                                            }
+                                        }catch (Exception e) {}
+                                    } else {
+                                        try {
+                                            drawSleepyHuman(x, x.getX(), x.getY());
+                                            Thread.sleep(500);
+                                        } catch (InterruptedException e) { }
+                                        drawHuman(x, x.getX(), x.getY());
                                     }
                                 });
                                 tableView.refresh();
@@ -70,12 +102,13 @@ public class BackTable extends TimerTask {
                             } else if (!storage.equals(storageOld)) {
                                 newUselessWindow = false;
                                 storage.stream().forEach(x -> tableView.getItems().add(x));
-                                storage.stream().forEach(x -> drawHuman(x));
+                                storage.stream().forEach(x -> drawHuman(x, x.getX(), x.getY()));
                                 tableView.refresh();
                                 storageOld = storage;
                             }
                         } catch (Exception e) {
                             System.out.println("Can't refresh the table!" + e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -115,17 +148,14 @@ public class BackTable extends TimerTask {
 
     }
 
-    public static void drawHuman(Human human){
-
-        int xC = human.getX();
-        int yC = human.getY();
+    public static void drawHuman(Human human, int xC, int yC){
 
         gc.beginPath();
         gc.save();
         gc.scale(0.4 * human.getSize(),0.4 * human.getSize());
         gc.strokeArc(20 + xC, 85 + yC, 20, 40, 70, 280, ArcType.OPEN); // обводка левого уха
         gc.strokeArc(170 + xC, 85 + yC, 20, 42, 80, 360, ArcType.OPEN); // обводка правого уха
-        gc.setFill(Login.customColor);
+        gc.setFill(Color.valueOf(server.DataBaseConnection.encryptString(human.getOwner()).substring(0,6)));
         gc.fillOval(30 + xC,35 + yC,150,150);    // For face
         gc.fillOval(20 + xC, 85 + yC,20, 40 );   // заливка левого уха
         gc.fillOval(170 + xC, 85 + yC,20, 42 );  // заливка правого уха
@@ -161,7 +191,72 @@ public class BackTable extends TimerTask {
 
     public static void cleanCanvas(){
         gc.clearRect(0, 0, 351, 434);
-        storageOld.stream().forEach(x -> drawHuman(x));
+        storageOld.stream().forEach(x -> drawHuman(x, x.getX(), x.getY()));
+    }
+
+    public static void moveHuman(Human human, double fromX, double fromY, double toX, double toY){
+        DoubleProperty x  = new SimpleDoubleProperty();
+        DoubleProperty y  = new SimpleDoubleProperty();
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0),
+                        new KeyValue(x, fromX),
+                        new KeyValue(y, fromY)
+                ),
+                new KeyFrame(Duration.seconds(4),
+                        new KeyValue(x, toX),
+                        new KeyValue(y, toY)
+                )
+        );
+        timeline.setAutoReverse(false);
+        timeline.setCycleCount(1);
+
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                cleanCanvasDrawExcept(human);
+                drawHuman(human, x.intValue(), y.intValue());
+            }
+        };
+
+        timer.start();
+        timeline.play();
+    }
+
+    public static void cleanCanvasDrawExcept(Human human){
+        gc.clearRect(0, 0, 351, 434);
+        storageOld.stream().filter(x -> x.getId() != human.getId()).forEach(x -> drawHuman(x, x.getX(), x.getY()));
+    }
+
+    public static void drawSleepyHuman(Human human, int x, int y) {
+        gc.beginPath();
+        gc.save();
+        gc.scale(0.4 * human.getSize(),0.4 * human.getSize());
+        gc.strokeArc(20 + x, 85 + y, 20, 40, 70, 280, ArcType.OPEN); // обводка левого уха
+        gc.strokeArc(170 + x, 85 + y, 20, 42, 80, 360, ArcType.OPEN); // обводка правого уха
+        gc.setFill(Color.valueOf(server.DataBaseConnection.encryptString(human.getOwner()).substring(0,6)));
+        gc.fillOval(30 + x,35 + y,150,150);    // For face
+        gc.fillOval(20 + x, 85 + y,20, 40 );   // заливка левого уха
+        gc.fillOval(170 + x, 85 + y,20, 42 );  // заливка правого уха
+        gc.strokeOval(30 + x,35 + y,150,150);  // обводка лица
+        gc.setFill(Color.BLACK);
+        gc.strokeLine(125 + x,100 + y,155 + x,100 + y);
+        gc.strokeLine(50 + x,100 + y,80 + x,100 + y);
+        gc.setFill(Color.SADDLEBROWN);
+        gc.strokeOval(5 + x, 25 + y, 195, 62); // обводка полей шл€пы
+        gc.fillOval(5 + x, 25 + y, 195, 62);   // пол€ шл€пы
+        gc.setFill(Color.BLACK);
+        gc.strokeArc(73 + x, 35 + y, 60, 30, 180, 180, ArcType.OPEN); // обводка выступа шл€пы
+        gc.strokeArc(73 + x, 0 + y, 60, 100, 0, 180, ArcType.OPEN); // выступ шл€пы
+        gc.setFill(Color.SADDLEBROWN);
+        gc.fillArc(73 + x, 0 + y, 60, 100, 0, 180, ArcType.OPEN); // выступ шл€пы
+        gc.setFill(Color.BLACK);
+        double x1[] = {104 + (double) x,94 + (double) x,104 + (double) x,104 + (double) x};
+        double y1[] = {105 + (double) y,124 + (double) y,124 + (double) y,105 + (double) y};
+        gc.fillPolygon(x1 , y1, 4);           // Nose
+        gc.strokeLine(70 + x,150 + y,135 + x,150 + y);
+        gc.restore();
+        gc.closePath();
     }
 
 }

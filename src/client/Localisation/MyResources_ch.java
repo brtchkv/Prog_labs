@@ -70,7 +70,9 @@ public class MyResources_ch extends ListResourceBundle {
                     {"lastHuman", "Posledn\u00ED \u010Clov\u011Bk:"},
                     {"dont", "Netla\u010D to!"},
                     {"notANumber", "Zadan\u00E9  pole nen\u00ED \u010D\u00EDslo!"},
-                    {"date", "Datum"}
+                    {"date", "Datum"},
+                    {"update", "Aktualizace"},
+                    {"notSelectHuman", "Zadan\u00E9  pole nen\u00ED \u010D\u00EDslo!"}
             };
         }
 }

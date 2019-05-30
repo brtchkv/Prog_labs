@@ -10,14 +10,19 @@ public class Temp implements Serializable {
     int size;
     int x;
     int y;
+    int id;
 
     public Human createHuman(){
-
         Human human = age != 0 ? new Human(name, age): new Human(name);
 
         human.setX(x);
         human.setY(y);
         human.setSize(size);
+
+        if (id != 0){
+            human.setId(id);
+        }
+
         if (skill != null) {
             human.addSkill(skill);
         }
