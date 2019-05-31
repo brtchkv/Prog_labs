@@ -67,7 +67,9 @@ public class MyResources_en extends ListResourceBundle {
                 {"notANumber", "Entered field is not a number!"},
                 {"date", "Date"},
                 {"update", "Update"},
-                {"notSelectHuman", "You didn't select a human to modify!"}
+                {"notSelectHuman", "You didn't select a human to modify!"},
+                {"mode", "Mode"},
+                {"canvas", "Canvas"}
         };
     }
 }

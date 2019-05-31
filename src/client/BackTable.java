@@ -29,8 +29,8 @@ public class BackTable extends TimerTask {
     private static GraphicsContext gcForSelection;
     public static boolean newUselessWindow = false;
 
-    public BackTable(GraphicsContext gc, GraphicsContext gc2){
-        tableView = new TableView();
+    public BackTable(GraphicsContext gc, GraphicsContext gc2, TableView<Human> tableView1){
+        tableView = tableView1;
         this.createTable();
         this.gc = gc;
         this.gcForSelection = gc2;
@@ -122,32 +122,35 @@ public class BackTable extends TimerTask {
 
 
     public void createTable(){
-        TableColumn<String, Human> column1 = new TableColumn<>("Name");
+        TableColumn<Human, Human> column1 = new TableColumn<>(Login.currentResource.getString("name"));
         column1.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        TableColumn<String, Human> column2 = new TableColumn<>("Age");
+        TableColumn<Human, Human> column2 = new TableColumn<>(Login.currentResource.getString("age"));
         column2.setCellValueFactory(new PropertyValueFactory<>("age"));
 
-        TableColumn<String,Human> column3 = new TableColumn<>("Owner");
+        TableColumn<Human,Human> column3 = new TableColumn<>(Login.currentResource.getString("nickname"));
         column3.setCellValueFactory(new PropertyValueFactory<>("owner"));
 
-        TableColumn<String,Human> column4 = new TableColumn<>("Size");
+        TableColumn<Human,Human> column4 = new TableColumn<>(Login.currentResource.getString("size"));
         column4.setCellValueFactory(new PropertyValueFactory<>("size"));
 
-        TableColumn<String,Human> column5 = new TableColumn<>("X");
+        TableColumn<Human,Human> column5 = new TableColumn<>("X");
         column5.setCellValueFactory(new PropertyValueFactory<>("X"));
 
-        TableColumn<String,Human> column6 = new TableColumn<>("Y");
+        TableColumn<Human,Human> column6 = new TableColumn<>("Y");
         column6.setCellValueFactory(new PropertyValueFactory<>("Y"));
 
-        TableColumn<String,Human> column7 = new TableColumn<>("Creation Date");
+        TableColumn<Human,Human> column7 = new TableColumn<>(Login.currentResource.getString("date"));
         column7.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
+
+        TableColumn<Human,Human> column8 = new TableColumn<>(Login.currentResource.getString("skill"));
+        column8.setCellValueFactory(new PropertyValueFactory<>("skills"));
 
 
         tableView.getColumns().add(column1);
         tableView.getColumns().add(column2);
         tableView.getColumns().add(column3);
-        tableView.getColumns().addAll(column4,column5,column6, column7);
+        tableView.getColumns().addAll(column4,column5,column6, column7, column8);
 
     }
 
@@ -158,7 +161,7 @@ public class BackTable extends TimerTask {
         gc.scale(0.4 * size,0.4 * size);
         gc.strokeArc(20 + xC, 85 + yC, 20, 40, 70, 280, ArcType.OPEN); // обводка левого уха
         gc.strokeArc(170 + xC, 85 + yC, 20, 42, 80, 360, ArcType.OPEN); // обводка правого уха
-        gc.setFill(Color.web((Color.valueOf(server.DataBaseConnection.encryptString(human.getOwner()).substring(0,6))).toString()));
+        gc.setFill(Color.valueOf(server.DataBaseConnection.encryptString(human.getOwner()).substring(0,6)));
         gc.fillOval(30 + xC,35 + yC,150,150);    // For face
         gc.fillOval(20 + xC, 85 + yC,20, 40 );   // заливка левого уха
         gc.fillOval(170 + xC, 85 + yC,20, 42 );  // заливка правого уха
@@ -242,7 +245,7 @@ public class BackTable extends TimerTask {
         gc.scale(0.4 * human.getSize(),0.4 * human.getSize());
         gc.strokeArc(20 + x, 85 + y, 20, 40, 70, 280, ArcType.OPEN); // обводка левого уха
         gc.strokeArc(170 + x, 85 + y, 20, 42, 80, 360, ArcType.OPEN); // обводка правого уха
-        gc.setFill(Color.web((Color.valueOf(server.DataBaseConnection.encryptString(human.getOwner()).substring(0,6))).toString()));
+        gc.setFill(Color.valueOf(server.DataBaseConnection.encryptString(human.getOwner()).substring(0,6)));
         gc.fillOval(30 + x,35 + y,150,150);    // For face
         gc.fillOval(20 + x, 85 + y,20, 40 );   // заливка левого уха
         gc.fillOval(170 + x, 85 + y,20, 42 );  // заливка правого уха

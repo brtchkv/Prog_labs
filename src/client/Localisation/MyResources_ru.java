@@ -70,7 +70,9 @@ public class MyResources_ru extends ListResourceBundle {
                     {"notANumber", "Одно из введенных значений, не является числом!"},
                     {"date", "Дата"},
                     {"update", "Обновить"},
-                    {"notSelectHuman", "Вы не выделили человека для обновления!"}
+                    {"notSelectHuman", "Вы не выделили человека для обновления!"},
+                    {"mode", "Режим"},
+                    {"canvas", "Холст"}
             };
         }
 }

@@ -90,6 +90,9 @@ public class SkeletonMain implements Initializable {
     @FXML
     private Canvas canvasForSelection;
 
+    @FXML
+    private TableView table;
+
     private GraphicsContext gc;
 
     private GraphicsContext gc2;
@@ -124,7 +127,7 @@ public class SkeletonMain implements Initializable {
         gc = canvas.getGraphicsContext2D();
         canvasForSelection.setOpacity(0.5);
         gc2 = canvasForSelection.getGraphicsContext2D();
-        timer.schedule(new BackTable(gc, gc2), 0, 3000);
+        timer.schedule(new BackTable(gc, gc2, table), 0, 3000);
         commandsList.getItems().addAll(
                 Login.currentResource.getString("add"),
                 Login.currentResource.getString("remove"),
@@ -140,6 +143,8 @@ public class SkeletonMain implements Initializable {
         currentDate = new Date();
         df = DateFormat.getDateInstance(DateFormat.SHORT, currentResource.getLocale());
         date.setText(df.format(currentDate));
+        table.setDisable(true);
+        table.setOpacity(0);
     }
 
 
@@ -148,36 +153,18 @@ public class SkeletonMain implements Initializable {
         gc2.clearRect(0, 0, 351, 380);
         BackTable.storageOld.forEach(h -> {
 
-            if((Math.abs(h.getY() - ((int) event.getY())) < 30*0.6*h.getSize()) && Math.abs( h.getX() - ((int) event.getX())) < 30*0.6*h.getSize()){
+            if((Math.abs( -h.getY() + ((int) event.getX())) < 72*h.getSize()) && Math.abs( -h.getX() + ((int) event.getY())) < 72*h.getSize()){
 
                 gc2.beginPath();
                 gc2.save();
                 gc2.setFill(Color.BLACK);
                 gc2.setStroke(Color.BLACK);
                 gc2.scale(0.4 * h.getSize(),0.4 * h.getSize());
-                gc2.strokeRect(h.getX(), h.getY(), 200, 200);
+                gc2.strokeRect(h.getX() + 3, h.getY(), 200, 190);
                 gc2.restore();
                 gc2.closePath();
 
-                selected = h;
-                humanName.setText(h.getName());
-                humanAge.setText(String.valueOf(h.getAge()));
-                xCoordinate.setText(String.valueOf(h.getX()));
-                yCoordinate.setText(String.valueOf(h.getY()));
-                slider.setValue(h.getSize());
-                if (h.getSkills().iterator().hasNext()) {
-                    Skill skill = h.getSkills().iterator().next();
-                    if (!skill.getName().toLowerCase().equals("null")) {
-                        skillName.setText(skill.getName());
-                        if (!skill.getAction().toLowerCase().equals("null")) {
-                            skillInfo.setText(skill.getAction());
-                        } else {skillInfo.clear();}
-                    } else {skillName.clear();}
-                } else {skillInfo.clear();skillName.clear();}
-
-                currentDate = new Date(h.getDateTime().toEpochSecond() * 1000);
-                df = DateFormat.getDateInstance(DateFormat.SHORT, currentResource.getLocale());
-                date.setText(df.format(currentDate));
+                showHumanOnPanel(h);
 
             }
         });
@@ -261,24 +248,40 @@ public class SkeletonMain implements Initializable {
 
     @FXML
     void showTable(ActionEvent event) {
-        VBox vbox;
-        if (BackTable.tableView != null) {
-            vbox = new VBox(BackTable.tableView);
-        } else {
-            TableView tb = new TableView();
-            TableColumn firstNameCol = new TableColumn(currentResource.getString("login"));
-            TableColumn age = new TableColumn(currentResource.getString("age"));
-            TableColumn u = new TableColumn(currentResource.getString("username"));
-            tb.getColumns().addAll(firstNameCol, age, u);
-            vbox = new VBox(tb);
-        }
+        table.setDisable(false);
+        table.setOpacity(1);
+//        VBox vbox;
+//        if (BackTable.tableView != null) {
+//            vbox = new VBox(BackTable.tableView);
+//        } else {
+//            TableView tb = new TableView();
+//            TableColumn firstNameCol = new TableColumn(currentResource.getString("login"));
+//            TableColumn age = new TableColumn(currentResource.getString("age"));
+//            TableColumn u = new TableColumn(currentResource.getString("username"));
+//            tb.getColumns().addAll(firstNameCol, age, u);
+//            vbox = new VBox(tb);
+//        }
+//
+//        vbox.setSpacing(5);
+//        Scene scene = new Scene(vbox);
+//        Stage stage = new Stage();
+//        stage.setTitle(currentResource.getString("objects"));
+//        stage.setScene(scene);
+//        stage.show();
+    }
 
-        vbox.setSpacing(5);
-        Scene scene = new Scene(vbox);
-        Stage stage = new Stage();
-        stage.setTitle(currentResource.getString("objects"));
-        stage.setScene(scene);
-        stage.show();
+    @FXML
+    void getHumanFromTable(MouseEvent event) {
+        if (!table.isDisabled()){
+            Human h = (Human) table.getSelectionModel().getSelectedItem();
+            showHumanOnPanel(h);
+        }
+    }
+
+    @FXML
+    void hideCanvas(ActionEvent event) {
+        table.setDisable(true);
+        table.setOpacity(0);
     }
 
     @FXML
@@ -289,6 +292,7 @@ public class SkeletonMain implements Initializable {
 
         try {
             String gson = "";
+
             if (humanName.getText() == null || humanAge.getText() == null || humanName.getText().isEmpty() || humanAge.getText().isEmpty() || commandsList.getValue() == null){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle(Login.currentResource.getString("command"));
@@ -352,6 +356,7 @@ public class SkeletonMain implements Initializable {
                     }
 
                     if (commandInEnglish.equals("update") || commandInEnglish.equals("remove")){
+
                         if (selected != null){
                             String prepareId = ", \"id\": \"" + selected.getId() + "\"";
                             gson = String.format(gson, prepareId);
@@ -394,6 +399,28 @@ public class SkeletonMain implements Initializable {
             alert.showAndWait();
         } catch (Exception e){}
 
+    }
+
+    private void showHumanOnPanel(Human selected) {
+        this.selected = selected;
+        humanName.setText(selected.getName());
+        humanAge.setText(String.valueOf(selected.getAge()));
+        xCoordinate.setText(String.valueOf(selected.getX()));
+        yCoordinate.setText(String.valueOf(selected.getY()));
+        slider.setValue(selected.getSize());
+        if (selected.getSkills().iterator().hasNext()) {
+            Skill skill = selected.getSkills().iterator().next();
+            if (!skill.getName().toLowerCase().equals("null")) {
+                skillName.setText(skill.getName());
+                if (!skill.getAction().toLowerCase().equals("null")) {
+                    skillInfo.setText(skill.getAction());
+                } else {skillInfo.clear();}
+            } else {skillName.clear();}
+        } else {skillInfo.clear();skillName.clear();}
+
+        currentDate = new Date(selected.getDateTime().toEpochSecond() * 1000);
+        df = DateFormat.getDateInstance(DateFormat.SHORT, currentResource.getLocale());
+        date.setText(df.format(currentDate));
     }
 
     @FXML

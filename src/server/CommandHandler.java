@@ -333,6 +333,13 @@ public class CommandHandler extends Thread {
         return ("Deleted " + (start - end) + " objects. :(").getBytes();
     }
 
+    /**
+     * <p>Обновляет человека в базе данных</p>
+     * @param storage (Human) - Storage of Humans
+     * @param human (Human) - An instance of human to update
+     * @param db (DataBaseConnection) - Database
+     * @param username (String) - A username (Owner)
+     */
     public byte[] update(Vector<Human> storage, Human human, DataBaseConnection db, String username){
             Human humanOld;
             if (storage.stream().anyMatch(h -> (h.getId() == human.getId() && h.getOwner().equals(username)))){

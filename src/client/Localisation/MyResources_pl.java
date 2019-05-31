@@ -73,7 +73,9 @@ public class MyResources_pl extends ListResourceBundle{
                     {"notANumber", "Zadan\u00E9  pole nen\u00ED \u010D\u00EDslo!"},
                     {"date", "Data"},
                     {"update", "Aktualizacja"},
-                    {"notSelectHuman", "Zadan\u00E9  pole nen\u00ED \u010D\u00EDslo!"}
+                    {"notSelectHuman", "Zadan\u00E9  pole nen\u00ED \u010D\u00EDslo!"},
+                    {"mode", "Tryb"},
+                    {"canvas", "Brezentowy"}
             };
         }
 }
