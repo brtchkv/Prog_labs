@@ -28,18 +28,17 @@ public class TestMain extends Application{
         final Canvas canvas = new Canvas(W, H);
         DoubleProperty x  = new SimpleDoubleProperty();
         DoubleProperty y  = new SimpleDoubleProperty();
+        DoubleProperty size = new SimpleDoubleProperty();
 
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0),
-                        new KeyValue(x, 0),
-                        new KeyValue(y, 0)
+                        new KeyValue(size, 0.98)
                 ),
-                new KeyFrame(Duration.seconds(5),
-                        new KeyValue(x, 200),
-                        new KeyValue(y, 200)
+                new KeyFrame(Duration.millis(340),
+                        new KeyValue(size, 4)
                 )
         );
-        timeline.setAutoReverse(false);
+        timeline.setAutoReverse(true);
         timeline.setCycleCount(Timeline.INDEFINITE);
 
         AnimationTimer timer = new AnimationTimer() {
@@ -50,6 +49,7 @@ public class TestMain extends Application{
                 gc.clearRect(0, 0, 500, 500);
                 gc.beginPath();
                 gc.save();
+                gc.scale(0.4 * size.intValue(),0.4 * size.intValue());
                 gc.strokeArc(20 + x.doubleValue(), 85 + y.doubleValue(), 20, 40, 70, 280, ArcType.OPEN); // обводка левого уха
                 gc.strokeArc(170 + x.doubleValue(), 85 + y.doubleValue(), 20, 42, 80, 360, ArcType.OPEN); // обводка правого уха
                 gc.setFill(Color.YELLOW);

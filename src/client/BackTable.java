@@ -21,7 +21,6 @@ import shared.*;
 
 import java.io.*;
 import java.net.DatagramPacket;
-import java.util.Optional;
 import java.util.TimerTask;
 import java.util.Vector;
 
@@ -72,9 +71,15 @@ public class BackTable extends TimerTask {
                                     if (!storage.stream().anyMatch(y -> y.getId() == x.getId())){
                                         try {
                                             drawSleepyHuman(x, x.getX(), x.getY());
-                                            Thread.sleep(500);
+                                            if (Thread.interrupted()) {
+
+                                            } else {
+                                                Thread.sleep(450);
+                                            }
                                             cleanCanvasDrawExcept(x);
-                                        } catch (InterruptedException e) { }
+                                        } catch (InterruptedException e) {
+                                            Thread.currentThread().interrupt(); // Here!
+                                        }
                                     }
 
                                 });
@@ -85,16 +90,22 @@ public class BackTable extends TimerTask {
                                     if (storageOld.stream().anyMatch(y -> y.getId() == x.getId())){
                                         try {
                                             Human human = storageOld.stream().filter(y -> y.getId() == x.getId()).findFirst().get();
-                                            if (human.getX() != x.getX() || human.getY() != x.getY()) {
-                                                moveHuman(x, human.getX(), human.getY(), x.getX(), x.getY());
+                                            if (human.getX() != x.getX() || human.getY() != x.getY() || human.getSize() != x.getSize()) {
+                                                moveHuman(x, human.getX(), human.getY(), x.getX(), x.getY(), human.getSize(), x.getSize());
                                             }
                                         }catch (Exception e) {}
                                     } else {
                                         try {
                                             drawSleepyHuman(x, x.getX(), x.getY());
-                                            Thread.sleep(500);
-                                        } catch (InterruptedException e) { }
-                                        drawHuman(x, x.getX(), x.getY());
+                                            if (Thread.interrupted()) {
+
+                                            } else {
+                                                Thread.sleep(450);
+                                            }
+                                        } catch (InterruptedException e) {
+                                            Thread.currentThread().interrupt(); // Here!
+                                        }
+                                        drawHuman(x, x.getX(), x.getY(), x.getSize());
                                     }
                                 });
                                 tableView.refresh();
@@ -102,7 +113,7 @@ public class BackTable extends TimerTask {
                             } else if (!storage.equals(storageOld)) {
                                 newUselessWindow = false;
                                 storage.stream().forEach(x -> tableView.getItems().add(x));
-                                storage.stream().forEach(x -> drawHuman(x, x.getX(), x.getY()));
+                                storage.stream().forEach(x -> drawHuman(x, x.getX(), x.getY(), x.getSize()));
                                 tableView.refresh();
                                 storageOld = storage;
                             }
@@ -148,11 +159,11 @@ public class BackTable extends TimerTask {
 
     }
 
-    public static void drawHuman(Human human, int xC, int yC){
+    public static void drawHuman(Human human, int xC, int yC, int size){
 
         gc.beginPath();
         gc.save();
-        gc.scale(0.4 * human.getSize(),0.4 * human.getSize());
+        gc.scale(0.4 * size,0.4 * size);
         gc.strokeArc(20 + xC, 85 + yC, 20, 40, 70, 280, ArcType.OPEN); // обводка левого уха
         gc.strokeArc(170 + xC, 85 + yC, 20, 42, 80, 360, ArcType.OPEN); // обводка правого уха
         gc.setFill(Color.valueOf(server.DataBaseConnection.encryptString(human.getOwner()).substring(0,6)));
@@ -191,21 +202,24 @@ public class BackTable extends TimerTask {
 
     public static void cleanCanvas(){
         gc.clearRect(0, 0, 351, 434);
-        storageOld.stream().forEach(x -> drawHuman(x, x.getX(), x.getY()));
+        storageOld.stream().forEach(x -> drawHuman(x, x.getX(), x.getY(), x.getSize()));
     }
 
-    public static void moveHuman(Human human, double fromX, double fromY, double toX, double toY){
+    public static void moveHuman(Human human, double fromX, double fromY, double toX, double toY, double fromSize, double toSize){
         DoubleProperty x  = new SimpleDoubleProperty();
         DoubleProperty y  = new SimpleDoubleProperty();
+        DoubleProperty size  = new SimpleDoubleProperty();
 
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0),
                         new KeyValue(x, fromX),
-                        new KeyValue(y, fromY)
+                        new KeyValue(y, fromY),
+                        new KeyValue(size, fromSize)
                 ),
-                new KeyFrame(Duration.seconds(4),
+                new KeyFrame(Duration.millis(340),
                         new KeyValue(x, toX),
-                        new KeyValue(y, toY)
+                        new KeyValue(y, toY),
+                        new KeyValue(size, toSize)
                 )
         );
         timeline.setAutoReverse(false);
@@ -215,7 +229,7 @@ public class BackTable extends TimerTask {
             @Override
             public void handle(long now) {
                 cleanCanvasDrawExcept(human);
-                drawHuman(human, x.intValue(), y.intValue());
+                drawHuman(human, x.intValue(), y.intValue(), size.intValue());
             }
         };
 
@@ -225,7 +239,7 @@ public class BackTable extends TimerTask {
 
     public static void cleanCanvasDrawExcept(Human human){
         gc.clearRect(0, 0, 351, 434);
-        storageOld.stream().filter(x -> x.getId() != human.getId()).forEach(x -> drawHuman(x, x.getX(), x.getY()));
+        storageOld.stream().filter(x -> x.getId() != human.getId()).forEach(x -> drawHuman(x, x.getX(), x.getY(), x.getSize()));
     }
 
     public static void drawSleepyHuman(Human human, int x, int y) {
