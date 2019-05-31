@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import shared.Human;
@@ -30,11 +31,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.URL;
-import java.time.LocalDate;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Timer;
+import java.text.DateFormat;
+import java.util.*;
 
 import static client.Login.currentResource;
 import static client.Login.loadScene;
@@ -86,11 +84,24 @@ public class SkeletonMain implements Initializable {
     @FXML
     private Canvas canvas;
 
+    @FXML
+    private Label date;
+
+    @FXML
+    private Canvas canvasForSelection;
+
     private GraphicsContext gc;
+
+    private GraphicsContext gc2;
 
     private Human selected;
 
+    Date currentDate;
+    DateFormat df;
+
     Timer timer;
+
+
 
     private int size = 1;
     private int x = 0;
@@ -99,8 +110,8 @@ public class SkeletonMain implements Initializable {
     private void init() {
         collectionInfo.setAlignment(Pos.CENTER_LEFT);
         nickname.setAlignment(Pos.CENTER_RIGHT);
-        lastCommand.setAlignment(Pos.CENTER_RIGHT);
-        lastHumanName.setAlignment(Pos.CENTER_RIGHT);
+        lastCommand.setAlignment(Pos.CENTER_LEFT);
+        lastHumanName.setAlignment(Pos.CENTER_LEFT);
         nickname.setText(SkeletonLogin.getNickname());
         collectionInfo.setText(currentResource.getString("collectionInfo"));
     }
@@ -111,7 +122,9 @@ public class SkeletonMain implements Initializable {
         init();
         timer = new Timer();
         gc = canvas.getGraphicsContext2D();
-        timer.schedule(new BackTable(gc), 0, 3000);
+        canvasForSelection.setOpacity(0.5);
+        gc2 = canvasForSelection.getGraphicsContext2D();
+        timer.schedule(new BackTable(gc, gc2), 0, 3000);
         commandsList.getItems().addAll(
                 Login.currentResource.getString("add"),
                 Login.currentResource.getString("remove"),
@@ -124,14 +137,28 @@ public class SkeletonMain implements Initializable {
             labelSize.setText(String.format("%.2f", newValue));
             size = newValue.intValue();
         });
+        currentDate = new Date();
+        df = DateFormat.getDateInstance(DateFormat.SHORT, currentResource.getLocale());
+        date.setText(df.format(currentDate));
     }
 
 
     @FXML
     void getHuman(MouseEvent event) {
-        BackTable.cleanCanvas();
-        BackTable.storage.forEach(h -> {
+        gc2.clearRect(0, 0, 351, 380);
+        BackTable.storageOld.forEach(h -> {
+
             if((Math.abs(h.getY() - ((int) event.getY())) < 30*0.6*h.getSize()) && Math.abs( h.getX() - ((int) event.getX())) < 30*0.6*h.getSize()){
+
+                gc2.beginPath();
+                gc2.save();
+                gc2.setFill(Color.BLACK);
+                gc2.setStroke(Color.BLACK);
+                gc2.scale(0.4 * h.getSize(),0.4 * h.getSize());
+                gc2.strokeRect(h.getX(), h.getY(), 200, 200);
+                gc2.restore();
+                gc2.closePath();
+
                 selected = h;
                 humanName.setText(h.getName());
                 humanAge.setText(String.valueOf(h.getAge()));
@@ -147,12 +174,11 @@ public class SkeletonMain implements Initializable {
                         } else {skillInfo.clear();}
                     } else {skillName.clear();}
                 } else {skillInfo.clear();skillName.clear();}
-                gc.beginPath();
-                gc.save();
-                gc.scale(0.4 * h.getSize(),0.4 * h.getSize());
-                gc.strokeRect(h.getX(), h.getY(), 200, 200);
-                gc.restore();
-                gc.closePath();
+
+                currentDate = new Date(h.getDateTime().toEpochSecond() * 1000);
+                df = DateFormat.getDateInstance(DateFormat.SHORT, currentResource.getLocale());
+                date.setText(df.format(currentDate));
+
             }
         });
     }
@@ -170,6 +196,10 @@ public class SkeletonMain implements Initializable {
         yCoordinate.clear();
         BackTable.cleanCanvas();
         selected = null;
+        currentDate = new Date();
+        df = DateFormat.getDateInstance(DateFormat.SHORT, currentResource.getLocale());
+        date.setText(df.format(currentDate));
+        gc2.clearRect(0, 0, 351, 380);
     }
 
     @FXML

@@ -65,7 +65,7 @@ public class MyResources_ru extends ListResourceBundle {
                     {"xCoordinate", "X Координата = 0"},
                     {"yCoordinate", "Y Координата = 0"},
                     {"lastCommand", "Последняя Команда:"},
-                    {"lastHuman", "Последний Человек:"},
+                    {"lastHuman", "Последнее Имя:"},
                     {"dont", "Не нажимать!"},
                     {"notANumber", "Одно из введенных значений, не является числом!"},
                     {"date", "Дата"},

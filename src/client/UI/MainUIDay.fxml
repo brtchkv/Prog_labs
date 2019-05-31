@@ -94,6 +94,7 @@
                   </Label>
                   <Pane layoutX="194.0" layoutY="12.0" onMouseClicked="#getHuman" prefHeight="200.0" prefWidth="200.0" />
                   <Pane id="pane1" layoutX="25.0" layoutY="47.0" onMouseClicked="#getHuman" prefHeight="378.0" prefWidth="351.0" />
+                  <Canvas fx:id="canvasForSelection" blendMode="SRC_ATOP" disable="true" height="380.0" layoutX="25.0" layoutY="47.0" onMouseClicked="#getHuman" width="351.0" />
                   <Canvas fx:id="canvas" blendMode="SRC_ATOP" disable="true" height="380.0" layoutX="25.0" layoutY="47.0" onMouseClicked="#getHuman" width="351.0" />
           </children>
         </AnchorPane>
@@ -152,7 +153,7 @@
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" style="-fx-background-color: c1a4b1;" VBox.vgrow="NEVER">
       <children>
-        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" prefHeight="17.0" prefWidth="164.0" text="%lastCommand" HBox.hgrow="ALWAYS">
+        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-1.0" prefHeight="17.0" prefWidth="147.0" text="%lastCommand" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -160,7 +161,7 @@
                   <Insets left="5.0" />
                </padding>
         </Label>
-            <Label fx:id="lastCommand" alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="212.0" text="%command" wrapText="true">
+            <Label fx:id="lastCommand" prefHeight="15.0" prefWidth="220.0" text="%command" wrapText="true">
                <font>
                   <Font size="11.0" />
                </font>
@@ -168,12 +169,13 @@
                   <Insets left="5.0" />
                </padding>
             </Label>
-            <Label prefHeight="17.0" prefWidth="155.0" text="%lastHuman" />
-            <Label fx:id="lastHumanName" alignment="CENTER_RIGHT" prefHeight="14.0" prefWidth="251.0" text="%name">
+            <Label alignment="CENTER" prefHeight="17.0" prefWidth="129.0" text="%lastHuman" />
+            <Label fx:id="lastHumanName" prefHeight="14.0" prefWidth="188.0" text="%name">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
+            <Label fx:id="date" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="91.0" text="Date" />
       </children>
       <padding>
         <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />

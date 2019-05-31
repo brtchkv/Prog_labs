@@ -7,9 +7,6 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -29,12 +26,14 @@ public class BackTable extends TimerTask {
     public static Vector<Human> storage;
     public static TableView tableView;
     private static GraphicsContext gc;
+    private static GraphicsContext gcForSelection;
     public static boolean newUselessWindow = false;
 
-    public BackTable(GraphicsContext gc){
+    public BackTable(GraphicsContext gc, GraphicsContext gc2){
         tableView = new TableView();
         this.createTable();
         this.gc = gc;
+        this.gcForSelection = gc2;
     }
 
     public void run(){
@@ -68,18 +67,14 @@ public class BackTable extends TimerTask {
                             if (!storage.equals(storageOld) && !newUselessWindow) {
                                 tableView.getItems().clear();
                                 storageOld.stream().forEach(x -> {
-                                    if (!storage.stream().anyMatch(y -> y.getId() == x.getId())){
+                                    if (!storage.stream().anyMatch(y -> y.getId() == x.getId())){ // if remove object
                                         try {
                                             drawSleepyHuman(x, x.getX(), x.getY());
-                                            if (Thread.interrupted()) {
-
-                                            } else {
-                                                Thread.sleep(450);
-                                            }
+                                            Thread.sleep(450);
+                                            gcForSelection.clearRect(0, 0, 351, 380);
                                             cleanCanvasDrawExcept(x);
-                                        } catch (InterruptedException e) {
-                                            Thread.currentThread().interrupt(); // Here!
-                                        }
+
+                                        } catch (InterruptedException e) { }
                                     }
 
                                 });
@@ -87,24 +82,21 @@ public class BackTable extends TimerTask {
                                 storage.stream().forEach(x -> tableView.getItems().add(x));
                                 //storage.stream().forEach(x -> drawHuman(x, x.getX(), x.getY()));
                                 storage.stream().forEach(x -> {
-                                    if (storageOld.stream().anyMatch(y -> y.getId() == x.getId())){
+                                    if (storageOld.stream().anyMatch(y -> y.getId() == x.getId())){ //if altered object
                                         try {
                                             Human human = storageOld.stream().filter(y -> y.getId() == x.getId()).findFirst().get();
                                             if (human.getX() != x.getX() || human.getY() != x.getY() || human.getSize() != x.getSize()) {
                                                 moveHuman(x, human.getX(), human.getY(), x.getX(), x.getY(), human.getSize(), x.getSize());
+                                                gcForSelection.clearRect(0, 0, 351, 380);
                                             }
-                                        }catch (Exception e) {}
+                                        }catch (Exception e) { e.printStackTrace();}
                                     } else {
-                                        try {
+                                        try {  //if new object
                                             drawSleepyHuman(x, x.getX(), x.getY());
-                                            if (Thread.interrupted()) {
 
-                                            } else {
-                                                Thread.sleep(450);
-                                            }
-                                        } catch (InterruptedException e) {
-                                            Thread.currentThread().interrupt(); // Here!
-                                        }
+                                            Thread.sleep(450);
+
+                                        } catch (InterruptedException e) { }
                                         drawHuman(x, x.getX(), x.getY(), x.getSize());
                                     }
                                 });
@@ -166,7 +158,7 @@ public class BackTable extends TimerTask {
         gc.scale(0.4 * size,0.4 * size);
         gc.strokeArc(20 + xC, 85 + yC, 20, 40, 70, 280, ArcType.OPEN); // обводка левого уха
         gc.strokeArc(170 + xC, 85 + yC, 20, 42, 80, 360, ArcType.OPEN); // обводка правого уха
-        gc.setFill(Color.valueOf(server.DataBaseConnection.encryptString(human.getOwner()).substring(0,6)));
+        gc.setFill(Color.web((Color.valueOf(server.DataBaseConnection.encryptString(human.getOwner()).substring(0,6))).toString()));
         gc.fillOval(30 + xC,35 + yC,150,150);    // For face
         gc.fillOval(20 + xC, 85 + yC,20, 40 );   // заливка левого уха
         gc.fillOval(170 + xC, 85 + yC,20, 42 );  // заливка правого уха
@@ -201,7 +193,7 @@ public class BackTable extends TimerTask {
     }
 
     public static void cleanCanvas(){
-        gc.clearRect(0, 0, 351, 434);
+        gc.clearRect(0, 0, 351, 380);
         storageOld.stream().forEach(x -> drawHuman(x, x.getX(), x.getY(), x.getSize()));
     }
 
@@ -211,7 +203,7 @@ public class BackTable extends TimerTask {
         DoubleProperty size  = new SimpleDoubleProperty();
 
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0),
+                new KeyFrame(Duration.millis(0),
                         new KeyValue(x, fromX),
                         new KeyValue(y, fromY),
                         new KeyValue(size, fromSize)
@@ -222,6 +214,8 @@ public class BackTable extends TimerTask {
                         new KeyValue(size, toSize)
                 )
         );
+        timeline.delayProperty();
+
         timeline.setAutoReverse(false);
         timeline.setCycleCount(1);
 
@@ -238,8 +232,8 @@ public class BackTable extends TimerTask {
     }
 
     public static void cleanCanvasDrawExcept(Human human){
-        gc.clearRect(0, 0, 351, 434);
-        storageOld.stream().filter(x -> x.getId() != human.getId()).forEach(x -> drawHuman(x, x.getX(), x.getY(), x.getSize()));
+        gc.clearRect(0, 0, 351, 380);
+        storage.stream().filter(y -> y.getId() != human.getId()).forEach(x ->{ drawHuman(x, x.getX(), x.getY(), x.getSize());});
     }
 
     public static void drawSleepyHuman(Human human, int x, int y) {
@@ -248,7 +242,7 @@ public class BackTable extends TimerTask {
         gc.scale(0.4 * human.getSize(),0.4 * human.getSize());
         gc.strokeArc(20 + x, 85 + y, 20, 40, 70, 280, ArcType.OPEN); // обводка левого уха
         gc.strokeArc(170 + x, 85 + y, 20, 42, 80, 360, ArcType.OPEN); // обводка правого уха
-        gc.setFill(Color.valueOf(server.DataBaseConnection.encryptString(human.getOwner()).substring(0,6)));
+        gc.setFill(Color.web((Color.valueOf(server.DataBaseConnection.encryptString(human.getOwner()).substring(0,6))).toString()));
         gc.fillOval(30 + x,35 + y,150,150);    // For face
         gc.fillOval(20 + x, 85 + y,20, 40 );   // заливка левого уха
         gc.fillOval(170 + x, 85 + y,20, 42 );  // заливка правого уха
