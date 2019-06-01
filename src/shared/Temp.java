@@ -6,7 +6,6 @@ public class Temp implements Serializable {
     String name ;
     int age;
     Skill skill;
-    String disability;
     int size;
     int x;
     int y;
@@ -26,9 +25,7 @@ public class Temp implements Serializable {
         if (skill != null) {
             human.addSkill(skill);
         }
-        if (disability != null) {
-            human.addDisability(new Disability(disability));
-        }
+
         return human;
     }
 }

@@ -13,7 +13,6 @@ public class Human extends God implements Serializable, Comparable<Human> {
     private int y = 0;
 
     private ArrayList<Skill> skills = new ArrayList<>();
-    private ArrayList<Disability> disabilities = new ArrayList<>();
 
     public Human(String name, int age) {
         super(name, age, "Human");
@@ -83,18 +82,6 @@ public class Human extends God implements Serializable, Comparable<Human> {
         }
     }
 
-    public boolean addDisability(Disability d) {
-        if (disabilities.add(d)) {
-            return true;
-        } else {
-            System.out.println("При добавлении несовершенности произошла ошибка...");
-            return false;
-        }
-    }
-
-    public ArrayList<Disability> getDisabilities(){
-        return this.disabilities;
-    }
 
     @Override
     public boolean equals(Object o) {

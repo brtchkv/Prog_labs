@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -153,7 +152,7 @@ public class SkeletonMain implements Initializable {
         gc2.clearRect(0, 0, 351, 380);
         BackTable.storageOld.forEach(h -> {
 
-            if((Math.abs( -h.getY() + ((int) event.getX())) < 72*h.getSize()) && Math.abs( -h.getX() + ((int) event.getY())) < 72*h.getSize()){
+            if((Math.abs( -h.getY() + ((int) event.getX())) < 35*h.getSize()) && Math.abs( -h.getX() + ((int) event.getY())) < 35*h.getSize()){
 
                 gc2.beginPath();
                 gc2.save();

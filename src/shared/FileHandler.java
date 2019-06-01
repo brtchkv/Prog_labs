@@ -123,7 +123,7 @@ public class FileHandler {
                 try{
                     List<String> lower_dis = CSVUtils.parseLine(upper.get(4).trim(), '-');
                     for (int i = lower_dis.size() - 1; i >= 0; i--) {
-                        temp.addDisability(new Disability(lower_dis.get(i)));
+                        //temp.addDisability(new Disability(lower_dis.get(i)));
                     }
                 }catch (Exception e){}
 
@@ -176,18 +176,18 @@ public class FileHandler {
                         }
                     }
 
-                    Iterator<Disability> iterator_d = temp.getDisabilities().iterator();
-                    if (iterator_d.hasNext()) {
-                        s.append(",\"");
-                    }
-                    while (iterator_d.hasNext()) {
-                        Disability disability = iterator_d.next();
-                        if (iterator_d.hasNext()) {
-                            s.append(disability.toString() + "-");
-                        } else {
-                            s.append(disability.toString() + "\"");
-                        }
-                    }
+//                    Iterator<Disability> iterator_d = temp.getDisabilities().iterator();
+//                    if (iterator_d.hasNext()) {
+//                        s.append(",\"");
+//                    }
+//                    while (iterator_d.hasNext()) {
+//                        Disability disability = iterator_d.next();
+//                        if (iterator_d.hasNext()) {
+//                            s.append(disability.toString() + "-");
+//                        } else {
+//                            s.append(disability.toString() + "\"");
+//                        }
+//                    }
 
                     printWriter.println(s);
                 }
