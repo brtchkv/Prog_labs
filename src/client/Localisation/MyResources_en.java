@@ -17,7 +17,7 @@ public class MyResources_en extends ListResourceBundle {
                 {"disconnected", "Disconnected from the server.\nTry again later!"},
                 {"collectionInfo", "Collection of Vector type. Contains objects of human type."},
                 {"submit", "Submit"},
-                {"sheerVoid", "The fields command, name and age can't be void.\nMake sure they're set."},
+                {"sheerVoid", "The fields command, name and age can't be void. (Size can't be 0) \nMake sure they're set."},
                 {"coordinatesVoid", "You didn't provide any coordinates. Thus the default preset was used!\nX = 0, Y = 0."},
                 {"yMissing", "You didn't provide Y coordinates. Thus the default preset was used!\nY = 0."},
                 {"xMissing", "You didn't provide X coordinates. Thus the default preset was used!\nX = 0."},
@@ -69,7 +69,9 @@ public class MyResources_en extends ListResourceBundle {
                 {"update", "Update"},
                 {"notSelectHuman", "You didn't select a human to modify!"},
                 {"mode", "Mode"},
-                {"canvas", "Canvas"}
+                {"canvas", "Canvas"},
+                {"filter", "Filter"},
+                {"showTable", "You didn't switched mode to Table!"}
         };
     }
 }

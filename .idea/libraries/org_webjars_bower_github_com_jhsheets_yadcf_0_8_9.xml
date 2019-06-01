@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="org.webjars.bower:github-com-jhsheets-yadcf:0.8.9" type="repository">
+    <properties maven-id="org.webjars.bower:github-com-jhsheets-yadcf:0.8.9" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/github-com-jhsheets-yadcf-0.8.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jquery-3.4.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/github-com-jhsheets-yadcf-0.8.9-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jquery-3.4.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

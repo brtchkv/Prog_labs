@@ -11,5 +11,7 @@
     <orderEntry type="library" exported="" name="postgresql-42.2.5" level="project" />
     <orderEntry type="library" exported="" name="javax.mail" level="project" />
     <orderEntry type="library" name="activation" level="project" />
+    <orderEntry type="library" name="com.github.maimart:TableFilterFX:1.0.1" level="project" />
+    <orderEntry type="library" name="org.webjars.bower:github-com-jhsheets-yadcf:0.8.9" level="project" />
   </component>
 </module>

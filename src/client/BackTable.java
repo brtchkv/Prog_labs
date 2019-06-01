@@ -5,21 +5,28 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.util.Callback;
 import javafx.util.Duration;
+
 import shared.*;
 
 import java.io.*;
 import java.net.DatagramPacket;
+import java.util.ArrayList;
 import java.util.TimerTask;
 import java.util.Vector;
+import java.util.function.Function;
 
 public class BackTable extends TimerTask {
     public static Vector<Human> storageOld = new Vector<>();
@@ -79,7 +86,7 @@ public class BackTable extends TimerTask {
 
                                 });
                                 //gc.clearRect(0, 0, 351, 434);
-                                storage.stream().forEach(x -> tableView.getItems().add(x));
+                                storage.stream().forEach(x -> tableView.getItems().add(x)); //добавляем элементы в таблицу
                                 //storage.stream().forEach(x -> drawHuman(x, x.getX(), x.getY()));
                                 storage.stream().forEach(x -> {
                                     if (storageOld.stream().anyMatch(y -> y.getId() == x.getId())){ //if altered object
@@ -151,6 +158,8 @@ public class BackTable extends TimerTask {
         tableView.getColumns().add(column2);
         tableView.getColumns().add(column3);
         tableView.getColumns().addAll(column4,column5,column6, column7, column8);
+
+
 
     }
 

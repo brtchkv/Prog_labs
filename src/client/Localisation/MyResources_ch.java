@@ -74,7 +74,9 @@ public class MyResources_ch extends ListResourceBundle {
                     {"update", "Aktualizace"},
                     {"notSelectHuman", "Zadan\u00E9  pole nen\u00ED \u010D\u00EDslo!"},
                     {"mode", "Re\u017Eimu"},
-                    {"canvas", "Pl\u00E1tno"}
+                    {"canvas", "Pl\u00E1tno"},
+                    {"filter", "Filtr"},
+                    {"showTable", "Nep\u0159epli jste re\u017Eim na tabulku!"}
             };
         }
 }

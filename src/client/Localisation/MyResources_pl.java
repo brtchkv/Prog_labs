@@ -75,7 +75,9 @@ public class MyResources_pl extends ListResourceBundle{
                     {"update", "Aktualizacja"},
                     {"notSelectHuman", "Zadan\u00E9  pole nen\u00ED \u010D\u00EDslo!"},
                     {"mode", "Tryb"},
-                    {"canvas", "Brezentowy"}
+                    {"canvas", "Brezentowy"},
+                    {"filter", "Filtr"},
+                    {"showTable", "Nie prze\u0142ączy\u0142e\u015B trybu na Table!"}
             };
         }
 }

@@ -17,7 +17,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -106,7 +105,7 @@ public class SkeletonMain implements Initializable {
 
 
 
-    private int size = 1;
+    private int size = 0;
     private int x = 0;
     private int y = 0;
 
@@ -134,8 +133,9 @@ public class SkeletonMain implements Initializable {
                 Login.currentResource.getString("remove_greater"),
                 Login.currentResource.getString("remove_lower"),
                 Login.currentResource.getString("add_if_min"),
-                Login.currentResource.getString("update"));
-        labelSize.setText("1.00");
+                Login.currentResource.getString("update"),
+                Login.currentResource.getString("filter"));
+        labelSize.setText("0.00");
         slider.valueProperty().addListener((observable, oldValue, newValue) -> {
             labelSize.setText(String.format("%.2f", newValue));
             size = newValue.intValue();
@@ -178,7 +178,7 @@ public class SkeletonMain implements Initializable {
         skillInfo.clear();
         commandsList.setValue(null);
         slider.setValue(slider.getMin());
-        labelSize.setText("1.00");
+        labelSize.setText("0.00");
         xCoordinate.clear();
         yCoordinate.clear();
         BackTable.cleanCanvas();
@@ -187,6 +187,9 @@ public class SkeletonMain implements Initializable {
         df = DateFormat.getDateInstance(DateFormat.SHORT, currentResource.getLocale());
         date.setText(df.format(currentDate));
         gc2.clearRect(0, 0, 351, 380);
+        table.getItems().clear();
+        BackTable.storageOld.stream().forEach(x -> table.getItems().add(x));
+        table.refresh();
     }
 
     @FXML
@@ -274,7 +277,9 @@ public class SkeletonMain implements Initializable {
     void getHumanFromTable(MouseEvent event) {
         if (!table.isDisabled()){
             Human h = (Human) table.getSelectionModel().getSelectedItem();
-            showHumanOnPanel(h);
+            if (h != null) {
+                showHumanOnPanel(h);
+            }
         }
     }
 
@@ -293,7 +298,54 @@ public class SkeletonMain implements Initializable {
         try {
             String gson = "";
 
-            if (humanName.getText() == null || humanAge.getText() == null || humanName.getText().isEmpty() || humanAge.getText().isEmpty() || commandsList.getValue() == null){
+            String commandInEnglish2 = "";
+            String key2;
+            Enumeration<String> keys2 = currentResource.getKeys();
+            while (keys2.hasMoreElements()){
+                key2 = keys2.nextElement();
+                String commandTemp = (commandsList.getValue() != null) ? commandsList.getValue() : "";
+                if (commandTemp.equals(currentResource.getString(key2))){
+                    commandInEnglish2 = key2;
+                }
+            }
+
+
+            if (commandInEnglish2.equals("filter")){
+
+                if (!table.isDisabled()){
+                    // фильтрация
+                    table.getItems().clear();
+                    String filterName = (humanName.getText() != null) ? humanName.getText() : "";
+                    String filterAge = (humanAge.getText() != null) ? humanAge.getText() : "";
+                    String filterXLocation = (xCoordinate.getText() != null) ? xCoordinate.getText() : "";
+                    String filterYLocation = (yCoordinate.getText() != null) ? yCoordinate.getText() : "";
+                    String filterSize = (size == 0) ? "" : String.valueOf(size);
+                    String filterSkillName = (skillName.getText() != null) ? skillName.getText() : "";
+                    String filterSkillInfo = (skillInfo.getText() != null) ? skillInfo.getText() : "";
+                    BackTable.storageOld.stream().filter(y ->
+                               y.getName().contains(filterName)
+                            && String.valueOf(y.getAge()).contains(filterAge)
+                            && String.valueOf(y.getX()).contains(filterXLocation)
+                            && String.valueOf(y.getY()).contains(filterYLocation)
+                            && String.valueOf(y.getSize()).contains(filterSize)
+                            && y.getSkills().get(0).getName().contains(filterSkillName)
+                            && y.getSkills().get(0).getAction().contains(filterSkillInfo))
+                            .forEach( x -> table.getItems().add(x));
+                    table.refresh();
+                    throw new Exception();
+
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle(Login.currentResource.getString("command"));
+                    alert.setHeaderText(Login.currentResource.getString("warning"));
+                    alert.setContentText(currentResource.getString("showTable"));
+                    alert.showAndWait();
+                    throw new Exception();
+
+                }
+            }
+
+            if (humanName.getText() == null || humanAge.getText() == null || humanName.getText().isEmpty() || humanAge.getText().isEmpty() || commandsList.getValue() == null || size == 0){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle(Login.currentResource.getString("command"));
                 alert.setHeaderText(Login.currentResource.getString("warning"));

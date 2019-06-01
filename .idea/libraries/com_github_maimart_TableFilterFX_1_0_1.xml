@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.github.maimart:TableFilterFX:1.0.1" type="repository">
+    <properties maven-id="com.github.maimart:TableFilterFX:1.0.1" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/TableFilterFX-1.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/TableFilterFX-1.0.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

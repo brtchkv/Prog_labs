@@ -21,7 +21,8 @@ public class Skill implements Serializable {
 
 
     public String toString(){
-        return (this.getName()+ ":"+ doSkill());
+        // + "\ninfo:"+ doSkill()
+        return (this.getName());
     }
 
     @Override

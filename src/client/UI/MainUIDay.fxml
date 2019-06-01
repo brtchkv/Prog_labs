@@ -144,7 +144,7 @@
                               <Label fx:id="labelSize" layoutX="327.0" layoutY="81.0" text="1" />
                            </children>
                         </Pane>
-                        <Slider fx:id="slider" blockIncrement="1.0" layoutX="229.0" layoutY="182.0" majorTickUnit="1.0" max="3.0" min="1.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                        <Slider fx:id="slider" blockIncrement="1.0" layoutX="229.0" layoutY="182.0" majorTickUnit="1.0" max="3.0" minorTickCount="0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
                      </children>
                   </Pane>
           </children>
@@ -156,7 +156,7 @@
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" style="-fx-background-color: c1a4b1;" VBox.vgrow="NEVER">
       <children>
-        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-1.0" prefHeight="17.0" prefWidth="142.0" text="%lastCommand" HBox.hgrow="ALWAYS">
+        <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-1.0" prefHeight="17.0" prefWidth="148.0" text="%lastCommand" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
