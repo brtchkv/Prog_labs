@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import shared.Response;
@@ -75,7 +74,6 @@ public class SkeletonLogin {
                         Window stageP = nick.getScene().getWindow();
                         stageP.hide();
                         Stage stage = new Stage();
-                        stage.setTitle(Login.currentResource.getString("main"));
                         FXMLLoader loader = new FXMLLoader();
                         loader.setResources(Login.currentResource);
                         loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUIDay.fxml"));
@@ -84,7 +82,7 @@ public class SkeletonLogin {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setHeaderText(Login.currentResource.getString("warning"));
                         alert.setTitle(Login.currentResource.getString("login"));
-                        alert.setContentText(output);
+                        alert.setContentText(Login.getLocaleMessageFromServer(output));
                         alert.showAndWait();
                     }
                 } catch (Exception e) {
@@ -123,7 +121,6 @@ public class SkeletonLogin {
         Window stageP = nick.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("register"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(Login.currentResource);
         loader.setLocation(getClass().getClassLoader().getResource("client/UI/register.fxml"));
@@ -135,7 +132,6 @@ public class SkeletonLogin {
         Window stageP = nick.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("login"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("ru", "Ru")));
@@ -148,7 +144,6 @@ public class SkeletonLogin {
         Window stageP = nick.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("login"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("en", "Ca")));
@@ -161,7 +156,6 @@ public class SkeletonLogin {
         Window stageP = nick.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("login"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("ch", "Ch")));
@@ -174,7 +168,6 @@ public class SkeletonLogin {
         Window stageP = nick.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("login"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("pl", "Pl")));

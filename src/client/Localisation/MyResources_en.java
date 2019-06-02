@@ -71,7 +71,22 @@ public class MyResources_en extends ListResourceBundle {
                 {"mode", "Mode"},
                 {"canvas", "Canvas"},
                 {"filter", "Filter"},
-                {"showTable", "You didn't switched mode to Table!"}
+                {"showTable", "You didn't switched mode to Table!"},
+                {"registerFirst", "You need to register first!"},
+                {"wrongPass", "Wrong Password!"},
+                {"userNotAuth", "User is not authorized"},
+                {"added", "A human %s was successfully added."},
+                {"alreadyExists", "Collection already stores this object."},
+                {"nameIsntTheSmallest", "%s's name isn't the smallest: Can't add to a collection!"},
+                {"deleted", "A human %s has been deleted"},
+                {"cantDelete", "There's no such object in the collection. Try adding instead." +
+                        "\nPerhaps, you don't have rights to delete it!"},
+                {"deletedN", "Deleted %s objects."},
+                {"updated", "Human %s has been updated."},
+                {"cantUpdate", "Human %s belongs to other user.\nCan't update!"},
+                {"emailSent", "Email registration is approved!"},
+                {"userRegistered", "You've already registered!"},
+                {"cantRegister", "Can't register you"}
         };
     }
 }

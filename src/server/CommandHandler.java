@@ -350,9 +350,9 @@ public class CommandHandler extends Thread {
                 storage.remove(humanOld);
                 storage.add(human);
                 db.updateHuman(human);
-                return ("Human " + human.toString() + "has been updated.").getBytes();
+                return ("Human " + human.toString() + " has been updated.").getBytes();
             }else {
-                return ("Human " + human.toString() + "belongs to other user.\nCan't update!").getBytes();
+                return ("Human " + human.toString() + " belongs to other user.\nCan't update!").getBytes();
             }
     }
 

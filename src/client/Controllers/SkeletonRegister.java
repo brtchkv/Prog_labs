@@ -57,7 +57,7 @@ public class SkeletonRegister {
                     Alert alert = new Alert(Alert.AlertType.WARNING);
                     alert.setHeaderText(Login.currentResource.getString("warning"));
                     alert.setTitle(Login.currentResource.getString("register"));
-                    alert.setContentText(output);
+                    alert.setContentText(Login.getLocaleMessageFromServer(output));
                     alert.showAndWait();
 
                 } catch (Exception e) {
@@ -107,7 +107,6 @@ public class SkeletonRegister {
         loader.setResources(currentResource);
         loader.setLocation(getClass().getClassLoader().getResource("client/UI/login.fxml"));
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("login"));
         loadScene(stage, loader);
     }
 
@@ -116,7 +115,6 @@ public class SkeletonRegister {
         Window stageP = nick.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("register"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("ru", "Ru")));
@@ -129,7 +127,6 @@ public class SkeletonRegister {
         Window stageP = nick.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("register"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("en", "Ca")));
@@ -142,7 +139,6 @@ public class SkeletonRegister {
         Window stageP = nick.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("register"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("ch", "Ch")));
@@ -155,7 +151,6 @@ public class SkeletonRegister {
         Window stageP = nick.getScene().getWindow();
         stageP.hide();
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("register"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("pl", "Pl")));

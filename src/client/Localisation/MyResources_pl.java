@@ -77,7 +77,23 @@ public class MyResources_pl extends ListResourceBundle{
                     {"mode", "Tryb"},
                     {"canvas", "Brezentowy"},
                     {"filter", "Filtr"},
-                    {"showTable", "Nie prze\u0142ączy\u0142e\u015B trybu na Table!"}
+                    {"showTable", "Nie prze\u0142ączy\u0142e\u015B trybu na Table!"},
+                    {"registerFirst", "Mus\u00EDte se nejprve zaregistrovat!"},
+                    {"wrongPass", "\u0160patn\u00E9 heslo!"},
+                    {"userNotAuth", "U\u017Eivatel nen\u00ED autorizov\u00E1n"},
+                    {"added", "Byl \u00FAsp\u011B\u017En\u011B %s pu0159id\u00E1n \u010Clov\u011Bk."},
+                    {"alreadyExists", "Kolekce ji\u017E tento objekt ukl\u00E1d\u00E1."},
+                    {"nameIsntTheSmallest", "%s jm\u00E9no nen\u00ED nejmen\u0161\u00ED: Nelze p\u0159idat do kolekce!"},
+                    {"deleted", "\u010Clov\u011Bk %s byl vymaz\u00E1n"},
+                    {"cantDelete", "Ve sb\u00EDrce takov\u00FD objekt neexistuje. Zkuste m\u00EDsto toho p\u0159idat." +
+                            "\nMo\u017En\u00E1 nem\u00E1te pr\u00E1vo je smazat!"},
+                    {"deletedN", "Odstran\u011Bno %s objekt\u016F."},
+                    {"updated", "\u010Clov\u011Bk %s byl aktualizov\u00E1n."},
+                    {"cantUpdate", "\u010Clov\u011Bk pat\u0159\u00ED jin\u011Bmu u\u017Eivateli.\n" +
+                            "Nelze aktualizovat!"},
+                    {"emailSent", "Registrace e-mailu je schv\u00E1lena!"},
+                    {"userRegistered", "U\u017E jste se zaregistrovali!"},
+                    {"cantRegister", "Nelze se zaregistrovat."}
             };
         }
 }

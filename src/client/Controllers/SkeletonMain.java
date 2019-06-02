@@ -312,7 +312,6 @@ public class SkeletonMain implements Initializable {
             if (commandInEnglish2.equals("filter")){
 
                 if (!table.isDisabled()){
-                    // фильтрация
                     table.getItems().clear();
                     String filterName = (humanName.getText() != null) ? humanName.getText() : "";
                     String filterAge = (humanAge.getText() != null) ? humanAge.getText() : "";
@@ -414,7 +413,7 @@ public class SkeletonMain implements Initializable {
                         } else {
                             Alert alert = new Alert(Alert.AlertType.WARNING);
                             alert.setTitle(Login.currentResource.getString("command"));
-                            alert.setHeaderText(Login.currentResource.getString("warning"));
+                            alert.setHeaderText(Login.currentResource.getString("message"));
                             alert.setContentText(currentResource.getString("notSelectHuman"));
                             alert.showAndWait();
                             throw new Exception();
@@ -433,8 +432,9 @@ public class SkeletonMain implements Initializable {
                         Response response = (Response) ois.readObject();
                         String output = new String(SkeletonLogin.client.decodeResponse(commandsList.getValue(), response));
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setHeaderText(Login.currentResource.getString("warning"));
                         alert.setTitle(Login.currentResource.getString("command"));
-                        alert.setContentText(output);
+                        alert.setContentText(Login.getLocaleMessageFromServer(output));
                         alert.showAndWait();
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
@@ -482,7 +482,6 @@ public class SkeletonMain implements Initializable {
         stageToClose.close();
         BackTable.newUselessWindow = true;
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("main"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("ru", "Ru")));
@@ -502,7 +501,6 @@ public class SkeletonMain implements Initializable {
         stageP.hide();
         BackTable.newUselessWindow = true;
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("main"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("en", "Ca")));
@@ -522,7 +520,6 @@ public class SkeletonMain implements Initializable {
         stageToClose.close();
         BackTable.newUselessWindow = true;
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("main"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("ch", "Ch")));
@@ -542,7 +539,6 @@ public class SkeletonMain implements Initializable {
         stageToClose.close();
         BackTable.newUselessWindow = true;
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("main"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(ResourceBundle.getBundle("client.Localisation.MyResources",
                 new Locale("pl", "Pl")));
@@ -562,7 +558,6 @@ public class SkeletonMain implements Initializable {
         stageToClose.close();
         BackTable.newUselessWindow = true;
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("login"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(currentResource);
         loader.setLocation(getClass().getClassLoader().getResource("client/UI/login.fxml"));
