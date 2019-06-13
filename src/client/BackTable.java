@@ -8,25 +8,20 @@ import javafx.animation.Timeline;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
-import javafx.util.Callback;
 import javafx.util.Duration;
 
 import shared.*;
 
 import java.io.*;
 import java.net.DatagramPacket;
-import java.util.ArrayList;
 import java.util.TimerTask;
 import java.util.Vector;
-import java.util.function.Function;
 
 public class BackTable extends TimerTask {
     public static Vector<Human> storageOld = new Vector<>();
@@ -77,7 +72,7 @@ public class BackTable extends TimerTask {
                                     if (!storage.stream().anyMatch(y -> y.getId() == x.getId())){ // if remove object
                                         try {
                                             drawSleepyHuman(x, x.getX(), x.getY());
-                                            Thread.sleep(450);
+                                            Thread.sleep(600);
                                             gcForSelection.clearRect(0, 0, 351, 380);
                                             cleanCanvasDrawExcept(x);
 
@@ -100,8 +95,7 @@ public class BackTable extends TimerTask {
                                     } else {
                                         try {  //if new object
                                             drawSleepyHuman(x, x.getX(), x.getY());
-
-                                            Thread.sleep(450);
+                                            Thread.sleep(600);
 
                                         } catch (InterruptedException e) { }
                                         drawHuman(x, x.getX(), x.getY(), x.getSize());
@@ -123,7 +117,7 @@ public class BackTable extends TimerTask {
                     }
                 }
 
-            } catch (Exception e) { }
+            } catch (Exception e) {}
 
     }
 
@@ -206,7 +200,8 @@ public class BackTable extends TimerTask {
 
     public static void cleanCanvas(){
         gc.clearRect(0, 0, 351, 380);
-        storageOld.stream().forEach(x -> drawHuman(x, x.getX(), x.getY(), x.getSize()));
+        storage.stream().forEach(x ->
+            drawHuman(x, x.getX(), x.getY(), x.getSize()));
     }
 
     public static void moveHuman(Human human, double fromX, double fromY, double toX, double toY, double fromSize, double toSize){

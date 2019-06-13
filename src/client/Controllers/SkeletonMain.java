@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -15,7 +16,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -91,6 +93,9 @@ public class SkeletonMain implements Initializable {
     @FXML
     private TableView table;
 
+    @FXML
+    private AnchorPane pane;
+
     private GraphicsContext gc;
 
     private GraphicsContext gc2;
@@ -102,11 +107,12 @@ public class SkeletonMain implements Initializable {
 
     Timer timer;
 
-
-
     private int size = 0;
     private int x = 0;
     private int y = 0;
+    private double dX = 0;
+    private double dY = 0;
+    private boolean drag = false;
 
     private void init() {
         collectionInfo.setAlignment(Pos.CENTER_LEFT);
@@ -144,12 +150,15 @@ public class SkeletonMain implements Initializable {
         date.setText(df.format(currentDate));
         table.setDisable(true);
         table.setOpacity(0);
+        pane.setCursor(Cursor.MOVE);
     }
 
 
     @FXML
     void getHuman(MouseEvent event) {
+
         gc2.clearRect(0, 0, 351, 380);
+
         BackTable.storageOld.forEach(h -> {
 
             if((Math.abs( -h.getY() + ((int) event.getX())) < 35*h.getSize()) && Math.abs( -h.getX() + ((int) event.getY())) < 35*h.getSize()){
@@ -167,10 +176,10 @@ public class SkeletonMain implements Initializable {
 
             }
         });
+
     }
 
-    @FXML
-    void clear(ActionEvent event) {
+    private void clearRemoteControl() {
         humanName.clear();
         humanAge.clear();
         skillName.clear();
@@ -186,8 +195,58 @@ public class SkeletonMain implements Initializable {
         df = DateFormat.getDateInstance(DateFormat.SHORT, currentResource.getLocale());
         date.setText(df.format(currentDate));
         gc2.clearRect(0, 0, 351, 380);
+    }
+
+    @FXML
+    void drag(MouseEvent event) {
+        pane.setCursor(Cursor.HAND);
+        if (selected != null && event.isDragDetect()) {
+
+            dX = event.getX();
+            dY = event.getY();
+            pane.setCursor(Cursor.MOVE);
+            drag = true;
+
+        }
+
+    }
+
+    @FXML
+    void mouseReleased(MouseEvent event) {
+        pane.setCursor(Cursor.DEFAULT);
+        if (selected != null) {
+            if ((Math.abs(event.getX() - dX) > 25 || Math.abs(event.getY() - dY) > 25) && drag) {
+                BackTable.moveHuman(selected, dX, dY, event.getX(), event.getY(), selected.getSize(), (int) slider.getValue());
+                xCoordinate.setText(String.valueOf((int) event.getX()));
+                yCoordinate.setText(String.valueOf((int) event.getY()));
+                BackTable.newUselessWindow = true;
+            }
+        }
+        drag = false;
+    }
+
+
+    @FXML
+    void scroll(ScrollEvent event) {
+        if (selected != null) {
+            double zoomFactor = -1;
+            double deltaY = event.getDeltaY();
+            if (deltaY < 0) {
+                zoomFactor = 2.0 + zoomFactor;
+            }
+            if (slider.getValue() + zoomFactor == 0){
+                zoomFactor = 0;
+            }
+            slider.setValue(slider.getValue() + zoomFactor);
+            BackTable.newUselessWindow = true;
+        }
+    }
+
+    @FXML
+    void clear(ActionEvent event) {
+        clearRemoteControl();
         table.getItems().clear();
-        BackTable.storageOld.stream().forEach(x -> table.getItems().add(x));
+        BackTable.storage.stream().forEach(x -> table.getItems().add(x));
         table.refresh();
     }
 
@@ -213,10 +272,10 @@ public class SkeletonMain implements Initializable {
         timer.cancel();
         BackTable.newUselessWindow = true;
         BackTable.storageOld.clear();
+        BackTable.cleanCanvas();
         Stage stageP = (Stage) nickname.getScene().getWindow();
         stageP.close();
         Stage stage = new Stage();
-        stage.setTitle(Login.currentResource.getString("main"));
         FXMLLoader loader = new FXMLLoader();
         loader.setResources(Login.currentResource);
         loader.setLocation(getClass().getClassLoader().getResource("client/UI/MainUINight.fxml"));
@@ -252,24 +311,6 @@ public class SkeletonMain implements Initializable {
     void showTable(ActionEvent event) {
         table.setDisable(false);
         table.setOpacity(1);
-//        VBox vbox;
-//        if (BackTable.tableView != null) {
-//            vbox = new VBox(BackTable.tableView);
-//        } else {
-//            TableView tb = new TableView();
-//            TableColumn firstNameCol = new TableColumn(currentResource.getString("login"));
-//            TableColumn age = new TableColumn(currentResource.getString("age"));
-//            TableColumn u = new TableColumn(currentResource.getString("username"));
-//            tb.getColumns().addAll(firstNameCol, age, u);
-//            vbox = new VBox(tb);
-//        }
-//
-//        vbox.setSpacing(5);
-//        Scene scene = new Scene(vbox);
-//        Stage stage = new Stage();
-//        stage.setTitle(currentResource.getString("objects"));
-//        stage.setScene(scene);
-//        stage.show();
     }
 
     @FXML

@@ -87,17 +87,17 @@
       </HBox>
     <SplitPane id="splitpane" dividerPositions="0.5" focusTraversable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="451.0" prefWidth="799.0" stylesheets="@day.css">
       <items>
-        <AnchorPane id="anchorpane" prefHeight="449.0" prefWidth="392.0">
+        <AnchorPane id="anchorpane" fx:id="pane" onDragDetected="#drag" onMouseReleased="#mouseReleased" onScroll="#scroll" prefHeight="449.0" prefWidth="392.0">
           <children>
                   <Label alignment="CENTER" layoutX="134.0" layoutY="13.0" prefHeight="23.0" prefWidth="118.0" text="%humans">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Pane layoutX="194.0" layoutY="12.0" onMouseClicked="#getHuman" prefHeight="200.0" prefWidth="200.0" />
+                  <Pane layoutX="208.0" layoutY="12.0" onMouseClicked="#getHuman" prefHeight="200.0" prefWidth="200.0" />
                   <Pane id="pane1" layoutX="25.0" layoutY="47.0" onMouseClicked="#getHuman" prefHeight="378.0" prefWidth="351.0" />
-                  <Canvas fx:id="canvasForSelection" blendMode="SRC_ATOP" disable="true" height="380.0" layoutX="25.0" layoutY="47.0" onMouseClicked="#getHuman" width="351.0" />
-                  <Canvas fx:id="canvas" blendMode="SRC_ATOP" disable="true" height="380.0" layoutX="25.0" layoutY="47.0" onMouseClicked="#getHuman" width="351.0" />
+                  <Canvas fx:id="canvasForSelection" blendMode="SRC_ATOP" disable="true" height="380.0" layoutX="25.0" layoutY="47.0" onDragDetected="#drag" onMouseClicked="#getHuman" width="351.0" />
+                  <Canvas fx:id="canvas" blendMode="SRC_ATOP" disable="true" height="380.0" layoutX="25.0" layoutY="47.0" onDragDetected="#drag" onMouseClicked="#getHuman" width="351.0" />
                   <TableView fx:id="table" layoutX="24.0" layoutY="47.0" onMouseClicked="#getHumanFromTable" prefHeight="380.0" prefWidth="351.0" stylesheets="@day.css" />
           </children>
         </AnchorPane>

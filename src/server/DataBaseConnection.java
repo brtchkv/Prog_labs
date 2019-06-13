@@ -13,8 +13,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class DataBaseConnection {
     private String url = "jdbc:postgresql://localhost:5432/studs";
-    private String name = "lab";
-    private String pass = "lab1234";
+    private String name = "ivan";
+    private String pass = "mylab";
     private Connection connection = null;
 
     {
@@ -85,15 +85,15 @@ public class DataBaseConnection {
     private void addHuman(Human h, String username) throws SQLException {
 
         PreparedStatement preStatement = connection.prepareStatement("INSERT INTO humans VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
-        preStatement.setString(1, h.getName());
-        preStatement.setInt(2, h.getAge());
-        preStatement.setString(3, username);
-        preStatement.setString(4, h.getDateTime().toString());
-        preStatement.setInt(5, h.getId());
-        preStatement.setInt(6, h.getSize());
-        preStatement.setInt(7, h.getX());
-        preStatement.setInt(8, h.getY());
-        preStatement.setInt(9, h.getId());
+        preStatement.setString(2, h.getName());
+        preStatement.setInt(3, h.getAge());
+        preStatement.setString(8, username);
+        preStatement.setString(9, h.getDateTime().toString());
+        preStatement.setInt(1, h.getId());
+        preStatement.setInt(4, h.getSize());
+        preStatement.setInt(5, h.getX());
+        preStatement.setInt(6, h.getY());
+        preStatement.setInt(7, h.getId());
         preStatement.executeUpdate();
 
         PreparedStatement statementSkills = connection.prepareStatement("INSERT INTO skills VALUES (?, ?, ?);");
