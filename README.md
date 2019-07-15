@@ -6,7 +6,7 @@ The innitial commit starts with the 5th lab.
 7-th lab - database support and authorisation;
 8-th lab - GUI of the previous command line functionality; 
 
-The final 8th lab contains server and client codes; authorisation of clients is supported; all user and program data is stored in PostgreSQL, passwords are stored in hashes. Customn animation is realised when an object is deleted or created. Moreover, every user has a special color for the objects.
+The final 8th lab contains multithreaded server and client codes; authorisation of clients is supported; all user and program data is stored in PostgreSQL, passwords are stored in hashes. Customn animation is realised when an object is deleted or created. Moreover, every user has a special color for the objects.
 
 Final 8th lab interfaces:
 
