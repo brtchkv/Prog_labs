@@ -16,11 +16,11 @@ Final 8th lab interfaces:
 Main UI with Day Theme:
 ![Alt text](src/screenshots/Screen%20Shot%202019-06-01%20at%2021.03.43.png?raw=true "Title")
 
-Main UI with Dark Theme:
+Main UI with Night Theme:
 ![Alt text](src/screenshots/Screen%20Shot%202019-06-01%20at%2021.03.36.png?raw=true "Title")
 
-Main UI with Dark Theme (Table Mode):
+Main UI with Day Theme (Table Mode):
 ![Alt text](src/screenshots/Screen%20Shot%202019-06-01%20at%2021.03.53.png?raw=true "Title")
 
-Main UI with Day Theme (Table Mode):
+Main UI with Night Theme (Table Mode):
 ![Alt text](src/screenshots/Screen%20Shot%202019-06-01%20at%2021.05.28.png?raw=true "Title")
