@@ -1,4 +1,4 @@
-# Prog_labs
+# Programming assignments
 Java 1st year
 The innitial commit starts with the 5th assignment. 
 
