@@ -1,12 +1,12 @@
 # Prog_labs
 Java 1st year
-The innitial commit starts with the 5th lab. 
+The innitial commit starts with the 5th assignment. 
 
-6-th lab - command line server and client model;
-7-th lab - database support and authorisation;
-8-th lab - GUI of the previous command line functionality; 
+6-th assignment - command line server and client model;
+7-th assignment - database support and authorisation;
+8-th assignment - GUI of the previous command line functionality; 
 
-The final 8th lab contains multithreaded server and client codes; authorisation of clients is supported; all user and program data is stored in PostgreSQL, passwords are stored in hashes. Customn animation is realised when an object is deleted or created. Moreover, every user has a special color for the objects.
+The final 8th assignment contains multithreaded server and client codes; authorisation of clients is supported; all user and program data is stored in PostgreSQL, passwords are stored in hashes. Customn animation is realised when an object is deleted or created. Moreover, every user has a special color for the objects.
 
 Final 8th lab interfaces:
 
